@@ -1,0 +1,14 @@
+---
+import Layout from "@/layouts/Layout.astro";
+// import getImagesByQuery from "@/services/getImagesByQuery";
+import PostByQuery from "./index";
+const { extension } = Astro.params;
+// console.log(query)
+// const query = window.location.href
+// const data = await getImagesByQuery(extension as string, query as string, 1);
+---
+
+<Layout title={String(extension) + " search"}>
+  <!-- <h2>{query}</h2> -->
+  <PostByQuery extension={extension} client:load />
+</Layout>

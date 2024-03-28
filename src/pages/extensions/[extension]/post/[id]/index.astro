@@ -1,0 +1,97 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import getPostById from "@/services/getPostById";
+import PostById from "./index.jsx";
+const { extension, id } = Astro.params;
+// console.log(extension, id);
+const dataImage = await getPostById(extension, String(id));
+const data = dataImage?.data;
+// console.log(data)
+---
+
+<Layout title={`${extension} - post ${id}`}>
+  <PostById data={data} client:load />
+  <!-- <div class="pt-4">
+    <div
+      class="bg-white shadow-2xl max-w-6xl mx-auto rounded-3xl overflow-hidden flex p-5"
+    >
+      {
+        (data && data.type_file === "webm") ||
+        (data && data.type_file === "mp4") ? (
+          <div class="w-1/2 relative">
+            <a
+              href={data?.file_url}
+              target="_blank"
+              class="absolute bottom-5 left-5 z-10 bg-neutral-50 text-2xl px-4 py-3 rounded-full capitalize"
+            >
+              original image
+            </a>
+            <video
+              src={data.file_url}
+              muted
+              controls
+              class="w-full rounded-3xl"
+            />
+          </div>
+        ) : (
+          <div class="w-1/2 relative h-fit">
+            <a
+              href={data?.file_url}
+              target="_blank"
+              class="absolute flex gap-2 items-center bottom-5 left-5 z-10 bg-neutral-50 text-lg px-4 py-2 rounded-full capitalize"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.5rem"
+                height="1.5rem"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="m21 15.344l-2.121 2.121l-3.172-3.172l-1.414 1.414l3.172 3.172L15.344 21H21zM3 8.656l2.121-2.121l3.172 3.172l1.414-1.414l-3.172-3.172L8.656 3H3zM21 3h-5.656l2.121 2.121l-3.172 3.172l1.414 1.414l3.172-3.172L21 8.656zM3 21h5.656l-2.121-2.121l3.172-3.172l-1.414-1.414l-3.172 3.172L3 15.344z"
+                />
+              </svg>
+              <p class="font-semibold">original image</p>
+            </a>
+            <img src={data?.file_url} class="w-full rounded-3xl" />
+          </div>
+        )
+      }
+      <div class="p-5 w-1/2">
+        <div class="flex gap-3 justify-end">
+          <button
+            class="bg-white px-4 py-3 rounded-full capitalize text-black shadow-lg font-semibold"
+            >descargar</button
+          >
+          <button
+            id="save_btn"
+            class="bg-rose-500 px-4 py-3 rounded-full capitalize text-white font-semibold shadow-lg shadow-rose-500/50"
+            >guardar</button
+          >
+        </div>
+        <div>
+          <div class="flex items-center gap-3 mt-5">
+            <div
+              class="bg-rose-400 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white"
+            >
+              {data?.owner.split("")[0]}
+            </div>
+            <p class="font-semibold">{data?.owner}</p>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-5">
+            {
+              data?.tags
+                .split(" ")
+                .map((e, i) => (
+                  <a class="items-center justify-center px-3 py-1 text-sm text-rose-900 bg-rose-100 rounded-full cursor-pointer backdrop-blur-3xl ring-1 ring-rose-300">
+                    {e}
+                  </a>
+                ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</Layout>

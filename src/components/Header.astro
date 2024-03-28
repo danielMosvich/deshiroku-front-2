@@ -1,0 +1,76 @@
+---
+const { extension } = Astro.params;
+import Searcher from "./searcher";
+---
+
+<header
+  class="bg-white/90 backdrop-blur-lg w-full h-20 fixed flex gap-0 px-10 items-center z-40"
+>
+  <a
+  href="/"
+    class="capitalize font-semibold bg-neutral-950 text-white px-4 py-2 rounded-full"
+    >Inicio
+  </a>
+  {
+    extension ? (
+      <a
+        href={`/extensions/${extension}`}
+        class="capitalize font-semibold  px-4 py-2 rounded-full"
+      >
+        {extension}
+      </a>
+    ) : (
+      <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full">
+        extensions
+      </a>
+    )
+  }
+  <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button>
+  
+  <Searcher client:load />
+  <div class="avatar"></div>
+</header>
+<style></style>
+<script>
+  import type { UserProps } from "@/types/UserProps";
+  if (document.cookie) {
+    const container = document.querySelector(".avatar");
+    const localStorageData = localStorage.getItem("user") as string;
+    const localStorageCollection = localStorage.getItem(
+      "defaultCollection"
+    ) as string;
+
+    if (localStorageData) {
+      const data = JSON.parse(localStorageData) as UserProps;
+      if (!localStorageCollection) {
+        const firstCollection = {
+          name: data.collections[0].name,
+          id: data.collections[0]._id,
+        };
+        localStorage.setItem(
+          "defaultCollection",
+          JSON.stringify(firstCollection)
+        );
+      }
+      const a = document.createElement("a");
+      a.href = `/${data.username}`;
+      a.className =
+        "bg-blue-500 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
+      a.innerHTML = data.name.split("")[0];
+      container?.appendChild(a);
+    } else {
+      async function getProfile() {
+        const res = await fetch("http://localhost:3000/api/user/profile", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        localStorage.setItem("user", JSON.stringify(data.data));
+      }
+      getProfile();
+    }
+  }
+</script>
+<!-- <script is:inline>
+ 
+</script> -->
