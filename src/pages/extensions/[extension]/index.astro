@@ -1,12 +1,12 @@
 ---
-import getImages from "../../../services/getImages";
+// import getImages from "../../../services/getImages";
 import Layout from "../../../layouts/Layout.astro";
 import Extension from "./index";
 const { extension } = Astro.params;
-const data = await getImages(extension as string, 1);
+// const data = await getImages(extension as string, 1);
 ---
 
 <Layout title={String(extension)}>
   <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima dolore, nihil optio expedita aliquid maxime qui aspernatur aperiam veritatis tempore, possimus provident numquam nulla maiores a consequuntur quasi necessitatibus eum? -->
-  <Extension client:idle data={data} extension={extension} />
+  <Extension />
 </Layout>
