@@ -3,15 +3,27 @@ import Masonry from "react-layout-masonry";
 
 function Collection({ id, user }) {
   const [data, setData] = useState(null);
-  async function handleDeleteCollection() {
-    const response = await fetch(`${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id: id,
-      }),
+  function obtenerCookies(){
+    const cookies = {};
+    document.cookie.split(";").forEach((cookie) => {
+      const [nombre, valor] = cookie.split("=").map((part) => part.trim());
+      cookies[nombre] = decodeURIComponent(valor);
     });
+    return cookies;
+  }
+  async function handleDeleteCollection() {
+    const token = obtenerCookies()
+    const response = await fetch(
+      `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
+      {
+        method: "DELETE",
+        // credentials: "include",
+        headers: { "Content-Type": "application/json", Authorization:`Bearer ${JSON.stringify(token)}` },
+        body: JSON.stringify({
+          id: id,
+        }),
+      }
+    );
     const dat = await response.json();
     localStorage.setItem("user", JSON.stringify(dat));
     function detectDefaultCollection() {
@@ -37,15 +49,15 @@ function Collection({ id, user }) {
     window.location.href = `/${user}`;
   }
   async function handleEditCollection() {
-    
     const newName = prompt("NUEVO NOMBRE DE LA COLECCION");
     if (newName) {
+      const token = obtenerCookies()
       const response = await fetch(
-        "http://localhost:3000/api/user/collections",
+        `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
         {
           method: "PUT",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          // credentials: "include",
+          headers: { "Content-Type": "application/json", Authorization:`Bearer ${JSON.stringify(token)}` },
           body: JSON.stringify({
             id: id,
             name: newName,

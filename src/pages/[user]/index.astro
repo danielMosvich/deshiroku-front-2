@@ -4,7 +4,7 @@
 //   return [{ params: "one" }];
 // }
 import Layout from "../../layouts/Layout.astro";
-const { user } = Astro.params
+const { user } = Astro.params;
 // console.log(id)
 import getUser from "../../services/getUser";
 const dataEntire = await getUser(String(user));
@@ -77,30 +77,45 @@ const data = dataEntire.data;
     }
   </h2>
 </Layout>
-<script is:inline>
+<script>
   const addButton = document.querySelector("#button-add");
-  addButton.addEventListener("click", () => {
-    const name_new_gallery = prompt("nombre de la nueva galeria :D");
-    if (name_new_gallery) {
-      (async () => {
-        const response = await fetch(
-          "http://localhost:3000/api/user/collections",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name: name_new_gallery }),
-          }
-        );
-        const data = await response.json();
-        alert(data.message);
-        localStorage.setItem("user", JSON.stringify(data.dat));
-        window.location.reload();
-        console.log(data);
-      })();
+
+  if (addButton) {
+    interface Cookie {
+      [key: string]: string;
     }
-  });
+    function obtenerCookies(): Cookie {
+      const cookies: Cookie = {};
+      document.cookie.split(";").forEach((cookie) => {
+        const [nombre, valor] = cookie.split("=").map((part) => part.trim());
+        cookies[nombre] = decodeURIComponent(valor);
+      });
+      return cookies;
+    }
+    const token = obtenerCookies();
+    addButton.addEventListener("click", () => {
+      const name_new_gallery = prompt("nombre de la nueva galeria :D");
+      if (name_new_gallery) {
+        (async () => {
+          const response = await fetch(
+            `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${JSON.stringify(token)}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ name: name_new_gallery }),
+            }
+          );
+          const data = await response.json();
+          alert(data.message);
+          localStorage.setItem("user", JSON.stringify(data.dat));
+          window.location.reload();
+          console.log(data);
+        })();
+      }
+    });
+  }
 </script>
