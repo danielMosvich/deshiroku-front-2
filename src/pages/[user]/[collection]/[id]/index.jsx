@@ -3,7 +3,7 @@ import Masonry from "react-layout-masonry";
 
 function Collection({ id, user }) {
   const [data, setData] = useState(null);
-  function obtenerCookies(){
+  function obtenerCookies() {
     const cookies = {};
     document.cookie.split(";").forEach((cookie) => {
       const [nombre, valor] = cookie.split("=").map((part) => part.trim());
@@ -12,13 +12,16 @@ function Collection({ id, user }) {
     return cookies;
   }
   async function handleDeleteCollection() {
-    const token = obtenerCookies()
+    const token = obtenerCookies();
     const response = await fetch(
       `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
       {
         method: "DELETE",
         // credentials: "include",
-        headers: { "Content-Type": "application/json", Authorization:`Bearer ${JSON.stringify(token)}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.stringify(token)}`,
+        },
         body: JSON.stringify({
           id: id,
         }),
@@ -51,13 +54,16 @@ function Collection({ id, user }) {
   async function handleEditCollection() {
     const newName = prompt("NUEVO NOMBRE DE LA COLECCION");
     if (newName) {
-      const token = obtenerCookies()
+      const token = obtenerCookies();
       const response = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
         {
           method: "PUT",
           // credentials: "include",
-          headers: { "Content-Type": "application/json", Authorization:`Bearer ${JSON.stringify(token)}` },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.stringify(token)}`,
+          },
           body: JSON.stringify({
             id: id,
             name: newName,
@@ -76,7 +82,7 @@ function Collection({ id, user }) {
   useEffect(() => {
     async function getCollection() {
       const res = await fetch(
-        `http://localhost:3000/api/user/collection/${id}`,
+        `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection/${id}`,
         {
           method: "GET",
           credentials: "include",
