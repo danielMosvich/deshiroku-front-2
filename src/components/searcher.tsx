@@ -6,7 +6,7 @@
 //               5 = meta
 
 import React, { useEffect, useRef, useState } from "react";
-import type { AutocompleteProps } from "@/types/autocompleteProps";
+import type { AutocompleteProps } from "../types/autocompleteProps";
 function Searcher() {
   const [inputValue, setInputValue] = useState("");
   const [extension, setExtension] = useState<string | null>(null);
@@ -25,7 +25,7 @@ function Searcher() {
         console.log(e.currentTarget.value);
         try {
           const response = await fetch(
-            `http://localhost:3000/api/deshiroku/${extension}/autocomplete/${input_value}`
+            `${import.meta.env.PUBLIC_SERVER_URL}/api/deshiroku/${extension}/autocomplete/${input_value}`
           );
           const json = await response.json();
           // console.log(json);

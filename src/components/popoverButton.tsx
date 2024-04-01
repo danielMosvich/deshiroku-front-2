@@ -1,4 +1,4 @@
-import type { UserProps } from "@/types/UserProps";
+import type { UserProps } from "../types/UserProps";
 import { useEffect, useState } from "react";
 interface PopoverButtonProps {
   defaultCollectionName: string;

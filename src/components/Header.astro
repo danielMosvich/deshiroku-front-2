@@ -32,7 +32,7 @@ import Searcher from "./searcher";
 </header>
 <style></style>
 <script>
-  import type { UserProps } from "@/types/UserProps";
+  import type { UserProps } from "../types/UserProps";
   if (document.cookie) {
     const container = document.querySelector(".avatar");
     const localStorageData = localStorage.getItem("user") as string;
@@ -60,7 +60,7 @@ import Searcher from "./searcher";
       container?.appendChild(a);
     } else {
       async function getProfile() {
-        const res = await fetch("http://localhost:3000/api/user/profile", {
+        const res = await fetch(`${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`, {
           method: "GET",
           credentials: "include",
         });

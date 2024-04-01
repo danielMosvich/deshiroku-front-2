@@ -507,6 +507,7 @@ function PostById({ extension, id }) {
             {/* {data.source && data.source} */}
           </div>
 
+{/* MORE CONTENT BY RELATED  */}
           <h2 className="mt-10 pb-5 text-center font-semibold text-xl">
             Mas para explorar{" "}
           </h2>
@@ -529,7 +530,7 @@ function PostById({ extension, id }) {
                   return (
                     <a
                       className=""
-                      href={`http://localhost:4321/extensions/${element.extension}/post/${element.id}`}
+                      href={`/extensions/${element.extension}/post/${element.id}`}
                       key={element.id + index}
                     >
                       <img
