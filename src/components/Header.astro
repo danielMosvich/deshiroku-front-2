@@ -7,7 +7,7 @@ import Searcher from "./searcher";
   class="bg-white/90 backdrop-blur-lg w-full h-20 fixed flex gap-0 px-10 items-center z-40"
 >
   <a
-  href="/"
+    href="/"
     class="capitalize font-semibold bg-neutral-950 text-white px-4 py-2 rounded-full"
     >Inicio
   </a>
@@ -26,7 +26,7 @@ import Searcher from "./searcher";
     )
   }
   <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button>
-  
+
   <Searcher client:load />
   <div class="avatar"></div>
 </header>
@@ -60,10 +60,16 @@ import Searcher from "./searcher";
       container?.appendChild(a);
     } else {
       async function getProfile() {
-        const res = await fetch(`${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
+          {
+            method: "GET",
+            credentials: "include",
+            mode: "cors", 
+            // referrerPolicy:'same-origin',
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         const data = await res.json();
         localStorage.setItem("user", JSON.stringify(data.data));
       }
