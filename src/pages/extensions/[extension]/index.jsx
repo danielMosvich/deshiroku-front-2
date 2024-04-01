@@ -1,11 +1,25 @@
-function Extension(){
-  return(
+import { useEffect } from "react";
+import getImages from "../../../services/getImages";
+
+function Extension() {
+  useEffect(() => {
+    async function getData() {
+      console.log("some");
+      const dat = await getImages("rule34", 1);
+      console.log(dat);
+    }
+    getData()
+  }, []);
+  return (
     <div>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. A sed distinctio non ad praesentium incidunt numquam sint doloribus! Doloremque praesentium soluta obcaecati adipisci cum recusandae provident aliquam labore perspiciatis minima.
-      </div>
-  )
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. A sed distinctio
+      non ad praesentium incidunt numquam sint doloribus! Doloremque praesentium
+      soluta obcaecati adipisci cum recusandae provident aliquam labore
+      perspiciatis minima.
+    </div>
+  );
 }
-export default Extension
+export default Extension;
 // import getImages from "../../../services/getImages";
 // import { useState, useEffect } from "react";
 // import Masonry from "react-layout-masonry";
