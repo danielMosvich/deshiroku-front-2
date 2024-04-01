@@ -8,5 +8,5 @@ const { extension } = Astro.params;
 
 <Layout title={String(extension)}>
   <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima dolore, nihil optio expedita aliquid maxime qui aspernatur aperiam veritatis tempore, possimus provident numquam nulla maiores a consequuntur quasi necessitatibus eum? -->
-  <Extension client:load />
+  <Extension client:load extension={extension}/>
 </Layout>
