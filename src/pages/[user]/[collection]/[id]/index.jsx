@@ -80,15 +80,20 @@ function Collection({ id, user }) {
     }
   }
   useEffect(() => {
+    const token = obtenerCookies()
     async function getCollection() {
       const res = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection/${id}`,
         {
           method: "GET",
-          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${JSON.stringify(token)}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       const data = await res.json();
+      console.log(data)
       setData(data);
     }
     getCollection();
