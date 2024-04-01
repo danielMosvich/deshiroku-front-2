@@ -1,4 +1,4 @@
-import type { UserProps } from "@/types/UserProps";
+import type { UserProps } from "../types/UserProps";
 // import type { ImagesProps } from "@/types/ImagesProps";
 
 async function getUser(extension: string) {

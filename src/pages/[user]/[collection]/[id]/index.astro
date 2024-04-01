@@ -1,0 +1,24 @@
+---
+import Collection from "./index";
+import Layout from "../../../../layouts/Layout.astro";
+// import getCollection from "@/services/getCollection";
+const { user, collection, id } = Astro.params;
+// console.log(collection)
+// const data = await getCollection(id);
+// console.log(data)
+---
+
+<Layout title={String(collection)}>
+  <Collection client:load id={id} user={user} />
+</Layout>
+<!-- <script is:inline>
+  async function getCollection() {
+    const res = await fetch("http://localhost:3000/api/user/collection/some", {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await res.json();
+    localStorage.setItem("user", JSON.stringify(data.data));
+  }
+  getCollection();
+</script> -->

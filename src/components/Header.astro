@@ -34,6 +34,18 @@ import Searcher from "./searcher";
 <script>
   import type { UserProps } from "../types/UserProps";
   if (document.cookie) {
+    interface Cookie {
+      [key: string]: string;
+    }
+    function obtenerCookies(): Cookie {
+      const cookies: Cookie = {};
+      document.cookie.split(";").forEach((cookie) => {
+        const [nombre, valor] = cookie.split("=").map((part) => part.trim());
+        cookies[nombre] = decodeURIComponent(valor);
+      });
+      return cookies;
+    }
+    // console.log("XD")
     const container = document.querySelector(".avatar");
     const localStorageData = localStorage.getItem("user") as string;
     const localStorageCollection = localStorage.getItem(
@@ -60,18 +72,21 @@ import Searcher from "./searcher";
       container?.appendChild(a);
     } else {
       async function getProfile() {
+        const token = obtenerCookies();
+        // console.log(token.token);
         const res = await fetch(
           `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
           {
             method: "GET",
-            credentials: "include",
-            mode: "cors", 
-            // referrerPolicy:'same-origin',
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: `Bearer ${JSON.stringify(token)}`,
+            },
           }
         );
         const data = await res.json();
+        console.log(data)
         localStorage.setItem("user", JSON.stringify(data.data));
+        window.location.reload()
       }
       getProfile();
     }
