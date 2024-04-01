@@ -1,16 +1,16 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import getPostById from "@/services/getPostById";
+import Layout from "../../../../../layouts/Layout.astro";
+// import getPostById from "../../../../../services/getPostById";
 import PostById from "./index.jsx";
 const { extension, id } = Astro.params;
 // console.log(extension, id);
-const dataImage = await getPostById(extension, String(id));
-const data = dataImage?.data;
+// const dataImage = await getPostById(extension, String(id));
+// const data = dataImage?.data;
 // console.log(data)
 ---
 
 <Layout title={`${extension} - post ${id}`}>
-  <PostById data={data} client:load />
+  <PostById extension={extension} id={id} client:load />
   <!-- <div class="pt-4">
     <div
       class="bg-white shadow-2xl max-w-6xl mx-auto rounded-3xl overflow-hidden flex p-5"
