@@ -1,0 +1,50 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="register">
+  <h1>LOGIN</h1>
+  <input id="usernameInput2" placeholder="username" />
+  <input id="passwordInput2" placeholder="password" />
+  <button id="buttonCreate2" type="button">LOGIN</button>
+</Layout>
+
+<script>
+  //   import {redirect} from "astro";
+  const usernameInput2 = document.querySelector("#usernameInput2") as HTMLInputElement
+  const passwordInput2 = document.querySelector("#passwordInput2") as HTMLInputElement
+  const buttonCreate2 = document.querySelector("#buttonCreate2");
+
+  if (buttonCreate2 && usernameInput2 && passwordInput2) {
+    buttonCreate2.addEventListener("click", fetchApi);
+    async function fetchApi() {
+      const url = import.meta.env.PUBLIC_SERVER_URL;
+      const response = await fetch(`${url}/api/user/login`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: usernameInput2.value,
+          password: passwordInput2.value,
+        }),
+      });
+      const cookie = await response.json();
+      const expirationTime = 3600 * 1000 * 24; // 1 hora en milisegundos
+      const currentTime = new Date();
+      const expirationDate = new Date(currentTime.getTime() + expirationTime);
+      const expirationDateString = expirationDate.toUTCString();
+      const cookieString = `token=${cookie}; expires=${expirationDateString}; path=/`;
+      document.cookie = cookieString;
+      // console.log(cookie);
+      console.log("LOGIN", document.cookie);
+      alert("LOGIN");
+      window.location.href = "/";
+    }
+  }
+</script>
+<!-- headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  }, -->
