@@ -74,7 +74,7 @@ function PostById({ extension, id }) {
     if (document.cookie) {
       const token = obtenerCookies();
       const fileUrl = data.file_url;
-      const resp = await fetch(
+      const response = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
           method: "DELETE",
