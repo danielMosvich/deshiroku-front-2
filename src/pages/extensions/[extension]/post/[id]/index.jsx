@@ -29,9 +29,10 @@ function PostById({ extension, id }) {
   // const [userData, setUserData] = useState(undefined)
   async function handleSave(id) {
     console.log("SAVE");
+    const token = obtenerCookies();
     if (document.cookie) {
       console.log("FETCH");
-      const token = obtenerCookies();
+      
       const resp = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
@@ -50,9 +51,7 @@ function PostById({ extension, id }) {
             `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
             {
               method: "GET",
-              // credentials: "include",
               headers: {
-                "Content-Type": "application/json",
                 Authorization: `Bearer ${JSON.stringify(token)}`,
               },
             }
