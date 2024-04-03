@@ -18,34 +18,43 @@ function PostById({ extension, id }) {
   const [saved, setSaved] = useState(undefined);
   const [dataByQuery, setDataByQuery] = useState(null);
   const [user, setUser] = useState(null);
+  function obtenerCookies() {
+    const cookies = {};
+    document.cookie.split(";").forEach((cookie) => {
+      const [nombre, valor] = cookie.split("=").map((part) => part.trim());
+      cookies[nombre] = decodeURIComponent(valor);
+    });
+    return cookies;
+  }
   // const [userData, setUserData] = useState(undefined)
   async function handleSave(id) {
     console.log("SAVE");
     if (document.cookie) {
       console.log("FETCH");
+      const token = obtenerCookies();
       const resp = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // "Access-Control-Allow-Origin": "http://localhost:4321",
+            Authorization: `Bearer ${JSON.stringify(token)}`,
           },
-
-          credentials: "include",
-          mode: "cors",
           body: JSON.stringify({ id: id, image: data }),
         }
       );
       const response = await resp.json();
-      // console.log(response);
       if (response.success) {
         async function getProfile() {
           const res = await fetch(
             `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
             {
               method: "GET",
-              credentials: "include",
+              // credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${JSON.stringify(token)}`,
+              },
             }
           );
           const data = await res.json();
@@ -64,13 +73,16 @@ function PostById({ extension, id }) {
   }
   async function handleRemove(id) {
     if (document.cookie) {
+      const token = obtenerCookies();
       const fileUrl = data.file_url;
       const resp = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.stringify(token)}`,
+          },
           body: JSON.stringify({
             id_collection: id,
             url: fileUrl,
@@ -507,7 +519,7 @@ function PostById({ extension, id }) {
             {/* {data.source && data.source} */}
           </div>
 
-{/* MORE CONTENT BY RELATED  */}
+          {/* MORE CONTENT BY RELATED  */}
           <h2 className="mt-10 pb-5 text-center font-semibold text-xl">
             Mas para explorar{" "}
           </h2>

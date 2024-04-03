@@ -84,9 +84,9 @@ import Searcher from "./searcher";
           }
         );
         const data = await res.json();
-        console.log(data)
+        console.log(data);
         localStorage.setItem("user", JSON.stringify(data.data));
-        window.location.reload()
+        window.location.reload();
       }
       getProfile();
     }
