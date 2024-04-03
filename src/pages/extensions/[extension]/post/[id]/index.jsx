@@ -88,7 +88,8 @@ function PostById({ extension, id }) {
           }),
         }
       );
-      const response = resp.json()
+      const response = await resp.json()
+      console.log(response)
       if (response.success) {
         async function getProfile() {
           const res = await fetch(
@@ -109,7 +110,7 @@ function PostById({ extension, id }) {
         getProfile();
         setSaved(false);
       } else {
-        alert(response.message);
+        // alert(response.message);
       }
       // const response = await resp.json();
       // if (response.success) {
