@@ -1,6 +1,8 @@
 ---
 const { extension } = Astro.params;
+import DropDown from "./dropDown";
 import Searcher from "./searcher";
+import HeaderUser from "./HeaderUser"
 ---
 
 <header
@@ -28,7 +30,10 @@ import Searcher from "./searcher";
   <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button>
 
   <Searcher client:load />
-  <div class="avatar"></div>
+  <HeaderUser client:load/>
+  <!-- <div class="avatar flex items-center ml-3 z-[51]">
+    
+  </div> -->
 </header>
 <style></style>
 <script>
@@ -67,9 +72,12 @@ import Searcher from "./searcher";
       const a = document.createElement("a");
       a.href = `/${data.username}`;
       a.className =
-        "bg-blue-500 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
-      a.innerHTML = data.name.split("")[0];
-      container?.appendChild(a);
+        "hover:bg-neutral-200 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
+      const div = document.createElement("div");
+      div.className = `bg-gradient-to-t from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase`;
+      div.innerHTML = data.name.split("")[0];
+      a.appendChild(div);
+      container?.insertBefore(a, container.firstChild);
     } else {
       async function getProfile() {
         const token = obtenerCookies();

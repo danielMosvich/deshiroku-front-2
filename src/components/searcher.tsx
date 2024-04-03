@@ -70,19 +70,6 @@ function Searcher() {
     const extension =
       extensionsArray.find((ext) => parts.includes(ext)) || null;
     setExtension(extension);
-    // console.log(extension);
-    // if (extension) {
-    //   console.log(extension);
-    //   input_search.addEventListener("input", (e) => {
-    //     fetch(
-    //       `http://localhost:3000/api/deshiroku/${extension}/autocomplete/${e.target.value}`
-    //     )
-    //       .then((res) => res.json())
-    //       .then((data) => {
-    //         console.log(data);
-    //       });
-    //   });
-    // }
   }, []);
   useEffect(() => {
     if (resultsBySearch !== null) {
@@ -91,12 +78,6 @@ function Searcher() {
       setActive(false);
     }
   }, [resultsBySearch]);
-  // useEffect(() => {
-  //   if (localStorage.getItem("tags")) {
-  //     const localTags = JSON.parse(localStorage.getItem("tags") as string);
-  //     setTags(localTags)
-  //   }
-  // }, []);
   useEffect(() => {
     const url = new URL(window.location.href);
 
@@ -120,7 +101,6 @@ function Searcher() {
       console.log(tagsObj);
       setTags(tagsObj);
     }
-    // http://localhost:4321/extensions/rule34/search/character?yorha_2b&general?looking_at_viewer&general?anus
   }, []);
   return (
     <div className="flex w-full relative ">
@@ -163,11 +143,6 @@ function Searcher() {
                       if (inputRef.current) {
                         inputRef.current.focus();
                       }
-                      // if(newTags.length > 0){
-                      //   localStorage.setItem("tags",JSON.stringify(newTags))
-                      // } else{
-                      //   localStorage.removeItem("tags")
-                      // }
                     }}
                   >
                     <svg
