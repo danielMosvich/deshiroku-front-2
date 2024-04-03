@@ -74,7 +74,7 @@ function PostById({ extension, id }) {
     if (document.cookie) {
       const token = obtenerCookies();
       const fileUrl = data.file_url;
-      const response = await fetch(
+      const resp = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
           method: "DELETE",
@@ -88,6 +88,7 @@ function PostById({ extension, id }) {
           }),
         }
       );
+      const response = resp.json()
       if (response.success) {
         async function getProfile() {
           const res = await fetch(
@@ -110,6 +111,26 @@ function PostById({ extension, id }) {
       } else {
         alert(response.message);
       }
+      // const response = await resp.json();
+      // if (response.success) {
+      //   async function getProfile() {
+      //     const res = await fetch(
+      //       `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
+      //       {
+      //         method: "GET",
+      //         credentials: "include",
+      //       }
+      //     );
+      //     const data = await res.json();
+      //     localStorage.setItem("user", JSON.stringify(data.data));
+      //     setCollections(data.data.collections);
+      //     console.log(data.data.collections);
+      //   }
+      //   getProfile();
+      //   setSaved(false);
+      // } else {
+      //   alert(response.message);
+      // }
     }
   }
   async function handleChangeDefaultCollection(obj) {
