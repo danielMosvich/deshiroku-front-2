@@ -88,7 +88,6 @@ function PostById({ extension, id }) {
           }),
         }
       );
-      const response = await resp.json();
       if (response.success) {
         async function getProfile() {
           const res = await fetch(
@@ -103,12 +102,11 @@ function PostById({ extension, id }) {
           const data = await res.json();
           localStorage.setItem("user", JSON.stringify(data.data));
           setCollections(data.data.collections);
-          // setUserData(data.data)
           console.log("SE ACTUALIZO EL LOCAL STORAGE DE USER");
           // console.log(data.data)
         }
         getProfile();
-        setSaved(true);
+        setSaved(false);
       } else {
         alert(response.message);
       }
