@@ -26,6 +26,23 @@ function PostById({ extension, id }) {
     });
     return cookies;
   }
+  const handleDownloadClick = (imageUrl) => {
+    const proxyUrl = `http://localhost:3000/proxy?imageUrl=${encodeURIComponent(
+      imageUrl
+    )}`;
+    fetch(proxyUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download",`${extension}-${id}.png`);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) => console.error("Error al descargar la imagen:", error));
+  };
   // const [userData, setUserData] = useState(undefined)
   async function handleSave(id) {
     console.log("SAVE");
@@ -88,8 +105,8 @@ function PostById({ extension, id }) {
           }),
         }
       );
-      const response = await resp.json()
-      console.log(response)
+      const response = await resp.json();
+      console.log(response);
       if (response.success) {
         async function getProfile() {
           const res = await fetch(
@@ -110,28 +127,8 @@ function PostById({ extension, id }) {
         getProfile();
         setSaved(false);
       } else {
-        // alert(response.message);
+        alert(response.message);
       }
-      // const response = await resp.json();
-      // if (response.success) {
-      //   async function getProfile() {
-      //     const res = await fetch(
-      //       `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
-      //       {
-      //         method: "GET",
-      //         credentials: "include",
-      //       }
-      //     );
-      //     const data = await res.json();
-      //     localStorage.setItem("user", JSON.stringify(data.data));
-      //     setCollections(data.data.collections);
-      //     console.log(data.data.collections);
-      //   }
-      //   getProfile();
-      //   setSaved(false);
-      // } else {
-      //   alert(response.message);
-      // }
     }
   }
   async function handleChangeDefaultCollection(obj) {
@@ -343,10 +340,11 @@ function PostById({ extension, id }) {
                 )}
                 {data.file_url && (
                   <a
+                    onClick={() => handleDownloadClick(data.file_url)}
                     className="hover:bg-neutral-300 p-2 grid place-content-center w-10 h-10 rounded-full capitalize text-black font-semibold"
-                    target="_blank"
-                    href={data.file_url}
-                    download
+                    // target="_blank"
+                    // href={data.file_url}
+                    // download
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
