@@ -32,7 +32,7 @@ function PostById({ extension, id }) {
     const token = obtenerCookies();
     if (document.cookie) {
       console.log("FETCH");
-      
+
       const resp = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
         {
@@ -95,16 +95,20 @@ function PostById({ extension, id }) {
             `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
             {
               method: "GET",
-              credentials: "include",
+              headers: {
+                Authorization: `Bearer ${JSON.stringify(token)}`,
+              },
             }
           );
           const data = await res.json();
           localStorage.setItem("user", JSON.stringify(data.data));
           setCollections(data.data.collections);
-          console.log(data.data.collections);
+          // setUserData(data.data)
+          console.log("SE ACTUALIZO EL LOCAL STORAGE DE USER");
+          // console.log(data.data)
         }
         getProfile();
-        setSaved(false);
+        setSaved(true);
       } else {
         alert(response.message);
       }
