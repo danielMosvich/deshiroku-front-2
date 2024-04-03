@@ -27,7 +27,7 @@ function PostById({ extension, id }) {
     return cookies;
   }
   const handleDownloadClick = (imageUrl) => {
-    const proxyUrl = `http://localhost:3000/proxy?imageUrl=${encodeURIComponent(
+    const proxyUrl = `${import.meta.env.PUBLIC_SERVER_URL}/proxy?imageUrl=${encodeURIComponent(
       imageUrl
     )}`;
     fetch(proxyUrl)
