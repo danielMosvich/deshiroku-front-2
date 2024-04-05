@@ -129,7 +129,7 @@ function Extension({ extension }) {
       const storageData = JSON.parse(localStorage.getItem(`${extension}`));
       setTimeout(() => {
         window.scrollTo(0, storageData.data.default.scrollY);
-        console.log("GG")
+        console.log("GG");
       }, 1000);
     }
   }, [data]);
@@ -227,7 +227,8 @@ function Extension({ extension }) {
               <div className="animate-fade-up">
                 <Masonry
                   columns={{
-                    200: 1,
+                    0: 1,
+                    350: 2,
                     400: 2,
                     700: 3,
                     1000: 4,
