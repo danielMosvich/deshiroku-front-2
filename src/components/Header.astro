@@ -37,68 +37,68 @@ import HeaderUser from "./HeaderUser"
 </header>
 <style></style>
 <script>
-  import type { UserProps } from "../types/UserProps";
-  if (document.cookie) {
-    interface Cookie {
-      [key: string]: string;
-    }
-    function obtenerCookies(): Cookie {
-      const cookies: Cookie = {};
-      document.cookie.split(";").forEach((cookie) => {
-        const [nombre, valor] = cookie.split("=").map((part) => part.trim());
-        cookies[nombre] = decodeURIComponent(valor);
-      });
-      return cookies;
-    }
-    // console.log("XD")
-    const container = document.querySelector(".avatar");
-    const localStorageData = localStorage.getItem("user") as string;
-    const localStorageCollection = localStorage.getItem(
-      "defaultCollection"
-    ) as string;
+  // import type { UserProps } from "../types/UserProps";
+  // if (document.cookie) {
+  //   interface Cookie {
+  //     [key: string]: string;
+  //   }
+  //   function obtenerCookies(): Cookie {
+  //     const cookies: Cookie = {};
+  //     document.cookie.split(";").forEach((cookie) => {
+  //       const [nombre, valor] = cookie.split("=").map((part) => part.trim());
+  //       cookies[nombre] = decodeURIComponent(valor);
+  //     });
+  //     return cookies;
+  //   }
+  //   // console.log("XD")
+  //   const container = document.querySelector(".avatar");
+  //   const localStorageData = localStorage.getItem("user") as string;
+  //   const localStorageCollection = localStorage.getItem(
+  //     "defaultCollection"
+  //   ) as string;
 
-    if (localStorageData) {
-      const data = JSON.parse(localStorageData) as UserProps;
-      if (!localStorageCollection) {
-        const firstCollection = {
-          name: data.collections[0].name,
-          id: data.collections[0]._id,
-        };
-        localStorage.setItem(
-          "defaultCollection",
-          JSON.stringify(firstCollection)
-        );
-      }
-      const a = document.createElement("a");
-      a.href = `/${data.username}`;
-      a.className =
-        "hover:bg-neutral-200 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
-      const div = document.createElement("div");
-      div.className = `bg-gradient-to-t from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase`;
-      div.innerHTML = data.name.split("")[0];
-      a.appendChild(div);
-      container?.insertBefore(a, container.firstChild);
-    } else {
-      async function getProfile() {
-        const token = obtenerCookies();
-        // console.log(token.token);
-        const res = await fetch(
-          `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${JSON.stringify(token)}`,
-            },
-          }
-        );
-        const data = await res.json();
-        console.log(data);
-        localStorage.setItem("user", JSON.stringify(data.data));
-        window.location.reload();
-      }
-      getProfile();
-    }
-  }
+  //   if (localStorageData) {
+  //     const data = JSON.parse(localStorageData) as UserProps;
+  //     if (!localStorageCollection) {
+  //       const firstCollection = {
+  //         name: data.collections[0].name,
+  //         id: data.collections[0]._id,
+  //       };
+  //       localStorage.setItem(
+  //         "defaultCollection",
+  //         JSON.stringify(firstCollection)
+  //       );
+  //     }
+  //     const a = document.createElement("a");
+  //     a.href = `/${data.username}`;
+  //     a.className =
+  //       "hover:bg-neutral-200 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
+  //     const div = document.createElement("div");
+  //     div.className = `bg-gradient-to-t from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase`;
+  //     div.innerHTML = data.name.split("")[0];
+  //     a.appendChild(div);
+  //     container?.insertBefore(a, container.firstChild);
+  //   } else {
+  //     async function getProfile() {
+  //       const token = obtenerCookies();
+  //       // console.log(token.token);
+  //       const res = await fetch(
+  //         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             Authorization: `Bearer ${JSON.stringify(token)}`,
+  //           },
+  //         }
+  //       );
+  //       const data = await res.json();
+  //       console.log(data);
+  //       localStorage.setItem("user", JSON.stringify(data.data));
+  //       window.location.reload();
+  //     }
+  //     getProfile();
+  //   }
+  // }
 </script>
 <!-- <script is:inline>
  

@@ -11,11 +11,24 @@ function HeaderUser() {
     });
     return cookies;
   }
+  function getCookieByName(name) {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Verificar si la cookie comienza con el nombre buscado
+      if (cookie.startsWith(name + "=")) {
+        // Devolver el valor de la cookie
+        return cookie.substring(name.length + 1);
+      }
+    }
+    // Si no se encuentra la cookie, devolver null
+    return null;
+  }
   useEffect(() => {
     const localStorageData = localStorage.getItem("user");
     const localStorageCollection = localStorage.getItem("defaultCollection");
 
-    if (document.cookie) {
+    if (getCookieByName("token")) {
       if (localStorageData) {
         const data = JSON.parse(localStorageData);
         setData(data);
@@ -53,13 +66,10 @@ function HeaderUser() {
       setData(undefined);
     }
   }, []);
-  useEffect(()=>{
-    console.log(data)
-  },[data])
   return (
     <div className="flex gap-1 ml-3 items-center">
       {data === null ? (
-        <div className="bg-neutral-200 w-20 h-20 rounded-xl"></div>
+        <div className="bg-neutral-200 w-20 h-full rounded-xl"></div>
       ) : data ? (
         <div className="flex items-center">
           <a
@@ -78,7 +88,7 @@ function HeaderUser() {
           <DropDown data={data} />
         </div>
       ) : (
-        <div className="flex gap-2 bg-rose-500">
+        <div className="flex gap-2">
           <a
             href="/login"
             className="bg-neutral-200 px-5 py-2 rounded-full font-semibold"
