@@ -12,9 +12,9 @@ function Extension({ extension }) {
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  async function GetImages(page) {
-    if (page === 1 && extension) {
-      const data = await getImages(extension, page);
+  async function GetImages(pageParams) {
+    if (pageParams === 1 && extension) {
+      const data = await getImages(extension, pageParams);
       if (data.success) {
         const imageUrls = data.data.map((img) => img.preview_url);
         const imagePromises = imageUrls.map(
@@ -41,6 +41,7 @@ function Extension({ extension }) {
                   search: {},
                   default: {
                     scrollY: 0,
+                    page: 1,
                     images: data.data,
                   },
                 },
@@ -57,13 +58,11 @@ function Extension({ extension }) {
       }
     } else {
       const newArray = new Array(30).fill().map(() => ({ extension: "load" }));
-      // console.log("LOAD SQUETELON");
-
       // LOAD IMAGES
-      const data = await getImages(extension, page);
+      const data2 = await getImages(extension, pageParams);
       setData((prev) => [...prev, ...newArray]);
-      if (data.success) {
-        const imageUrls = data.data.map((img) => img.preview_url);
+      if (data2.success) {
+        const imageUrls = data2.data.map((img) => img.preview_url);
         const imagePromises = imageUrls.map(
           (url) =>
             new Promise((resolve, reject) => {
@@ -79,11 +78,20 @@ function Extension({ extension }) {
           if (
             loadedImages.every((img) => img.complete && img.naturalWidth !== 0)
           ) {
-            console.log("LOAD IMAGES");
             setData((prev) => [
               ...prev.filter((e) => e.extension !== "load"),
-              ...data.data,
+              ...data2.data,
             ]);
+            const storageData = localStorage.getItem(String(extension));
+            if (storageData) {
+              const storageDataOBJ = JSON.parse(storageData);
+              storageDataOBJ.data.default.images = [...data, ...data2.data];
+              storageDataOBJ.data.default.page = page + 1;
+              localStorage.setItem(
+                String(extension),
+                JSON.stringify(storageDataOBJ)
+              );
+            }
             setPage((prev) => prev + 1);
             setTimeout(() => {
               setIsLoadingMore(false);
@@ -97,7 +105,20 @@ function Extension({ extension }) {
       }
     }
   }
-
+  useEffect(() => {
+    if (extension && localStorage.getItem(`${extension}`)) {
+      const storageData = JSON.parse(localStorage.getItem(`${extension}`));
+      // console.log("XD");
+      const uwu = () => {
+        if (data.length > 0) {
+          console.log(data.length);
+          window.scrollTo(0, storageData.data.default.scrollY);
+          console.log("SCROLLED ", storageData.data.default.scrollY + "Y");
+        }
+      };
+      uwu();
+    }
+  }, [data.length]);
   useEffect(() => {
     let timeOut;
     if (extension) {
@@ -112,7 +133,11 @@ function Extension({ extension }) {
             GetImages(1);
           }, 500);
         } else {
-          setData(storageData.data.default.images);
+          try {
+            setData(storageData.data.default.images);
+          } catch (error) {
+            localStorage.clear()
+          }
         }
       } else {
         timeOut = setTimeout(() => {
@@ -124,15 +149,7 @@ function Extension({ extension }) {
     }
     return () => clearTimeout(timeOut);
   }, []);
-  useState(() => {
-    if (loadClient) {
-      const storageData = JSON.parse(localStorage.getItem(`${extension}`));
-      setTimeout(() => {
-        window.scrollTo(0, storageData.data.default.scrollY);
-        console.log("GG");
-      }, 1000);
-    }
-  }, [data]);
+
   useEffect(() => {
     if (data && !isLoadingMore) {
       const handleScroll = () => {
@@ -165,6 +182,20 @@ function Extension({ extension }) {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      console.log("RELOAD")
+      
+      // localStorage.removeItem(String(extension))
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
   return (
