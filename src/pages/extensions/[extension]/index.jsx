@@ -11,7 +11,11 @@ function Extension({ extension }) {
 
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-
+  function encryptUrl(url) {
+    // Aquí puedes usar tu algoritmo de encriptación preferido
+    // Por ejemplo, puedes usar btoa para codificar en Base64
+    return btoa(url);
+  }
   async function GetImages(pageParams) {
     if (pageParams === 1 && extension) {
       const data = await getImages(extension, pageParams);
@@ -106,6 +110,9 @@ function Extension({ extension }) {
     }
   }
   useEffect(() => {
+    // if(data){
+    //   console.log(encryptUrl(data.preview_url))
+    // }
     if (extension && localStorage.getItem(`${extension}`)) {
       const storageData = JSON.parse(localStorage.getItem(`${extension}`));
       // console.log("XD");
@@ -136,7 +143,7 @@ function Extension({ extension }) {
           try {
             setData(storageData.data.default.images);
           } catch (error) {
-            localStorage.clear()
+            localStorage.clear();
           }
         }
       } else {
@@ -188,14 +195,12 @@ function Extension({ extension }) {
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       console.log("RELOAD")
-      
-      // localStorage.removeItem(String(extension))
     };
-  
-    window.addEventListener('beforeunload', handleBeforeUnload);
-  
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
   return (
@@ -227,12 +232,18 @@ function Extension({ extension }) {
                         )}px`,
                       }}
                       className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all`}
+                      
                     ></div>
                   ) : (
                     <a
-                      href={`/extensions/${extension}/post/${e.id}`}
+                      href={`/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`}
                       key={e.id}
                       className=""
+                      onClick={()=> {
+                        // window.location.href = `/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`
+                        console.log(encryptUrl(e.preview_url))
+                        console.log("Xd")
+                      }}
                     >
                       <img
                         className="w-full rounded-xl max-h-[500px] object-cover"
@@ -241,11 +252,11 @@ function Extension({ extension }) {
                         loading="lazy"
                       />
                       <div className="flex gap-1 items-center mt-2">
-                        <div className="rounded-full bg-neutral-200 w-8 h-8 grid place-content-center">
+                        {/* <div className="rounded-full bg-neutral-200 w-8 h-8 grid place-content-center">
                           <p className="uppercase font-semibold">
                             {e.owner.split("")[0]}
                           </p>
-                        </div>
+                        </div> */}
                         <h2 className="text-sm font-semibold">{e.owner}</h2>
                       </div>
                     </a>
