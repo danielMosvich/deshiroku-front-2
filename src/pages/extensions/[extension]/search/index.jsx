@@ -434,8 +434,8 @@ function Extension({ extension }) {
                       className=""
                       onClick={()=> {
                         // window.location.href = `/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`
-                        console.log(encryptUrl(e.preview_url))
-                        console.log("Xd")
+                        // console.log(encryptUrl(e.preview_url))
+                        // console.log("Xd")
                       }}
                     >
                       <img
