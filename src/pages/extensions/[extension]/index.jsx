@@ -5,15 +5,13 @@ import Card from "../../../components/Card";
 import Loader from "../../../components/Loader";
 function Extension({ extension }) {
   const [loadClient, setClientLoad] = useState(false);
-  const [dataByAstro, setDataByAstro] = useState();
-  const [loadImages, setLoadImages] = useState(false);
+  // const [dataByAstro, setDataByAstro] = useState();
+  // const [loadImages, setLoadImages] = useState(false);
   const [data, setData] = useState([]);
 
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   function encryptUrl(url) {
-    // Aquí puedes usar tu algoritmo de encriptación preferido
-    // Por ejemplo, puedes usar btoa para codificar en Base64
     return btoa(url);
   }
   async function GetImages(pageParams) {
@@ -42,13 +40,15 @@ function Extension({ extension }) {
               JSON.stringify({
                 lastUpdate: now.getTime(),
                 data: {
-                  search: {},
                   default: {
                     scrollY: 0,
                     page: 1,
                     images: data.data,
                   },
                 },
+                search:{
+                  querys:[]
+                }
               })
             );
             setData(data.data);
@@ -109,6 +109,7 @@ function Extension({ extension }) {
       }
     }
   }
+  // !PONER EL SCROLL A DONDE SE QUEDO
   useEffect(() => {
     // if(data){
     //   console.log(encryptUrl(data.preview_url))
@@ -142,8 +143,9 @@ function Extension({ extension }) {
         } else {
           try {
             setData(storageData.data.default.images);
+            setPage(storageData.data.default.page)
           } catch (error) {
-            localStorage.clear();
+            localStorage.removeItem(extension);
           }
         }
       } else {
@@ -157,6 +159,7 @@ function Extension({ extension }) {
     return () => clearTimeout(timeOut);
   }, []);
 
+  // !SCROLL DETECT
   useEffect(() => {
     if (data && !isLoadingMore) {
       const handleScroll = () => {
@@ -192,17 +195,17 @@ function Extension({ extension }) {
     };
   }, []);
 
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      console.log("RELOAD")
-    };
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event) => {
+  //     console.log("RELOAD")
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
   return (
     <div className="relative">
       {loadClient && (
@@ -236,7 +239,7 @@ function Extension({ extension }) {
                     ></div>
                   ) : (
                     <a
-                      href={`/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`}
+                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(e.preview_url)}`}
                       key={e.id}
                       className=""
                       onClick={()=> {

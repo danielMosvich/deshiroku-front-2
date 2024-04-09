@@ -246,25 +246,49 @@ function PostById({ extension, id }) {
     async function getData() {
       const data = await getPostById(extension, id);
       setData(data.data);
-      console.log(data.data.file_url);
-      const imagePromises = new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = () =>
-          reject(
-            new Error(`error al cargar la imagen desde ${data.data.file_url}`)
-          );
-        img.src = data.data.file_url;
-      });
-      try {
-        const loadedImages = await Promise.resolve(imagePromises);
-        if (loadedImages) {
-          setFile_url(data.data.file_url);
-        } else {
+      // console.log(data.data.file_url);
+      if (data.data.type_file === "webm" || data.data.type_file === "mp4") {
+        async function loadVideo() {
+          return new Promise((resolve, reject) => {
+            const video = document.createElement("video");
+            video.addEventListener("loadedmetadata", () => {
+              resolve(video);
+            });
+            video.addEventListener("error", (error) => {
+              reject(new Error("Error al cargar el video"));
+            });
+            video.src = data.data.file_url;
+            video.controls = true;
+          });
         }
-      } catch (error) {
+        try {
+          // const data = { file_url: "URL_DEL_VIDEO" };
+          const videoElement = await loadVideo();
+          if(videoElement){
+            setFile_url(data.data.file_url)
+          }
+          // console.log(videoElement);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        const imagePromises = new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () =>
+            reject(
+              new Error(`error al cargar la imagen desde ${data.data.file_url}`)
+            );
+          img.src = data.data.file_url;
+        });
+        try {
+          const loadedImages = await Promise.resolve(imagePromises);
+          if (loadedImages) {
+            setFile_url(data.data.file_url);
+          } else {
+          }
+        } catch (error) {}
       }
-      
     }
     getData();
   }, []);
@@ -638,7 +662,10 @@ function PostById({ extension, id }) {
                       return (
                         <a
                           className=""
-                          href={`/extensions/${element.extension}/post/${element.id}`}
+                          // href={`/extensions/${element.extension}/post/${element.id}`}
+                          href={`/extensions/${element.extension}/post/${
+                            element.id
+                          }?p=${btoa(element.preview_url)}`}
                           key={element.id + index}
                         >
                           <img
@@ -655,20 +682,17 @@ function PostById({ extension, id }) {
             </div>
           ) : (
             <div className="bg-white shadow-2xl max-w-6xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
-                
-                  <div className="w-full sm:px-10 md:px-0 md:w-2/3 lg:1/2 mx-auto lg:mx-0 relative">
-                      <img
-                        src={preview_url}
-                        className="w-full rounded-t-xl lg:rounded-l-3xl"
-                      />
-                  </div>
-
-                {/* RIGHT */}
-                <div className="p-10 w-1/2 ">
-                 
-                </div>
-                {/* {data.source && data.source} */}
+              <div className="w-full sm:px-10 md:px-0 md:w-2/3 lg:1/2 mx-auto lg:mx-0 relative">
+                <img
+                  src={preview_url}
+                  className="w-full rounded-t-xl lg:rounded-l-3xl"
+                />
               </div>
+
+              {/* RIGHT */}
+              <div className="p-10 w-1/2 "></div>
+              {/* {data.source && data.source} */}
+            </div>
           )}
         </div>
       )}
