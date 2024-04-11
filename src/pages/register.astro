@@ -116,7 +116,7 @@ import Layout from "../layouts/Layout.astro";
         const expirationDateString = expirationDate.toUTCString();
         const cookieString = `token=${cookie}; expires=${expirationDateString}; path=/`;
         document.cookie = cookieString;
-        window.location.href = "/";
+        window.history.back()
       }
       console.log(data);
     } else {

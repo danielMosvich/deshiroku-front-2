@@ -222,6 +222,8 @@ function PostById({ extension, id }) {
       return `meta?${e.name}`;
     }
   }
+
+  // !EFECT PARA CARGAR EL DOM Y TRAER LOS VALORES DE LOS PARAMETROS
   useEffect(() => {
     setLoadClient(true);
     if (setLoadClient) {
@@ -246,7 +248,6 @@ function PostById({ extension, id }) {
     async function getData() {
       const data = await getPostById(extension, id);
       setData(data.data);
-      // console.log(data.data.file_url);
       if (data.data.type_file === "webm" || data.data.type_file === "mp4") {
         async function loadVideo() {
           return new Promise((resolve, reject) => {
@@ -262,12 +263,10 @@ function PostById({ extension, id }) {
           });
         }
         try {
-          // const data = { file_url: "URL_DEL_VIDEO" };
           const videoElement = await loadVideo();
-          if(videoElement){
-            setFile_url(data.data.file_url)
+          if (videoElement) {
+            setFile_url(data.data.file_url);
           }
-          // console.log(videoElement);
         } catch (error) {
           console.log(error);
         }
@@ -285,12 +284,40 @@ function PostById({ extension, id }) {
           const loadedImages = await Promise.resolve(imagePromises);
           if (loadedImages) {
             setFile_url(data.data.file_url);
+            const post = data.data;
+            if (localStorage.getItem(extension)) {
+              const beforeStorage = JSON.parse(localStorage.getItem(extension));
+              beforeStorage.posts.push(post);
+              localStorage.setItem(extension, JSON.stringify(beforeStorage));
+            } else{
+              localStorage.setItem(extension, JSON.stringify({
+                data:{},
+                posts:[post],
+                search:{}
+              }))
+            }
           } else {
           }
         } catch (error) {}
       }
     }
-    getData();
+    if (localStorage.getItem(extension)) {
+      const beforeStorage = JSON.parse(localStorage.getItem(extension));
+      const indexCoincide = beforeStorage.posts.findIndex(
+        (item) => Number(item.id) === Number(id)
+      );
+      // console.log(indexCoincide)
+      if (indexCoincide !== -1) {
+        const postCoincide = beforeStorage.posts[indexCoincide];
+        // console.log(postCoincide.file_url)
+        setFile_url(postCoincide.file_url);
+        setData(postCoincide);
+      } else {
+        getData();
+      }
+    } else {
+      getData();
+    }
   }, []);
   useEffect(() => {
     if (data) {

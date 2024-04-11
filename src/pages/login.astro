@@ -44,7 +44,8 @@ import Layout from "../layouts/Layout.astro";
       // console.log(cookie);
       console.log("LOGIN", document.cookie);
       alert("LOGIN");
-      window.location.href = "/";
+      window.history.back()
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }
 </script>

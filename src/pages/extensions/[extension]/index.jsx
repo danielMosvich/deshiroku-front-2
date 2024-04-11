@@ -43,7 +43,7 @@ function Extension({ extension }) {
                   data: {
                     default: {
                       lastUpdate: now.getTime(),
-                      scrollY: 0,
+                      // scrollY: 0,
                       page: 1,
                       images: data.data,
                     },
@@ -69,7 +69,7 @@ function Extension({ extension }) {
                   data: {
                     default: {
                       lastUpdate: now.getTime(),
-                      scrollY: 0,
+                      // scrollY: 0,
                       page: 1,
                       images: data.data,
                     },
@@ -137,35 +137,45 @@ function Extension({ extension }) {
     }
   }
   // !PONER EL SCROLL A DONDE SE QUEDO
-  useEffect(() => {
-    // if(data){
-    //   console.log(encryptUrl(data.preview_url))
-    // }
-    if (extension && localStorage.getItem(`${extension}`)) {
-      const storageData = JSON.parse(localStorage.getItem(`${extension}`));
-      // console.log("XD");
-      const uwu = () => {
-        if (data.length > 0) {
-          console.log(data.length);
-          window.scrollTo(0, storageData.data.default.scrollY);
-          console.log("SCROLLED ", storageData.data.default.scrollY + "Y");
-        }
-      };
-      uwu();
-    }
-  }, [data.length]);
+  // useEffect(() => {
+  //   // if(data){
+  //   //   console.log(encryptUrl(data.preview_url))
+  //   // }
+  //   if (extension && localStorage.getItem(`${extension}`)) {
+  //     const storageData = JSON.parse(localStorage.getItem(`${extension}`));
+  //     // console.log("XD");
+  //     const uwu = () => {
+  //       if (data.length > 0) {
+  //         console.log(data.length);
+  //         window.scrollTo(0, storageData.data.default.scrollY);
+  //         console.log("SCROLLED ", storageData.data.default.scrollY + "Y");
+  //       }
+  //     };
+  //     uwu();
+  //   }
+  // }, [data.length]);
   useEffect(() => {
     let timeOut;
     if (extension) {
       if (localStorage.getItem(`${extension}`)) {
-        const now = new Date();
         const storageData = JSON.parse(localStorage.getItem(`${extension}`));
-        if (storageData.data.default) {
-          console.log("SE GUARDA DESDE EL LOCAL")
-          setData(storageData.data.default.images);
-          setPage(storageData.data.default.page);
+        if (storageData.data.default.lastUpdate) {
+          // console.log("SE GUARDA DESDE EL LOCAL")
+          const lastUpdate = storageData.data.default.lastUpdate;
+          const now = new Date().getTime();
+          const tiempo_pasado = (now - lastUpdate) / 60000;
+          // console.log(lastUpdate)
+          console.log('tiempo transcurrido', Math.floor(tiempo_pasado) , "minuto");
+          if (tiempo_pasado > 5) {
+            console.log("paso mas de 5 minutos")
+            timeOut = setTimeout(() => {
+              GetImages(1);
+            }, 500);
+          } else {
+            setData(storageData.data.default.images);
+            setPage(storageData.data.default.page);
+          }
         } else {
-          // console.log(storageData.data)
           GetImages(1);
         }
       } else {

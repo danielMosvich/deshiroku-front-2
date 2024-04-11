@@ -61,7 +61,7 @@ function Extension({ extension }) {
                     );
                     parsedLocalStorage.search.querys[indexQuery] = {
                       query,
-                      scrollY: 0,
+                      // scrollY: 0,
                       page: 1,
                       images: data.data,
                       lastUpdate: now.getTime(),
@@ -74,7 +74,7 @@ function Extension({ extension }) {
                 } else {
                   parsedLocalStorage.search.querys.push({
                     query,
-                    scrollY: 0,
+                    // scrollY: 0,
                     page: 1,
                     images: data.data,
                     lastUpdate: now.getTime(),
@@ -87,7 +87,7 @@ function Extension({ extension }) {
               } else {
                 parsedLocalStorage.search.querys.push({
                   query,
-                  scrollY: 0,
+                  // scrollY: 0,
                   page: 1,
                   images: data.data,
                   lastUpdate: now.getTime(),
@@ -107,7 +107,7 @@ function Extension({ extension }) {
                     querys: [
                       {
                         query,
-                        scrollY: 0,
+                        // scrollY: 0,
                         page: 1,
                         images: data.data,
                         lastUpdate: now.getTime(),
@@ -240,7 +240,7 @@ function Extension({ extension }) {
               storageDataOBJ.search.querys.splice(ind, 1, {
                 ...xd,
                 images: [...xd.images, ...data2.data],
-                scrollY: 0,
+                // scrollY: 0,
                 page: page + 1,
                 lastUpdate: now.getTime(),
               });
