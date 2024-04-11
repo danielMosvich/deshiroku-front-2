@@ -35,26 +35,52 @@ function Extension({ extension }) {
             loadedImages.every((img) => img.complete && img.naturalWidth !== 0)
           ) {
             const now = new Date();
-            localStorage.setItem(
-              String(extension),
-              JSON.stringify({
-                lastUpdate: now.getTime(),
-                data: {
-                  default: {
-                    scrollY: 0,
-                    page: 1,
-                    images: data.data,
+            if (!localStorage.getItem(String(extension))) {
+              console.log("no hay nada aun");
+              localStorage.setItem(
+                String(extension),
+                JSON.stringify({
+                  data: {
+                    default: {
+                      lastUpdate: now.getTime(),
+                      scrollY: 0,
+                      page: 1,
+                      images: data.data,
+                    },
                   },
-                },
-                search:{
-                  querys:[]
-                }
-              })
-            );
-            setData(data.data);
-            setTimeout(() => {
-              setIsLoadingMore(false);
-            }, 1000);
+                  search: {
+                    querys: [],
+                  },
+                  posts: [],
+                })
+              );
+              setData(data.data);
+              setTimeout(() => {
+                setIsLoadingMore(false);
+              }, 1000);
+            } else {
+              const beforeStorage = JSON.parse(
+                localStorage.getItem(String(extension))
+              );
+              localStorage.setItem(
+                String(extension),
+                JSON.stringify({
+                  ...beforeStorage,
+                  data: {
+                    default: {
+                      lastUpdate: now.getTime(),
+                      scrollY: 0,
+                      page: 1,
+                      images: data.data,
+                    },
+                  },
+                })
+              );
+              setData(data.data);
+              setTimeout(() => {
+                setIsLoadingMore(false);
+              }, 1000);
+            }
           }
         } catch (error) {
           console.log(error);
@@ -87,6 +113,7 @@ function Extension({ extension }) {
               ...data2.data,
             ]);
             const storageData = localStorage.getItem(String(extension));
+            // console.log(storageData)
             if (storageData) {
               const storageDataOBJ = JSON.parse(storageData);
               storageDataOBJ.data.default.images = [...data, ...data2.data];
@@ -133,20 +160,13 @@ function Extension({ extension }) {
       if (localStorage.getItem(`${extension}`)) {
         const now = new Date();
         const storageData = JSON.parse(localStorage.getItem(`${extension}`));
-        // console.log(storageData.lastUpdate);
-        const tiempo_actual = now.getTime() - storageData.lastUpdate;
-        console.log(tiempo_actual / 60000);
-        if (tiempo_actual / 60000 > 1) {
-          timeOut = setTimeout(() => {
-            GetImages(1);
-          }, 500);
+        if (storageData.data.default) {
+          console.log("SE GUARDA DESDE EL LOCAL")
+          setData(storageData.data.default.images);
+          setPage(storageData.data.default.page);
         } else {
-          try {
-            setData(storageData.data.default.images);
-            setPage(storageData.data.default.page)
-          } catch (error) {
-            localStorage.removeItem(extension);
-          }
+          // console.log(storageData.data)
+          GetImages(1);
         }
       } else {
         timeOut = setTimeout(() => {
@@ -160,52 +180,42 @@ function Extension({ extension }) {
   }, []);
 
   // !SCROLL DETECT
-  useEffect(() => {
-    if (data && !isLoadingMore) {
-      const handleScroll = () => {
-        const { scrollTop, scrollHeight, clientHeight } =
-          document.documentElement;
-        if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
-          console.log("LOAD MORE", page + 1);
-          setIsLoadingMore(true);
-          GetImages(page + 1);
-        }
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, [data, isLoadingMore]);
-
-  //* SCROLL Y LOAD
-  useEffect(() => {
-    function handleScroll() {
-      const ScrollY = window.scrollY || document.documentElement.scrollTop;
-      console.log("Position", ScrollY);
-      const storageData = localStorage.getItem(String(extension));
-      const dataJSON = JSON.parse(storageData);
-      dataJSON.data.default.scrollY = ScrollY;
-      localStorage.setItem(String(extension), JSON.stringify(dataJSON));
-    }
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
+  // ! no se si con AStro el scroll es automatico, pero de por si ahora es auto, en todo caso aqui el codigo para hacerlo manual
   // useEffect(() => {
-  //   const handleBeforeUnload = (event) => {
-  //     console.log("RELOAD")
-  //   };
+  //   if (data && !isLoadingMore) {
+  //     const handleScroll = () => {
+  //       const { scrollTop, scrollHeight, clientHeight } =
+  //         document.documentElement;
+  //       if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
+  //         console.log("LOAD MORE", page + 1);
+  //         setIsLoadingMore(true);
+  //         GetImages(page + 1);
+  //       }
+  //     };
+  //     window.addEventListener("scroll", handleScroll);
+  //     return () => {
+  //       window.removeEventListener("scroll", handleScroll);
+  //     };
+  //   }
+  // }, [data, isLoadingMore]);
 
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  // //* SCROLL Y LOAD
+  // useEffect(() => {
+  //   function handleScroll() {
+  //     const ScrollY = window.scrollY || document.documentElement.scrollTop;
+  //     console.log("Position", ScrollY);
+  //     const storageData = localStorage.getItem(String(extension));
+  //     const dataJSON = JSON.parse(storageData);
+  //     dataJSON.data.default.scrollY = ScrollY;
+  //     localStorage.setItem(String(extension), JSON.stringify(dataJSON));
+  //   }
+  //   window.addEventListener("scroll", handleScroll);
 
   //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //     window.removeEventListener("scroll", handleScroll);
   //   };
   // }, []);
+
   return (
     <div className="relative">
       {loadClient && (
@@ -235,17 +245,18 @@ function Extension({ extension }) {
                         )}px`,
                       }}
                       className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all`}
-                      
                     ></div>
                   ) : (
                     <a
-                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(e.preview_url)}`}
+                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(
+                        e.preview_url
+                      )}`}
                       key={e.id}
                       className=""
-                      onClick={()=> {
+                      onClick={() => {
                         // window.location.href = `/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`
-                        console.log(encryptUrl(e.preview_url))
-                        console.log("Xd")
+                        console.log(encryptUrl(e.preview_url));
+                        console.log("Xd");
                       }}
                     >
                       <img

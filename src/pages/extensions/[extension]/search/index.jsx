@@ -114,6 +114,7 @@ function Extension({ extension }) {
                       },
                     ],
                   },
+                  posts:[]
                 })
               );
             }
@@ -279,7 +280,6 @@ function Extension({ extension }) {
         const itemInQuestion = parsedLocalStorage.search.querys.find(
           (item) => item.query === tags.join("+")
         );
-        // console.log(itemInQuestion);
         if (itemInQuestion) {
           const index = parsedLocalStorage.search.querys.findIndex(
             (item) => item.query === tags.join("+")
@@ -320,7 +320,6 @@ function Extension({ extension }) {
           document.documentElement;
         if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
           console.log("LOAD MORE", page + 1);
-          // console.log(JSON.parse(localStorage.getItem(extension)), "inside")
           setIsLoadingMore(true);
           GetImages(page + 1, tags.join("+"));
         }
@@ -431,12 +430,6 @@ function Extension({ extension }) {
                     <a
                       href={`/extensions/${extension}/post/${e.id}?p=${btoa(e.preview_url)}`}
                       key={e.id}
-                      className=""
-                      onClick={()=> {
-                        // window.location.href = `/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`
-                        // console.log(encryptUrl(e.preview_url))
-                        // console.log("Xd")
-                      }}
                     >
                       <img
                         className="w-full rounded-xl max-h-[500px] object-cover"
@@ -445,11 +438,6 @@ function Extension({ extension }) {
                         loading="lazy"
                       />
                       <div className="flex gap-1 items-center mt-2">
-                        {/* <div className="rounded-full bg-neutral-200 w-8 h-8 grid place-content-center">
-                          <p className="uppercase font-semibold">
-                            {e.owner.split("")[0]}
-                          </p>
-                        </div> */}
                         <h2 className="text-sm font-semibold">{e.owner}</h2>
                       </div>
                     </a>
