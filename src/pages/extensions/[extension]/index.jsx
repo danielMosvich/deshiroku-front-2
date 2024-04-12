@@ -51,7 +51,7 @@ function Extension({ extension }) {
                   search: {
                     querys: [],
                   },
-                  posts: [],
+                  posts: { data: [] },
                 })
               );
               setData(data.data);
@@ -159,21 +159,30 @@ function Extension({ extension }) {
     if (extension) {
       if (localStorage.getItem(`${extension}`)) {
         const storageData = JSON.parse(localStorage.getItem(`${extension}`));
-        if (storageData.data.default.lastUpdate) {
-          // console.log("SE GUARDA DESDE EL LOCAL")
-          const lastUpdate = storageData.data.default.lastUpdate;
-          const now = new Date().getTime();
-          const tiempo_pasado = (now - lastUpdate) / 60000;
-          // console.log(lastUpdate)
-          console.log('tiempo transcurrido', Math.floor(tiempo_pasado) , "minuto");
-          if (tiempo_pasado > 5) {
-            console.log("paso mas de 5 minutos")
-            timeOut = setTimeout(() => {
-              GetImages(1);
-            }, 500);
+        // !VERIFICA SI ES QUE DENTRO DE DATA {} DEL LOCAL STORAGE EXISTE LA PROPIEDAD DEFAULT SINO PASA A CREARLA CON GETIMAGES
+        if (storageData.data.default) {
+          if (storageData.data.default.lastUpdate) {
+            // console.log("SE GUARDA DESDE EL LOCAL")
+            const lastUpdate = storageData.data.default.lastUpdate;
+            const now = new Date().getTime();
+            const tiempo_pasado = (now - lastUpdate) / 60000;
+            // console.log(lastUpdate)
+            console.log(
+              "tiempo transcurrido",
+              Math.floor(tiempo_pasado),
+              "minuto"
+            );
+            if (tiempo_pasado > 5) {
+              console.log("paso mas de 5 minutos");
+              timeOut = setTimeout(() => {
+                GetImages(1);
+              }, 500);
+            } else {
+              setData(storageData.data.default.images);
+              setPage(storageData.data.default.page);
+            }
           } else {
-            setData(storageData.data.default.images);
-            setPage(storageData.data.default.page);
+            GetImages(1);
           }
         } else {
           GetImages(1);
@@ -191,41 +200,42 @@ function Extension({ extension }) {
 
   // !SCROLL DETECT
   // ! no se si con AStro el scroll es automatico, pero de por si ahora es auto, en todo caso aqui el codigo para hacerlo manual
-  // useEffect(() => {
-  //   if (data && !isLoadingMore) {
-  //     const handleScroll = () => {
-  //       const { scrollTop, scrollHeight, clientHeight } =
-  //         document.documentElement;
-  //       if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
-  //         console.log("LOAD MORE", page + 1);
-  //         setIsLoadingMore(true);
-  //         GetImages(page + 1);
-  //       }
-  //     };
-  //     window.addEventListener("scroll", handleScroll);
-  //     return () => {
-  //       window.removeEventListener("scroll", handleScroll);
-  //     };
-  //   }
-  // }, [data, isLoadingMore]);
-
-  // //* SCROLL Y LOAD
-  // useEffect(() => {
-  //   function handleScroll() {
-  //     const ScrollY = window.scrollY || document.documentElement.scrollTop;
-  //     console.log("Position", ScrollY);
-  //     const storageData = localStorage.getItem(String(extension));
-  //     const dataJSON = JSON.parse(storageData);
-  //     dataJSON.data.default.scrollY = ScrollY;
-  //     localStorage.setItem(String(extension), JSON.stringify(dataJSON));
-  //   }
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-
+  useEffect(() => {
+    if (data && !isLoadingMore) {
+      const handleScroll = () => {
+        const { scrollTop, scrollHeight, clientHeight } =
+          document.documentElement;
+        if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
+          console.log("LOAD MORE", page + 1);
+          setIsLoadingMore(true);
+          GetImages(page + 1);
+        }
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [data, isLoadingMore]);
+  useEffect(() => {
+    if (localStorage.getItem(extension)) {
+      const storageData = JSON.parse(localStorage.getItem(extension));
+      if (storageData.posts) {
+        if (storageData.posts.lastUpdate) {
+          const now = new Date().getTime();
+          const tiempo_transcurrido = now - storageData.posts.lastUpdate;
+          if (tiempo_transcurrido / 60000 > 10) {
+            console.log("POSTS[] PASO MAS DE 5 minutos", tiempo_transcurrido / 60000);
+            storageData.posts.data = [];
+            storageData.posts.lastUpdate = now;
+            localStorage.setItem(extension, JSON.stringify(storageData))
+          } else {
+            console.log("POSTS[] aun no pasan 5 minutos", tiempo_transcurrido / 60000);
+          }
+        }
+      }
+    }
+  }, []);
   return (
     <div className="relative">
       {loadClient && (

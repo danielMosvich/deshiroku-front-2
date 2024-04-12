@@ -1,8 +1,8 @@
 import getImagesByQuery from "@/services/getImagesByQuery";
 import { useState, useEffect } from "react";
 import Masonry from "react-layout-masonry";
-import Card from '../../../../components/Card'
-import Loader from "../../../../components/Loader"
+import Card from "../../../../components/Card";
+import Loader from "../../../../components/Loader";
 function Extension({ extension }) {
   const [loadClient, setClientLoad] = useState(false);
   // const [loadImages, setLoadImages] = useState(false);
@@ -114,7 +114,7 @@ function Extension({ extension }) {
                       },
                     ],
                   },
-                  posts:[]
+                  posts: { data: {} },
                 })
               );
             }
@@ -277,23 +277,27 @@ function Extension({ extension }) {
         const parsedLocalStorage = JSON.parse(
           localStorage.getItem(String(extension))
         );
-        const itemInQuestion = parsedLocalStorage.search.querys.find(
-          (item) => item.query === tags.join("+")
-        );
-        if (itemInQuestion) {
-          const index = parsedLocalStorage.search.querys.findIndex(
+        if (parsedLocalStorage.search && parsedLocalStorage.search.querys) {
+          const itemInQuestion = parsedLocalStorage.search.querys.find(
             (item) => item.query === tags.join("+")
           );
-          const tiempo_transcurrido =
-            (now.getTime() - itemInQuestion.lastUpdate) / 60000;
-          console.log(tiempo_transcurrido);
-          if (tiempo_transcurrido > 2) {
-            timeOut = setTimeout(() => {
-              GetImages(1, tags.join("+"));
-            }, 1000);
+          if (itemInQuestion) {
+            const index = parsedLocalStorage.search.querys.findIndex(
+              (item) => item.query === tags.join("+")
+            );
+            const tiempo_transcurrido =
+              (now.getTime() - itemInQuestion.lastUpdate) / 60000;
+            console.log(tiempo_transcurrido);
+            if (tiempo_transcurrido > 2) {
+              timeOut = setTimeout(() => {
+                GetImages(1, tags.join("+"));
+              }, 1000);
+            } else {
+              setData(parsedLocalStorage.search.querys[index].images);
+              setPage(parsedLocalStorage.search.querys[index].page);
+            }
           } else {
-            setData(parsedLocalStorage.search.querys[index].images);
-            setPage(parsedLocalStorage.search.querys[index].page);
+            GetImages(1, tags.join("+"));
           }
         } else {
           GetImages(1, tags.join("+"));
@@ -424,11 +428,12 @@ function Extension({ extension }) {
                         )}px`,
                       }}
                       className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all`}
-                      
                     ></div>
                   ) : (
                     <a
-                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(e.preview_url)}`}
+                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(
+                        e.preview_url
+                      )}`}
                       key={e.id}
                     >
                       <img

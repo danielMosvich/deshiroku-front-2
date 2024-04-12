@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import PopoverButton from "@/components/popoverButton";
 import Masonry from "react-layout-masonry";
 import getPostById from "../../../../../services/getPostById";
+import Card from "../../../../../components/Card";
 function PostById({ extension, id }) {
   const [loadClient, setLoadClient] = useState(false);
   const [preview_url, setPreview__url] = useState(null);
@@ -144,61 +145,81 @@ function PostById({ extension, id }) {
   }
   async function getDataByTags(tags, page) {
     // TAGS IS A ARRAY
+    console.log(tags);
     if (tags.length > 0) {
-      const tagsList = tags;
+      const tagsList = tags.sort((a, b) => {
+        return parseInt(b.count) - parseInt(a.count);
+      });
 
-      const character = tagsList
-        .filter((e) => e.type === "4")
-        .map((e) => e.name);
-      const randomsGeneral = tagsList.filter((e) => e.type === "0");
-      const random = [
-        randomsGeneral[
-          [Math.floor(Math.random() * (randomsGeneral.length - 0 + 1)) + 0]
-        ].name,
-      ];
-      // console.log("RANDOM", random);
-      const tagsFinaly = [...character, ...random];
-      // console.log(tagsFinaly);
-      try {
-        const response = await fetch(
-          `${import.meta.env.PUBLIC_SERVER_URL}/api/deshiroku/${
-            data.extension
-          }/search/${tagsFinaly.join("+")}/${page}`
-        );
-        const res = await response.json();
-        if (res.success) {
-          setDataByQuery(res.data);
-          console.log("GG :D");
-        } else {
-          console.log("SOMETHING WAS WRONG");
+      const generalTags = tagsList.filter((item) => item.type === "0");
+      const generalTagsListSorted = generalTags
+        .filter((obj) => parseInt(obj.count) > 500)
+        .sort((a, b) => parseInt(b.count) - parseInt(a.count));
+
+      const tagElegido =
+        generalTagsListSorted[
+          Math.floor(Math.random() * generalTagsListSorted.length)
+        ];
+      const characterTags = tagsList
+        .filter((item) => item.type === "4")
+        .sort((a, b) => parseInt(b.count) - parseInt(a.count));
+
+      console.log(tagElegido, "ELEGIDO");
+      const finalString =
+        characterTags.length > 0
+          ? `${
+              characterTags[Math.floor(Math.random() * characterTags.length)]
+                .name
+            }`
+          : `${tagElegido.name}`;
+      console.log(finalString);
+      async function GetDataByTags() {
+        try {
+          const response = await fetch(
+            `${
+              import.meta.env.PUBLIC_SERVER_URL
+            }/api/deshiroku/${extension}/search/${finalString}/1`
+          );
+
+          const res = await response.json();
+          console.log(res);
+          if (res.success) {
+            const data = res.data;
+            // console.log(data)
+            // setDataByQuery(res.data);
+            const imageUrls = data.map((img) => img.preview_url);
+            // console.log(imageUrls)
+            const imagePromises = imageUrls.map(
+              (url) =>
+                new Promise((resolve, reject) => {
+                  const img = new Image();
+                  img.onload = () => resolve(img);
+                  img.onerror = () =>
+                    reject(new Error(`error al cargar la imagen desde ${url}`));
+                  img.src = url;
+                })
+            );
+            try {
+              const loadedImages = await Promise.all(imagePromises);
+              if (
+                loadedImages.every(
+                  (img) => img.complete && img.naturalWidth !== 0
+                )
+              ) {
+                setTimeout(() => {
+                  setDataByQuery(data);
+                }, 500);
+              }
+            } catch (error) {}
+          } else {
+            console.log("SOMETHING WAS WRONG");
+          }
+        } catch (error) {
+          console.log("error", error);
         }
-      } catch (error) {}
+      }
+      GetDataByTags();
     }
-
-    // // Caso 1: Si hay más de 3 tags, selecciona aleatoriamente 3 de los primeros 10 tags
-    // if (tagsList.length > 3) {
-    //   const firstTenTags = tagsList.slice(0, 8); // Tomar los primeros 10 tags
-    //   selectedTags = [];
-    //   for (let i = 0; i < 3; i++) {
-    //     const randomIndex = Math.floor(Math.random() * firstTenTags.length);
-    //     selectedTags.push(firstTenTags.splice(randomIndex, 1)[0]);
-    //   }
-    // } else {
-    //   // Caso 2: Si hay 3 o menos tags, simplemente selecciona todos los tags disponibles
-    //   selectedTags = tagsList;
-    // }
-    // console.log(selectedTags);
-    // const response = await fetch(
-    //   `http://localhost:3000/api/deshiroku/${
-    //     data.extension
-    //   }/search/${selectedTags.join("+")}/${page}`,
-    //   { method: "GET" }
-    // );
-    // const dat = await response.json();
-    // console.log(dat);
-    // if (dat.success) {
-    //   setDataByQuery(dat.data);
-    // }
   }
 
   function getTagsUrl(e) {
@@ -247,7 +268,9 @@ function PostById({ extension, id }) {
   useEffect(() => {
     async function getData() {
       const data = await getPostById(extension, id);
+      // console.log(data.data.tags.tags)
       setData(data.data);
+      getDataByTags(data.data.tags.tags, 1);
       if (data.data.type_file === "webm" || data.data.type_file === "mp4") {
         async function loadVideo() {
           return new Promise((resolve, reject) => {
@@ -266,6 +289,28 @@ function PostById({ extension, id }) {
           const videoElement = await loadVideo();
           if (videoElement) {
             setFile_url(data.data.file_url);
+            const post = data.data;
+            const now = new Date().getTime();
+            if (localStorage.getItem(extension)) {
+              const beforeStorage = JSON.parse(localStorage.getItem(extension));
+              if (beforeStorage.posts.lastUpdate) {
+                beforeStorage.posts.data.push(post);
+              } else {
+                beforeStorage.posts.data.push(post);
+                beforeStorage.posts.lastUpdate = now;
+              }
+              1712941999714;
+              localStorage.setItem(extension, JSON.stringify(beforeStorage));
+            } else {
+              localStorage.setItem(
+                extension,
+                JSON.stringify({
+                  data: {},
+                  posts: { data: [post], lastUpdate: now },
+                  search: { querys: [] },
+                })
+              );
+            }
           }
         } catch (error) {
           console.log(error);
@@ -285,16 +330,26 @@ function PostById({ extension, id }) {
           if (loadedImages) {
             setFile_url(data.data.file_url);
             const post = data.data;
+            const now = new Date().getTime();
             if (localStorage.getItem(extension)) {
               const beforeStorage = JSON.parse(localStorage.getItem(extension));
-              beforeStorage.posts.push(post);
+              if (beforeStorage.posts.lastUpdate) {
+                beforeStorage.posts.data.push(post);
+              } else {
+                beforeStorage.posts.data.push(post);
+                beforeStorage.posts.lastUpdate = now;
+              }
+              1712941999714;
               localStorage.setItem(extension, JSON.stringify(beforeStorage));
-            } else{
-              localStorage.setItem(extension, JSON.stringify({
-                data:{},
-                posts:[post],
-                search:{}
-              }))
+            } else {
+              localStorage.setItem(
+                extension,
+                JSON.stringify({
+                  data: {},
+                  posts: { data: [post], lastUpdate: now },
+                  search: { querys: [] },
+                })
+              );
             }
           } else {
           }
@@ -303,15 +358,17 @@ function PostById({ extension, id }) {
     }
     if (localStorage.getItem(extension)) {
       const beforeStorage = JSON.parse(localStorage.getItem(extension));
-      const indexCoincide = beforeStorage.posts.findIndex(
+      const indexCoincide = beforeStorage.posts.data.findIndex(
         (item) => Number(item.id) === Number(id)
       );
       // console.log(indexCoincide)
       if (indexCoincide !== -1) {
-        const postCoincide = beforeStorage.posts[indexCoincide];
-        // console.log(postCoincide.file_url)
+        // console.log(beforeStorage.data);
+        const postCoincide = beforeStorage.posts.data[indexCoincide];
+        // console.log(postCoincide);
         setFile_url(postCoincide.file_url);
         setData(postCoincide);
+        getDataByTags(postCoincide.tags.tags, 1);
       } else {
         getData();
       }
@@ -357,11 +414,11 @@ function PostById({ extension, id }) {
       }
     }
   }, [changeDefaultCollection, data]);
-  useEffect(() => {
-    if (data) {
-      getDataByTags(data.tags.tags, 1);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     getDataByTags(data.tags.tags, 1);
+  //   }
+  // }, [data]);
   useEffect(() => {
     // console.log(data);
     const userLocal = localStorage.getItem("user");
@@ -374,11 +431,11 @@ function PostById({ extension, id }) {
         <div>
           {data ? (
             <div className="">
-              <div className="bg-white shadow-2xl max-w-6xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
+              <div className="bg-white shadow-2xl max-w-xl lg:max-w-5xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
                 {(data && data.type_file === "webm") ||
                 (data && data.type_file === "mp4") ? (
                   // *VIDEO
-                  <div className="w-full sm:px-10 md:px-0 md:w-2/3 lg:1/2 mx-auto lg:mx-0 relative">
+                  <div className="w-full lg:w-3/4 relative">
                     <a
                       href={data?.file_url}
                       target="_blank"
@@ -403,7 +460,7 @@ function PostById({ extension, id }) {
                   </div>
                 ) : (
                   //* IMAGE
-                  <div className="w-full sm:px-10 md:px-0 md:w-2/3 lg:1/2 mx-auto lg:mx-0 relative">
+                  <div className="w-full lg:w-3/4 relative">
                     <a
                       href={data?.file_url}
                       target="_blank"
@@ -437,7 +494,7 @@ function PostById({ extension, id }) {
                 )}
 
                 {/* RIGHT */}
-                <div className="p-10 w-1/2 ">
+                <div className="p-10 w-[70%] ">
                   <div className="flex gap-1 justify-end">
                     {data.source && (
                       <a
@@ -666,50 +723,80 @@ function PostById({ extension, id }) {
                 {/* {data.source && data.source} */}
               </div>
 
-              {/* MORE CONTENT BY RELATED  */}
+              {/*! MORE CONTENT BY RELATED  */}
+              {/*! MORE CONTENT BY RELATED  */}
+              {/*! MORE CONTENT BY RELATED  */}
+              {/*! MORE CONTENT BY RELATED  */}
+
               <h2 className="mt-10 pb-5 text-center font-semibold text-xl">
-                Mas para explorar{" "}
+                Mas para explorar
               </h2>
+
               <div className="">
-                {dataByQuery && (
-                  <Masonry
-                    className="w-full h-fit"
-                    columns={{
-                      200: 1,
-                      400: 2,
-                      700: 3,
-                      1000: 4,
-                      1250: 5,
-                      1500: 6,
-                      1750: 7,
-                    }}
-                    gap={16}
-                  >
-                    {dataByQuery.map((element, index) => {
-                      return (
-                        <a
-                          className=""
-                          // href={`/extensions/${element.extension}/post/${element.id}`}
-                          href={`/extensions/${element.extension}/post/${
-                            element.id
-                          }?p=${btoa(element.preview_url)}`}
-                          key={element.id + index}
-                        >
-                          <img
-                            className="w-full rounded-xl max-h-[500px] object-cover"
-                            src={element.preview_url}
-                            alt="some"
-                          />
-                        </a>
-                      );
-                    })}
-                  </Masonry>
+                {dataByQuery ? (
+                  <div className="lg:px-20 sm:px-10  px-5">
+                    <Masonry
+                      columns={{
+                        0: 1,
+                        350: 2,
+                        400: 2,
+                        700: 3,
+                        1000: 4,
+                        1250: 5,
+                        1500: 6,
+                        1750: 7,
+                      }}
+                      gap={16}
+                    >
+                      {dataByQuery.map((element, index) => {
+                        if (element.id !== id) {
+                          return (
+                            <a
+                              className=""
+                              href={`/extensions/${element.extension}/post/${
+                                element.id
+                              }?p=${btoa(element.preview_url)}`}
+                              key={element.id + index}
+                            >
+                              <img
+                                className="w-full rounded-xl max-h-[500px] object-cover"
+                                src={element.preview_url}
+                                alt="some"
+                              />
+                            </a>
+                          );
+                        }
+                      })}
+                    </Masonry>
+                  </div>
+                ) : (
+                  <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-5 overflow-hidden">
+                    <div className="">
+                      <Masonry
+                        columns={{
+                          0: 1,
+                          350: 2,
+                          400: 2,
+                          700: 3,
+                          1000: 4,
+                          1250: 5,
+                          1500: 6,
+                          1750: 7,
+                        }}
+                        gap={16}
+                      >
+                        {Array.from({ length: 40 }).map((e, k) => {
+                          return <Card key={k} delay={k} />;
+                        })}
+                      </Masonry>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="bg-white shadow-2xl max-w-6xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
-              <div className="w-full sm:px-10 md:px-0 md:w-2/3 lg:1/2 mx-auto lg:mx-0 relative">
+            <div className="bg-white shadow-2xl max-w-xl lg:max-w-5xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
+              <div className="w-full lg:w-3/4 relative">
                 <img
                   src={preview_url}
                   className="w-full rounded-t-xl lg:rounded-l-3xl"
@@ -717,7 +804,7 @@ function PostById({ extension, id }) {
               </div>
 
               {/* RIGHT */}
-              <div className="p-10 w-1/2 "></div>
+              <div className="p-10 w-[70%]"></div>
               {/* {data.source && data.source} */}
             </div>
           )}
