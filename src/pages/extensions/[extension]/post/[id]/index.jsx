@@ -565,7 +565,7 @@ function PostById({ extension, id }) {
                     </div>
 
                     {/* CONTENT TO SAVED IN MOBILE */}
-                    <div className="lg:flex mt-5 bg-pink-300 hidden">
+                    <div className="lg:flex mt-5  hidden">
                       {/* TYPES TAGS 
         0 = general
         1 = artist
@@ -676,7 +676,7 @@ function PostById({ extension, id }) {
                             </div>
                           )}
                           {data.tags.tags.some((e) => e.type === "0") && (
-                            <div className="bg-red-500 ">
+                            <div className="">
                               <h2 className=" font-semibold capitalize">
                                 general
                               </h2>
