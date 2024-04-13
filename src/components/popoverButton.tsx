@@ -1,5 +1,5 @@
 import type { UserProps } from "../types/UserProps";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 interface PopoverButtonProps {
   defaultCollectionName: string;
   saved: boolean;
@@ -20,7 +20,8 @@ interface PopoverButtonProps {
     name: string;
   }) => void;
   defaultCollection: { id: string; name: string };
-  user:UserProps
+  user: UserProps;
+  setIsLoading: () => void;
 }
 interface PopoverBodyProps {
   collections: {
@@ -40,119 +41,9 @@ interface PopoverBodyProps {
     id: string;
     name: string;
   }) => void;
+  setIsLoading: (some: string) => void;
 }
-function PopoverBody({
-  collections,
-  handleClose,
-  file_url,
-  handleSave,
-  handleRemove,
-  setDefaultCollection,
-  handleChangeDefaultCollection,
-}: PopoverBodyProps) {
-  useEffect(() => {
-    console.log(collections, "collections :D");
-  }, []);
-  return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      <div
-        className="absolute shadow-2xl bg-white top-[100%] left-[-60%] mx-auto w-72 rounded-xl p-2 flex flex-col justify-center mt-2 z-40 select-none overflow-auto"
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <h4 className="text-center">Guardar</h4>
-        <p className="text-xs mt-3 mb-1 px-2">Guardar en tus colecciones</p>
-        {collections.map((collection, i) => {
-          return (
-            <div
-              key={i + "collectionBy" + collection._id}
-              className="flex  w-full items-center justify-between gap-3 group hover:bg-neutral-200 p-2 rounded-md"
-              onClick={() => {
-                handleChangeDefaultCollection({
-                  id: collection._id,
-                  name: collection.name,
-                });
-                handleClose();
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-neutral-500 overflow-hidden ">
-                  {collection.images.length > 0 && (
-                    <img
-                      className="w-full h-full object-cover"
-                      src={collection.images[0].preview_url}
-                      alt=""
-                    />
-                  )}
-                </div>
-                <p className="overflow-hidden text-ellipsis whitespace-nowrap capitalize hover:underline">
-                  {collection.name}
-                </p>
-              </div>
-              {collection.images.length > 0 ? (
-                collection.images.some((e) => e.file_url === file_url) ? (
-                  <button
-                    className="hidden group-hover:flex bg-neutral-900 px-4 py-2 rounded-full text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemove(collection._id);
-                      handleChangeDefaultCollection({
-                        id: collection._id,
-                        name: collection.name,
-                      });
-                      handleClose();
-                    }}
-                  >
-                    guardado
-                  </button>
-                ) : (
-                  <button
-                    className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSave(collection._id);
-                      handleChangeDefaultCollection({
-                        id: collection._id,
-                        name: collection.name,
-                      });
-                      handleClose();
-                    }}
-                  >
-                    guardar
-                  </button>
-                )
-              ) : (
-                <button
-                  className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSave(collection._id);
-                    handleChangeDefaultCollection({
-                      id: collection._id,
-                      name: collection.name,
-                    });
-                    handleClose();
-                  }}
-                >
-                  guardar
-                </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      <div
-        className="fixed bg-rose-100/20  w-full h-screen left-0 top-0 z-30 "
-        onClick={handleClose}
-      ></div>
-    </div>
-  );
-}
+
 function PopoverButton({
   defaultCollectionName,
   defaultCollection,
@@ -162,27 +53,27 @@ function PopoverButton({
   handleSave,
   setDefaultCollection,
   handleChangeDefaultCollection,
-  user
+  user,
+  setIsLoading,
 }: PopoverButtonProps) {
   const [active, setActive] = useState<boolean>(false);
-  
+
   function handleActive() {
     setActive(true);
   }
   function handleClose() {
     setActive(false);
   }
-  useEffect(() => {
-    console.log("POPOVER RUNING", collections);
-  }, [collections]);
   return (
     <div
       className="relative flex items-center rounded-full px-4 font-semibold cursor-pointer select-none"
       onClick={handleActive}
     >
+      {/* NOMBRE DE LA COLECCION SELECIONADA */}
       <label className="cursor-pointer capitalize">
         {defaultCollectionName}
       </label>
+      {/* ICONO DE DROPDOWN */}
       <i className="cursor-pointer ml-3">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +90,12 @@ function PopoverButton({
           </g>
         </svg>
       </i>
-      <a href={`/${user.name}/${defaultCollectionName}/${defaultCollection.id}`} className="ml-3">
+
+      {/* REDIRIGIR HACIA LA GALERIA SELECCIONADA */}
+      <a
+        href={`/${user.name}/${defaultCollectionName}/${defaultCollection.id}`}
+        className="ml-3"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -207,7 +103,7 @@ function PopoverButton({
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
           className="icon icon-tabler icons-tabler-outline icon-tabler-external-link"
@@ -218,8 +114,11 @@ function PopoverButton({
           <path d="M15 4h5v5" />
         </svg>
       </a>
+
+      {/* CUERPO DEL POPOVER */}
       {active && (
         <PopoverBody
+          setIsLoading={setIsLoading}
           setDefaultCollection={setDefaultCollection}
           handleChangeDefaultCollection={handleChangeDefaultCollection}
           handleRemove={handleRemove}
@@ -229,6 +128,132 @@ function PopoverButton({
           file_url={file_url}
         />
       )}
+    </div>
+  );
+}
+function PopoverBody({
+  collections,
+  handleClose,
+  file_url,
+  handleSave,
+  handleRemove,
+  handleChangeDefaultCollection,
+  setIsLoading,
+}: PopoverBodyProps) {
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
+      <div
+        className="absolute shadow-2xl bg-white ring-1 top-[100%] left-[-60%] mx-auto w-72 rounded-xl p-2 flex flex-col justify-center mt-2 z-40 select-none overflow-auto"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <h4 className="text-center">Guardar</h4>
+        <p className="text-xs mt-3 mb-1 px-2">Save it in your collections</p>
+        {collections.map((collection, i) => {
+          return (
+            <div
+              key={i + "collectionBy" + collection._id}
+              className="flex  w-full items-center justify-between gap-3 group hover:bg-neutral-200 p-2 rounded-md"
+              onClick={() => {
+                if (collection.images.length > 0) {
+                  if (
+                    collection.images.some((item) => item.file_url === file_url)
+                  ) {
+                    handleChangeDefaultCollection({
+                      id: collection._id,
+                      name: collection.name,
+                    });
+
+                    handleClose();
+                    handleRemove(collection._id);
+                  } else {
+                    handleChangeDefaultCollection({
+                      id: collection._id,
+                      name: collection.name,
+                    });
+
+                    handleClose();
+                    handleSave(collection._id);
+                  }
+                } else {
+                  handleChangeDefaultCollection({
+                    id: collection._id,
+                    name: collection.name,
+                  });
+
+                  handleClose();
+                  handleSave(collection._id);
+                }
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-lg bg-neutral-400 overflow-hidden ">
+                  {collection.images.length > 0 && (
+                    <img
+                      className="w-full h-full object-cover"
+                      src={collection.images[0].preview_url}
+                      alt="collection first image"
+                    />
+                  )}
+                </div>
+                <p
+                  className="overflow-hidden text-ellipsis whitespace-nowrap capitalize hover:underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleChangeDefaultCollection({
+                      id: collection._id,
+                      name: collection.name,
+                    });
+                    handleClose();
+                    if (collection.images.length > 0) {
+                      if (
+                        collection.images.some(
+                          (item) => item.file_url === file_url
+                        )
+                      ) {
+                        setIsLoading("true");
+                      } else {
+                        setIsLoading("false");
+                      }
+                    } else {
+                      setIsLoading("false");
+                    }
+                  }}
+                >
+                  {collection.name}
+                </p>
+              </div>
+              {collection.images.length > 0 ? (
+                collection.images.some((e) => e.file_url === file_url) ? (
+                  <button className="hidden group-hover:flex bg-neutral-900 px-4 py-2 rounded-full text-white">
+                    Saved
+                  </button>
+                ) : (
+                  <button
+                    className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white"
+                  >
+                    Saved
+                  </button>
+                )
+              ) : (
+                <button className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white">
+                  Save
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {/* PANTALLA PARA CERRAR EL POPOVER */}
+      <div
+        className="fixed bg-rose-100/20  w-full h-screen left-0 top-0 z-30 "
+        onClick={handleClose}
+      ></div>
     </div>
   );
 }

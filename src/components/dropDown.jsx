@@ -5,6 +5,11 @@ function DropDown({ data }) {
   function toggleActive() {
     setActive((prev) => !prev);
   }
+  function resetAplication() {
+    localStorage.clear();
+    window.location.reload();
+    // setActive(false)
+  }
   function logout() {
     localStorage.clear();
     const cookies = document.cookie.split(";");
@@ -17,7 +22,7 @@ function DropDown({ data }) {
       document.cookie = `${nombre}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     }
     alert("LOGOUT");
-    window.location.reload()
+    window.location.href = "/";
   }
   return (
     <div className="relative">
@@ -73,6 +78,25 @@ function DropDown({ data }) {
             </li>
             <li
               className="hover:bg-neutral-200 px-3 py-2 rounded-xl font-semibold cursor-pointer flex gap-2 items-center select-none"
+              onClick={resetAplication}
+            >
+              <i>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1rem"
+                  height="1rem"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="m16.325 18.8l-2.2 2.2L12 18.875l2.2-2.2q-.1-.275-.15-.575t-.05-.6q0-1.45 1.025-2.475T17.5 12q.45 0 .875.113t.8.312L16.8 14.8l1.4 1.4l2.375-2.35q.2.375.313.788T21 15.5q0 1.45-1.025 2.475T17.5 19q-.325 0-.612-.05t-.563-.15m4.45-8.8H18.7q-.65-2.2-2.475-3.6T12 5Q9.075 5 7.037 7.038T5 12q0 1.8.813 3.3T8 17.75V15h2v6H4v-2h2.35Q4.8 17.75 3.9 15.938T3 12q0-1.875.713-3.512t1.924-2.85q1.213-1.213 2.85-1.925T12 3q3.225 0 5.663 1.988T20.775 10"
+                  />
+                </svg>
+              </i>
+              <p>Reset aplication</p>
+            </li>
+            <li
+              className="hover:bg-neutral-200 px-3 py-2 rounded-xl font-semibold cursor-pointer flex gap-2 items-center select-none text-red-500"
               onClick={logout}
             >
               <i>

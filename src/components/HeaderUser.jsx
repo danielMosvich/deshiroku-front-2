@@ -67,7 +67,7 @@ function HeaderUser() {
     }
   }, []);
   return (
-    <div className="flex gap-1 ml-3 items-center">
+    <div className="flex gap-1 ml-3 items-center bg-red-500">
       {data === null ? (
         <div className="bg-neutral-200 w-20 h-full rounded-xl"></div>
       ) : data ? (

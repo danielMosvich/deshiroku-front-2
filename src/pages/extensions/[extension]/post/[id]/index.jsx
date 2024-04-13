@@ -11,6 +11,8 @@ import PopoverButton from "@/components/popoverButton";
 import Masonry from "react-layout-masonry";
 import getPostById from "../../../../../services/getPostById";
 import Card from "../../../../../components/Card";
+import SaveButton from "../../../../../components/SaveButton";
+
 function PostById({ extension, id }) {
   const [loadClient, setLoadClient] = useState(false);
   const [preview_url, setPreview__url] = useState(null);
@@ -18,13 +20,11 @@ function PostById({ extension, id }) {
 
   const [data, setData] = useState(null);
   const [defaultCollection, setDefaultCollection] = useState(null);
-  const [changeDefaultCollection, setChangeDefaultCollection] = useState(null);
   const [collections, setCollections] = useState(null);
-  const [saved, setSaved] = useState(undefined);
   const [dataByQuery, setDataByQuery] = useState(null);
   const [user, setUser] = useState(null);
 
-  // const preview_url = atob()
+  const [isLoading, setIsLoading] = useState("false");
   function obtenerCookies() {
     const cookies = {};
     document.cookie.split(";").forEach((cookie) => {
@@ -50,8 +50,8 @@ function PostById({ extension, id }) {
       })
       .catch((error) => console.error("Error al descargar la imagen:", error));
   };
-  // const [userData, setUserData] = useState(undefined)
   async function handleSave(id) {
+    setIsLoading("saving");
     console.log("SAVE");
     const token = obtenerCookies();
     if (document.cookie) {
@@ -88,13 +88,16 @@ function PostById({ extension, id }) {
           // console.log(data.data)
         }
         getProfile();
-        setSaved(true);
+        // setSaved(true);
+        setIsLoading("true");
       } else {
         alert(response.message);
+        setIsLoading("false");
       }
     }
   }
   async function handleRemove(id) {
+    setIsLoading("removing");
     if (document.cookie) {
       const token = obtenerCookies();
       const fileUrl = data.file_url;
@@ -129,18 +132,17 @@ function PostById({ extension, id }) {
           localStorage.setItem("user", JSON.stringify(data.data));
           setCollections(data.data.collections);
           console.log("SE ACTUALIZO EL LOCAL STORAGE DE USER");
-          // console.log(data.data)
         }
         getProfile();
-        setSaved(false);
+        setIsLoading("false");
       } else {
         alert(response.message);
+        setIsLoading("true");
       }
     }
   }
   async function handleChangeDefaultCollection(obj) {
     setDefaultCollection(obj);
-    setChangeDefaultCollection(obj);
     localStorage.setItem("defaultCollection", JSON.stringify(obj));
   }
   async function getDataByTags(tags, page) {
@@ -261,7 +263,6 @@ function PostById({ extension, id }) {
         var encodedValue = decodeURIComponent(results[2].replace(/\+/g, " "));
         return atob(encodedValue); // Decodificar en Base64
       }
-      // console.log(getParamValue("p"))
       setPreview__url(getParamValue("p"));
     }
   }, []);
@@ -378,7 +379,6 @@ function PostById({ extension, id }) {
   }, []);
   useEffect(() => {
     if (data) {
-      // console.log(data);
       // ! ESTO VERIFICA SI ES QUE EXISTE UNA COLLECTION POR DEFECTO DONDE GUARDAR LAS IMAGENES.
       const localStorageDefaultCollection =
         localStorage.getItem("defaultCollection");
@@ -389,13 +389,10 @@ function PostById({ extension, id }) {
         setDefaultCollection(parsedLocalStorageDefaultCollection);
 
       const localStorageUser = localStorage.getItem("user");
-      // console.log(localStorageUser)
       // !VERIFICA SI ES QUE LA IMAGEN YA EXISTE EN LA COLECCION DEFAULT O SELECIONADA.
       if (localStorageUser) {
         const parsedLocalStorageUser = JSON.parse(localStorageUser);
         if (parsedLocalStorageUser) {
-          // console.log("SOME");
-          // setUserData(parsedLocalStorageUser)
           setCollections(parsedLocalStorageUser.collections);
           const index = parsedLocalStorageUser.collections.findIndex(
             (e) => e._id === parsedLocalStorageDefaultCollection.id
@@ -404,34 +401,27 @@ function PostById({ extension, id }) {
             const match = parsedLocalStorageUser.collections[index].images.some(
               (e) => e.file_url === data.file_url
             );
-            setSaved(match);
-            console.log("SE ESTABLECE :", match);
+            setIsLoading(String(match));
           } else {
-            console.log("SE ESTABLECE NO GUARDADo");
-            setSaved(false);
+            setIsLoading("false");
           }
         }
       }
     }
-  }, [changeDefaultCollection, data]);
-  // useEffect(() => {
-  //   if (data) {
-  //     getDataByTags(data.tags.tags, 1);
-  //   }
-  // }, [data]);
+  }, [data]);
+  // !TRAE LAS COLECCIONES DEL USUARIO
   useEffect(() => {
-    // console.log(data);
     const userLocal = localStorage.getItem("user");
     setUser(JSON.parse(userLocal));
   }, [collections]);
 
   return (
-    <div className="pt-4">
+    <div className="md:pt-4">
       {loadClient && (
         <div>
           {data ? (
             <div className="">
-              <div className="bg-white shadow-2xl max-w-xl lg:max-w-5xl mx-auto rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
+              <div className="bg-white sm:shadow-2xl max-w-xl lg:max-w-5xl mx-auto sm:rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
                 {(data && data.type_file === "webm") ||
                 (data && data.type_file === "mp4") ? (
                   // *VIDEO
@@ -494,8 +484,8 @@ function PostById({ extension, id }) {
                 )}
 
                 {/* RIGHT */}
-                <div className="p-10 w-[70%] ">
-                  <div className="flex gap-1 justify-end">
+                <div className="lg:p-10 p-5 lg:w-[70%] w-full max-h-fit overflow-hidden border-b-[1px]">
+                  <div className="hidden gap-1 justify-end lg:flex">
                     {data.source && (
                       <a
                         href={data.source}
@@ -550,27 +540,20 @@ function PostById({ extension, id }) {
                         handleChangeDefaultCollection={
                           handleChangeDefaultCollection
                         }
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
                       />
                     )}
-                    {/* {defaultCollection && collections && <button>{defaultCollection.name}</button>} */}
-                    {saved === undefined ? (
-                      <button className="px-4 rounded-full text-white">
-                        loading
-                      </button>
-                    ) : saved ? (
-                      <button
-                        className="px-4 py-3 capitalize rounded-full text-white font-semibold bg-neutral-900"
-                        onClick={() => handleRemove(defaultCollection.id)}
-                      >
-                        guardado
-                      </button>
-                    ) : (
-                      <button
-                        className="px-4 py-3 capitalize rounded-full text-white font-semibold bg-red-500"
-                        onClick={() => handleSave(defaultCollection.id)}
-                      >
-                        guardar
-                      </button>
+
+                    {/* BUTON SECTION FOR SAVE OR DELETE IMG FROM COLLECTION */}
+                    {defaultCollection && collections && (
+                      <SaveButton
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                        handleSave={handleSave}
+                        handleRemove={handleRemove}
+                        defaultCollection={defaultCollection}
+                      />
                     )}
                   </div>
                   <div>
@@ -581,7 +564,8 @@ function PostById({ extension, id }) {
                       <p className="font-semibold">{data?.owner}</p>
                     </div>
 
-                    <div className="flex mt-5">
+                    {/* CONTENT TO SAVED IN MOBILE */}
+                    <div className="lg:flex mt-5 bg-pink-300 hidden">
                       {/* TYPES TAGS 
         0 = general
         1 = artist
@@ -590,7 +574,7 @@ function PostById({ extension, id }) {
         5 = meta
         */}
                       {data && (
-                        <div>
+                        <div className="">
                           {data.tags.tags.some((e) => e.type === "1") && (
                             <div>
                               <h2 className=" font-semibold capitalize">
@@ -692,7 +676,7 @@ function PostById({ extension, id }) {
                             </div>
                           )}
                           {data.tags.tags.some((e) => e.type === "0") && (
-                            <div>
+                            <div className="bg-red-500 ">
                               <h2 className=" font-semibold capitalize">
                                 general
                               </h2>
@@ -718,6 +702,44 @@ function PostById({ extension, id }) {
                         </div>
                       )}
                     </div>
+                    <div className="lg:hidden flex  mt-5">
+                      {/* {data && data.tags.tags.length} */}
+                      {data && (
+                        <div className="flex items-center justify-center gap-3 w-full">
+                          <button className=" px-4 py-3 rounded-full font-semibold">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1.5rem"
+                              height="1.5rem"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M3 19h18v2H3zm10-5.828L19.071 7.1l1.414 1.414L12 17L3.515 8.515L4.929 7.1L11 13.173V2h2z"
+                              />
+                            </svg>
+                          </button>
+                          <button className="bg-neutral-200 px-4 py-3 rounded-full font-semibold  gap-1">
+                            Source
+                          </button>
+                          <SaveButton isLoading={isLoading} />
+                          <button className="flex hover:bg-neutral-100 px-4 py-3 rounded-full font-semibold gap-1">
+                            <label htmlFor="">Tags</label>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1.5rem"
+                              height="1.5rem"
+                              viewBox="0 0 15 15"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M7.5 10.207L11.707 6H3.293z"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {/* {data.source && data.source} */}
@@ -728,13 +750,12 @@ function PostById({ extension, id }) {
               {/*! MORE CONTENT BY RELATED  */}
               {/*! MORE CONTENT BY RELATED  */}
 
-              <h2 className="mt-10 pb-5 text-center font-semibold text-xl">
-                Mas para explorar
-              </h2>
-
               <div className="">
                 {dataByQuery ? (
                   <div className="lg:px-20 sm:px-10  px-5">
+                    <h2 className="md:mt-10  mt-5 pb-5 md:pl-0 sm:text-center font-semibold md:text-xl">
+                      Mas para explorar
+                    </h2>
                     <Masonry
                       columns={{
                         0: 1,
@@ -770,7 +791,7 @@ function PostById({ extension, id }) {
                     </Masonry>
                   </div>
                 ) : (
-                  <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-5 overflow-hidden">
+                  <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-5 overflow-hidden md:mt-[85px] mt-16">
                     <div className="">
                       <Masonry
                         columns={{

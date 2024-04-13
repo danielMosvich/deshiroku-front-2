@@ -237,7 +237,7 @@ function Extension({ extension }) {
     }
   }, []);
   return (
-    <div className="relative">
+    <div className="relative pt-5 md:pt-0">
       {loadClient && (
         <div>
           {data && data.length > 0 ? (
