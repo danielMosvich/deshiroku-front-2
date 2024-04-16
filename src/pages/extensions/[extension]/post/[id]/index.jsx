@@ -37,7 +37,7 @@ function PostById({ extension, id }) {
     const proxyUrl = `${
       import.meta.env.PUBLIC_SERVER_URL
     }/proxy?imageUrl=${encodeURIComponent(imageUrl)}`;
-    fetch(proxyUrl)
+    fetch(proxyUrl, { mode: "cors", headers: { "Content-Type": "image/png" } })
       .then((response) => response.blob())
       .then((blob) => {
         const url = window.URL.createObjectURL(new Blob([blob]));
