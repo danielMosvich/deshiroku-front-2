@@ -334,77 +334,13 @@ function Extension({ extension }) {
       };
     }
   }, [data, isLoadingMore]);
-  // useEffect(() => {
-  //   function handleScroll() {
-  //     const ScrollY = window.scrollY || document.documentElement.scrollTop;
-  //     console.log("Position", ScrollY);
-  //     const storageData = localStorage.getItem(String(extension));
-  //     const dataJSON = JSON.parse(storageData);
-  //     dataJSON.data.default.scrollY = ScrollY;
-  //     localStorage.setItem(String(extension), JSON.stringify(dataJSON));
-  //   }
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-  // useEffect(() => {
-  //   if (data && isLoadingMore) {
-  //     console.log(page + 1, "CARGAR MAS");
-  //     GetImages(page + 1);
-  //     setPage(page + 1);
-  //     setTimeout(() => {
-  //       setIsLoadingMore(false);
-  //     }, 1000);
-  //   }
-  // }, [isLoadingMore]);
   return (
-    // <div className="">
-    //   {loadClient ? (
-    //     <div className="lg:px-20 sm:px-10  px-5">
-    //       <Masonry
-    //         columns={{
-    //           200: 1,
-    //           400: 2,
-    //           700: 3,
-    //           1000: 4,
-    //           1250: 5,
-    //           1500: 6,
-    //           1750: 7,
-    //         }}
-    //         gap={16}
-    //       >
-    //         {data.map((e, index) => {
-    //           return (
-    //             <a
-    //               href={`/extensions/${extension}/post/${e.id}`}
-    //               key={index}
-    //               className=""
-    //             >
-    //               <img
-    //                 className="w-full rounded-xl max-h-[500px] object-cover"
-    //                 src={e.preview_url}
-    //                 alt={e.owner + "image"}
-    //                 loading="lazy"
-    //               />
-    //               <div className="flex gap-1 items-center mt-2">
-    //                 <h2>{e.owner}</h2>
-    //               </div>
-    //             </a>
-    //           );
-    //         })}
-    //       </Masonry>
-    //     </div>
-    //   ) : (
-    //     <div>loading</div>
-    //   )}
-    // </div>
     <div className="relative">
       {loadClient && (
         <div>
           {data && data.length > 0 ? (
             <div className="lg:px-20 sm:px-10  px-5">
+              
               <Masonry
                 columns={{
                   0: 1,

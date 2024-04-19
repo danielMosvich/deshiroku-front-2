@@ -247,7 +247,13 @@ function Extension({ extension }) {
       {loadClient && (
         <div>
           {data && data.length > 0 ? (
-            <div className="lg:px-20 sm:px-10  px-5">
+            <div className="lg:px-20 sm:px-10  px-2">
+              <div>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor,
+                facilis. Impedit dicta consectetur iste quas sapiente
+                repudiandae sit distinctio nobis. Corporis dolorum commodi
+                repellendus laboriosam! Incidunt facilis nemo ullam pariatur?
+              </div>
               <Masonry
                 columns={{
                   0: 1,
@@ -259,7 +265,9 @@ function Extension({ extension }) {
                   1500: 6,
                   1750: 7,
                 }}
-                gap={16}
+                className="gap-2 sm:gap-4"
+                // gap={16}
+                // style={{gap:"16px"}}
               >
                 {data.map((e, index) =>
                   e.extension === "load" ? (
@@ -326,7 +334,7 @@ function Extension({ extension }) {
                           loading="lazy"
                         />
                       )}
-                      <div className="flex gap-1 items-center mt-2">
+                      <div className="flex gap-1 items-center mt-2 mb-4">
                         <h2 className="text-sm font-semibold">{e.owner}</h2>
                       </div>
                     </a>
