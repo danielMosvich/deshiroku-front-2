@@ -1,5 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Card from "./Card.astro";
+// import "swiper/css";
 // import Card from "../components/Card.astro";
 // import getImages from "@/services/getImages";
 // import type { ImagesProps } from "@/types/ImagesProps";
@@ -12,120 +14,61 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Welcome to Astro.">
-  <div class="flex gap-5 p-5">
-    <a
-      href="/extensions/rule34"
-      class="flex gap-2 bg-white shadow-lg ring-1 ring-neutral-300 w-fit p-2 rounded-lg items-center hover:shadow-xl hover:bg-neutral-50"
-    >
-      <i class="flex rounded-lg p-2 overflow-hidden bg-neutral-200 w-10 h-10"
-        ><img
-          class="w-full h-full rounded-sm"
-          src="https://rule34.xxx/favicon.ico?v=2"
-          alt=""
-        /></i
-      >
-      <p class="font-semibold">rule34.xxx</p>
-    </a>
-    <a
-      href="/extensions/realbooru"
-      class="flex gap-2 bg-white shadow-lg ring-1 ring-neutral-300 w-fit p-2 rounded-lg items-center hover:shadow-xl hover:bg-neutral-50"
-    >
-      <i class="flex rounded-lg p-2 overflow-hidden bg-neutral-200 w-10 h-10"
-        ><img
-          class="w-full h-full rounded-md"
-          src="https://realbooru.com/favicon-32x32.png?v=1"
-          alt=""
-        /></i
-      >
-      <p class="font-semibold">realbooru.xxx</p>
-    </a>
-    <a
-      href="/extensions/safebooru"
-      class="flex gap-2 bg-white shadow-lg ring-1 ring-neutral-300 w-fit p-2 rounded-lg items-center hover:shadow-xl hover:bg-neutral-50"
-    >
-      <i class="flex rounded-lg p-2 overflow-hidden bg-neutral-200 w-10 h-10"
-        ><img
-          class="w-full h-full rounded-sm"
-          src="https://safebooru.org/favicon.ico"
-          alt=""
-        /></i
-      >
-      <p class="font-semibold">safebooru.xxx</p>
-    </a>
-    <a
-      href="/extensions/gelbooru"
-      class="flex gap-2 bg-white shadow-lg ring-1 ring-neutral-300 w-fit p-2 rounded-lg items-center hover:shadow-xl hover:bg-neutral-50"
-    >
-      <i class="flex rounded-lg p-2 overflow-hidden bg-neutral-200 w-10 h-10"
-        ><img
-          class="w-full h-full rounded-sm"
-          src="https://gelbooru.com/favicon.png"
-          alt=""
-        /></i
-      >
-      <p class="font-semibold">gelbooru</p>
-    </a>
+  <h2 class="text-4xl font-extrabold uppercase text-center my-5">Deshiroku</h2>
+  <p
+    class="mx-auto text-center md:max-w-xl max-w-sm font-semibold text-neutral-600"
+  >
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iure, molestiae
+    unde veniam hic doloribus mollitia nam
+  </p>
+
+  <div class="mt-10 lg:px-20 sm:px-10 px-5">
+    <h2 class="text-2xl font-semibold capitalize tracking-tight">
+      safe services
+    </h2>
+    <div class="gap-5 grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 mt-3">
+      <Card
+        title="safebooru.org"
+        description=`Safebooru is a anime and manga picture search engine, images are being updated hourly.`
+        avatar="https://safebooru.org/favicon.ico"
+        background="https://safebooru.org//samples/4619/sample_162568abb18523ad14f8b18132284365ef3ca1f9.jpg?4882408"
+        src="/extensions/safebooru"
+      />
+    </div>
+  </div>
+  <div class="mt-10 lg:px-20 sm:px-10 px-5 mb-10">
+    <h2 class="text-2xl font-semibold capitalize tracking-tight">
+     +18 services
+    </h2>
+    <div class="gap-5 grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 mt-3">
+      <Card
+        title="rule34.xxx"
+        description=`if something exists in real life, or is made up, there will be a
+      pornographic depiction of it`
+        avatar="https://rule34.xxx/favicon.ico?v=2"
+        background="https://us.rule34.xxx//samples/7281/sample_3e89953717d8771c2dc070fd24dbb7ef.jpg?8315449"
+        position="center"
+        safe={false}
+        src="/extensions/rule34"
+      />
+      <Card
+        title="realbooru.com"
+        description=`The best booru for real porn stuff.`
+        avatar="https://realbooru.com/favicon.ico?v=5"
+        background="https://realbooru.com//images/51/5c/515c6f8100663536c83ce30a8fddc67d.jpeg"
+        position="-60px"
+        safe={false}
+        src="/extensions/realbooru"
+      />
+      <Card
+        title="gelbooru.com"
+        description=`Millions of FREE hentai and anime videos, images, wallpapers, and more!`
+        avatar="https://gelbooru.com/favicon.png"
+        background="https://img3.gelbooru.com//images/a8/9d/a89d2dc8b558d6d53a51be71132ea329.jpg"
+        safe={false}
+        src="/extensions/gelbooru"
+      />
+    </div>
   </div>
 
-  <style>
-    main {
-      margin: auto;
-      padding: 1rem;
-      width: 800px;
-      max-width: calc(100% - 2rem);
-      color: white;
-      font-size: 20px;
-      line-height: 1.6;
-    }
-    .astro-a {
-      position: absolute;
-      top: -32px;
-      left: 50%;
-      transform: translatex(-50%);
-      width: 220px;
-      height: auto;
-      z-index: -1;
-    }
-    h1 {
-      font-size: 4rem;
-      font-weight: 700;
-      line-height: 1;
-      text-align: center;
-      margin-bottom: 1em;
-    }
-    .text-gradient {
-      background-image: var(--accent-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      background-position: 0%;
-    }
-    .instructions {
-      margin-bottom: 2rem;
-      border: 1px solid rgba(var(--accent-light), 25%);
-      background: linear-gradient(
-        rgba(var(--accent-dark), 66%),
-        rgba(var(--accent-dark), 33%)
-      );
-      padding: 1.5rem;
-      border-radius: 8px;
-    }
-    .instructions code {
-      font-size: 0.8em;
-      font-weight: bold;
-      background: rgba(var(--accent-light), 12%);
-      color: rgb(var(--accent-light));
-      border-radius: 4px;
-      padding: 0.3em 0.4em;
-    }
-    .instructions strong {
-      color: rgb(var(--accent-light));
-    }
-    .link-card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-      gap: 2rem;
-      padding: 0;
-    }
-  </style>
 </Layout>

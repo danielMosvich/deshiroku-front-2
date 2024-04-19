@@ -225,12 +225,18 @@ function Extension({ extension }) {
           const now = new Date().getTime();
           const tiempo_transcurrido = now - storageData.posts.lastUpdate;
           if (tiempo_transcurrido / 60000 > 10) {
-            console.log("POSTS[] PASO MAS DE 5 minutos", tiempo_transcurrido / 60000);
+            console.log(
+              "POSTS[] PASO MAS DE 5 minutos",
+              tiempo_transcurrido / 60000
+            );
             storageData.posts.data = [];
             storageData.posts.lastUpdate = now;
-            localStorage.setItem(extension, JSON.stringify(storageData))
+            localStorage.setItem(extension, JSON.stringify(storageData));
           } else {
-            console.log("POSTS[] aun no pasan 5 minutos", tiempo_transcurrido / 60000);
+            console.log(
+              "POSTS[] aun no pasan 5 minutos",
+              tiempo_transcurrido / 60000
+            );
           }
         }
       }
@@ -270,27 +276,57 @@ function Extension({ extension }) {
                     <a
                       href={`/extensions/${extension}/post/${e.id}?p=${btoa(
                         e.preview_url
-                      )}`}
+                      )}&f=${btoa(e.file_url)}`}
                       key={e.id}
-                      className=""
-                      onClick={() => {
-                        // window.location.href = `/extensions/${extension}/post/${e.id}?p=${encryptUrl(e.preview_url)}`
-                        console.log(encryptUrl(e.preview_url));
-                        console.log("Xd");
-                      }}
                     >
-                      <img
-                        className="w-full rounded-xl max-h-[500px] object-cover"
-                        src={e.preview_url}
-                        alt={e.owner + "image"}
-                        loading="lazy"
-                      />
+                      {e.type_file === "mp4" || e.type_file === "webm" ? (
+                        <div
+                          style={{
+                            backgroundImage:
+                              " linear-gradient(144deg,#a241ff, #513bfa 50%,#3f89ff)",
+                          }}
+                          className="w-full h-fit rounded-[18px] p-[3px] shadow-xl shadow-blue-500/30 relative"
+                        >
+                          <img
+                            className="w-full rounded-2xl max-h-[500px] object-cover"
+                            src={e.preview_url}
+                            alt={e.owner + "image"}
+                            loading="lazy"
+                          />
+                          <i className="absolute top-3 right-3 text-neutral-500 bg-white/80 px-2 rounded-full">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1.2rem"
+                              height="1.2rem"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11z"
+                              />
+                            </svg>
+                          </i>
+                        </div>
+                      ) : (
+                        // <div className="relative drop-shadow-xl w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d]">
+                        //   <img
+                        //   className="w-full absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] max-h-[500px]"
+                        //   src={e.preview_url}
+                        //   alt={e.owner + "image"}
+                        //   loading="lazy"
+                        // />
+                        // <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2">
+
+                        // </div>
+                        // </div>
+                        <img
+                          className="w-full rounded-2xl max-h-[500px] object-cover"
+                          src={e.preview_url}
+                          alt={e.owner + "image"}
+                          loading="lazy"
+                        />
+                      )}
                       <div className="flex gap-1 items-center mt-2">
-                        {/* <div className="rounded-full bg-neutral-200 w-8 h-8 grid place-content-center">
-                          <p className="uppercase font-semibold">
-                            {e.owner.split("")[0]}
-                          </p>
-                        </div> */}
                         <h2 className="text-sm font-semibold">{e.owner}</h2>
                       </div>
                     </a>

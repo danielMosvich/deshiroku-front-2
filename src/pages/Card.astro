@@ -1,0 +1,53 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  safe?: boolean;
+  avatar: string;
+  background: string;
+  src: string;
+  position?: string;
+}
+const {
+  title,
+  description,
+  safe = true,
+  avatar,
+  background,
+  src,
+  position,
+} = Astro.props;
+---
+
+<a
+  href={src}
+  class="bg-white shadow-xl shadow-neutral-500/10 hover:shadow-neutral-500/20 w-full rounded-2xl overflow-hidden relative active:scale-[1.01] cursor-pointer transition-all hover:ring-black/10 hover:ring-2 ring-neutral-500/10"
+>
+  <div class="w-full z-10 h-40 overflow-hidden"></div>
+  <img
+    style={`object-position:center ${position}`}
+    class="w-full h-full object-cover absolute top-0"
+    src={background}
+    alt=""
+  />
+  {
+    !safe ? (
+      <span class="w-fit text-xs bg-gradient-to-br to-pink-500 from-red-700 px-2 py-1 rounded-full text-white font-semibold shadow-md shadow-red-500/30 absolute top-3 right-3">
+        NSFW
+      </span>
+    ) : (
+      <span class="w-fit text-xs bg-gradient-to-br to-lime-500 from-lime-700 px-3 py-1 rounded-full text-white font-semibold shadow-md shadow-lime-500/30 absolute top-3 right-3">
+        SFW
+      </span>
+    )
+  }
+  <div class="w-full h-full p-4 z-20 bg-white/85 backdrop-blur-md">
+    <div class="flex gap-2 items-center">
+      <img class="w-5 h-5 rounded-[4px] mt-1" src={avatar} alt="" />
+      <h2 class="text-xl font-semibold mt-1 w-fit capitalize">
+        {title}
+      </h2>
+    </div>
+    <p class="text-sm text-neutral-600">{description}</p>
+  </div>
+</a>
