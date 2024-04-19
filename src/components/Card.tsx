@@ -19,7 +19,7 @@ function Card({ delay }: { delay: number }) {
         height: `${Math.floor(Math.random() * (400 - 150 + 1) + 150)}px`,
         opacity: `${visible ? "100" : "0"}`,
       }}
-      className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all`}
+      className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all mt-4`}
     ></div>
   );
 }

@@ -3,6 +3,11 @@ import Masonry from "react-layout-masonry";
 import getImages from "../../../services/getImages";
 import Card from "../../../components/Card";
 import Loader from "../../../components/Loader";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/effect-cards";
+import { EffectCards } from "swiper/modules";
+
 function Extension({ extension }) {
   const [loadClient, setClientLoad] = useState(false);
   // const [dataByAstro, setDataByAstro] = useState();
@@ -248,11 +253,72 @@ function Extension({ extension }) {
         <div>
           {data && data.length > 0 ? (
             <div className="lg:px-20 sm:px-10  px-2">
-              <div>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor,
-                facilis. Impedit dicta consectetur iste quas sapiente
-                repudiandae sit distinctio nobis. Corporis dolorum commodi
-                repellendus laboriosam! Incidunt facilis nemo ullam pariatur?
+              {/* <div className="mb-5 flex gap-3">
+                <button className="max-w-40 whitespace-nowrap overflow-hidden rounded-full pl-[5px] pr-4 py-1 font-semibold bg-lime-500/40 flex items-center gap-2">
+                  <img
+                    className="min-w-12 w-12 min-h-12 h-12 object-cover rounded-full"
+                    src="https://r34.app/img/featured/rule34.xxx/top-4.jpg"
+                    alt=""
+                  />
+                  <label className="text-lg text-ellipsis overflow-hidden">
+                    Popular
+                  </label>
+                </button>
+                <button className="max-w-40 whitespace-nowrap overflow-hidden rounded-full pl-[5px] pr-4 py-1 font-semibold bg-teal-500/40 flex items-center gap-2">
+                  <img
+                    className="min-w-12 w-12 min-h-12 h-12 object-cover rounded-full"
+                    src="https://r34.app/img/featured/rule34.xxx/animated.jpeg"
+                    alt=""
+                  />
+                  <label className="text-lg text-ellipsis overflow-hidden">
+                    Animated Videos
+                  </label>
+                </button>
+                <button className="max-w-40 whitespace-nowrap overflow-hidden rounded-full pl-[5px] pr-4 py-1 font-semibold bg-rose-500/40 flex items-center gap-2">
+                  <img
+                    className="min-w-12 w-12 min-h-12 h-12 object-cover rounded-full"
+                    src="https://r34.app/img/featured/rule34.xxx/top-4.jpg"
+                    alt=""
+                  />
+                  <label className="text-lg text-ellipsis overflow-hidden">
+                    Top posts
+                  </label>
+                </button>
+              </div> */}
+              {/* CARDS */}
+              <div className="flex justify-center gap-20 mt-5 mb-10">
+                <div className="flex flex-col items-center">
+                  <Swiper
+                    style={{ margin: "0" }}
+                    effect={"cards"}
+                    grabCursor={true}
+                    modules={[EffectCards]}
+                    className="mySwiper w-[240px] h-[320px] select-none"
+                  >
+                    <SwiperSlide className="bg-red-500 rounded-2xl">
+                      <img
+                        className="w-full h-full object-cover"
+                        src="https://r34.app/img/featured/rule34.xxx/top-4.jpg"
+                        alt=""
+                      />
+                    </SwiperSlide>
+                    <SwiperSlide className="bg-red-500 rounded-2xl">
+                      <img
+                        className="w-full h-full object-cover"
+                        src="https://r34.app/img/featured/rule34.xxx/top-7.jpg"
+                        alt=""
+                      />
+                    </SwiperSlide>
+                    <SwiperSlide className="bg-red-500 rounded-2xl">
+                      <img
+                        className="w-full h-full object-cover"
+                        src="https://r34.app/img/featured/rule34.xxx/animated.jpeg"
+                        alt=""
+                      />
+                    </SwiperSlide>
+                  </Swiper>
+                  <h2 className="text-xl font-bold">Featured</h2>
+                </div>
               </div>
               <Masonry
                 columns={{
@@ -343,7 +409,7 @@ function Extension({ extension }) {
               </Masonry>
             </div>
           ) : (
-            <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-5 overflow-hidden">
+            <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-2 overflow-hidden">
               <div className="animate-fade-up">
                 <Masonry
                   columns={{
@@ -356,7 +422,8 @@ function Extension({ extension }) {
                     1500: 6,
                     1750: 7,
                   }}
-                  gap={16}
+                  // gap={16}
+                  className="gap-2 sm:gap-4"
                 >
                   {Array.from({ length: 30 }).map((e, k) => {
                     return <Card key={k} delay={k} />;
