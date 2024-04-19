@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Masonry from "react-layout-masonry";
+// import Masonry from "react-layout-masonry";
 import getImages from "../../../services/getImages";
 import Card from "../../../components/Card";
 import Loader from "../../../components/Loader";
@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 import { EffectCards } from "swiper/modules";
 
+import Masonry from "react-masonry-css";
 function Extension({ extension }) {
   const [loadClient, setClientLoad] = useState(false);
   // const [dataByAstro, setDataByAstro] = useState();
@@ -285,8 +286,9 @@ function Extension({ extension }) {
                   </label>
                 </button>
               </div> */}
+
               {/* CARDS */}
-              <div className="flex justify-center gap-20 mt-5 mb-10">
+              {/* <div className="flex justify-center gap-20 mt-5 mb-14">
                 <div className="flex flex-col items-center">
                   <Swiper
                     style={{ margin: "0" }}
@@ -319,8 +321,88 @@ function Extension({ extension }) {
                   </Swiper>
                   <h2 className="text-xl font-bold">Featured</h2>
                 </div>
-              </div>
+              </div> */}
+              {/* LAYOUT */}
               <Masonry
+                breakpointCols={{
+                  0:2,
+                  520: 2,
+                  1000: 3,
+                  1300: 4,
+                  1550: 5,
+                  1750: 6,
+                  default:7,
+
+                }}
+                className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
+                columnClassName="my-mansory-grid-column"
+              >
+                {data.map((e, index) =>
+                  e.extension === "load" ? (
+                    <div
+                      key={index + "load"}
+                      style={{
+                        height: `${Math.floor(
+                          Math.random() * (400 - 150 + 1) + 150
+                        )}px`,
+                      }}
+                      className={` bg-rose-100 w-full rounded-xl animate-card-squeleton transition-all`}
+                    ></div>
+                  ) : (
+                    <a
+                      className="w-full"
+                      href={`/extensions/${extension}/post/${e.id}?p=${btoa(
+                        e.preview_url
+                      )}&f=${btoa(e.file_url)}`}
+                      key={e.id}
+                    >
+                      {e.type_file === "mp4" || e.type_file === "webm" ? (
+                        <div
+                          style={{
+                            backgroundImage:
+                              " linear-gradient(144deg,#a241ff, #513bfa 50%,#3f89ff)",
+                          }}
+                          className="w-full rounded-[18px] p-[3px] shadow-xl shadow-blue-500/30 relative"
+                        >
+                          <img
+                            className="w-full rounded-2xl max-h-[500px] object-cover"
+                            src={e.preview_url}
+                            alt={e.owner + "image"}
+                            loading="lazy"
+                          />
+                          <i className="absolute top-3 right-3 text-neutral-500 bg-white/80 px-2 rounded-full">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1.2rem"
+                              height="1.2rem"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11z"
+                              />
+                            </svg>
+                          </i>
+                        </div>
+                      ) : (
+                        <div className="">
+                          <img
+                          style={{filter:"brightness(0.95)"}}
+                            className="w-full rounded-2xl max-h-[500px] object-cover"
+                            src={e.preview_url}
+                            alt={e.owner + "image"}
+                            loading="lazy"
+                          />
+                          <div className="flex gap-1 items-center mt-2 mb-5">
+                            <h2 className="text-sm font-semibold">{e.owner}</h2>
+                          </div>
+                        </div>
+                      )}
+                    </a>
+                  )
+                )}
+              </Masonry>
+              {/* <Masonry
                 columns={{
                   0: 1,
                   350: 2,
@@ -348,6 +430,7 @@ function Extension({ extension }) {
                     ></div>
                   ) : (
                     <a
+                      className="bg-lime-500 p-1"
                       href={`/extensions/${extension}/post/${e.id}?p=${btoa(
                         e.preview_url
                       )}&f=${btoa(e.file_url)}`}
@@ -359,7 +442,7 @@ function Extension({ extension }) {
                             backgroundImage:
                               " linear-gradient(144deg,#a241ff, #513bfa 50%,#3f89ff)",
                           }}
-                          className="w-full h-fit rounded-[18px] p-[3px] shadow-xl shadow-blue-500/30 relative"
+                          className="w-full rounded-[18px] p-[3px] shadow-xl shadow-blue-500/30 relative"
                         >
                           <img
                             className="w-full rounded-2xl max-h-[500px] object-cover"
@@ -382,49 +465,40 @@ function Extension({ extension }) {
                           </i>
                         </div>
                       ) : (
-                        // <div className="relative drop-shadow-xl w-48 h-64 overflow-hidden rounded-xl bg-[#3d3c3d]">
-                        //   <img
-                        //   className="w-full absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] max-h-[500px]"
-                        //   src={e.preview_url}
-                        //   alt={e.owner + "image"}
-                        //   loading="lazy"
-                        // />
-                        // <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2">
-
-                        // </div>
-                        // </div>
-                        <img
-                          className="w-full rounded-2xl max-h-[500px] object-cover"
-                          src={e.preview_url}
-                          alt={e.owner + "image"}
-                          loading="lazy"
-                        />
+                        <div className="bg-red-500">
+                          <img
+                            className="w-full rounded-2xl max-h-[500px] object-cover"
+                            src={e.preview_url}
+                            alt={e.owner + "image"}
+                            loading="lazy"
+                          />
+                          <div className="flex gap-1 items-center mt-2 mb-4">
+                            <h2 className="text-sm font-semibold">{e.owner}</h2>
+                          </div>
+                        </div>
                       )}
-                      <div className="flex gap-1 items-center mt-2 mb-4">
-                        <h2 className="text-sm font-semibold">{e.owner}</h2>
-                      </div>
                     </a>
                   )
                 )}
-              </Masonry>
+              </Masonry> */}
             </div>
           ) : (
             <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-2 overflow-hidden">
               <div className="animate-fade-up">
-                <Masonry
-                  columns={{
-                    0: 1,
-                    350: 2,
-                    400: 2,
-                    700: 3,
-                    1000: 4,
-                    1250: 5,
-                    1500: 6,
-                    1750: 7,
-                  }}
-                  // gap={16}
-                  className="gap-2 sm:gap-4"
-                >
+              <Masonry
+                breakpointCols={{
+                  0:2,
+                  520: 2,
+                  1000: 3,
+                  1300: 4,
+                  1550: 5,
+                  1750: 6,
+                  default:7,
+
+                }}
+                className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
+                columnClassName="my-mansory-grid-column"
+              >
                   {Array.from({ length: 30 }).map((e, k) => {
                     return <Card key={k} delay={k} />;
                   })}
