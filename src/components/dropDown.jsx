@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function DropDown({ data }) {
+function DropDownProfile({ data }) {
   const [active, setActive] = useState(false);
   function toggleActive() {
     setActive((prev) => !prev);
@@ -126,4 +126,4 @@ function DropDown({ data }) {
     </div>
   );
 }
-export default DropDown;
+export default DropDownProfile;

@@ -1,17 +1,23 @@
 import type { UserProps } from "../types/UserProps";
 import { useState } from "react";
+type ButtonStates = "false" | "saving" | "removing" | "true";
 interface PopoverButtonProps {
   defaultCollectionName: string;
-  saved: boolean;
+  // saved: boolean;
   collections: {
     _id: string;
     name: string;
     images: { preview_url: string; file_url: string }[];
   }[];
   file_url: string;
-  handleRemove: () => void;
-  handleSave: () => void;
-  setDefaultCollection: React.Dispatch<React.SetStateAction<null | {}>>;
+  handleRemove: (some: string) => Promise<void>;
+  handleSave: (some: string) => Promise<void>;
+  setDefaultCollection: React.Dispatch<
+    React.SetStateAction<{
+      id: string;
+      name: string;
+    } | null>
+  >;
   handleChangeDefaultCollection: ({
     id,
     name,
@@ -20,8 +26,8 @@ interface PopoverButtonProps {
     name: string;
   }) => void;
   defaultCollection: { id: string; name: string };
-  user: UserProps;
-  setIsLoading: () => void;
+  user: UserProps | null;
+  setIsLoading: (some: ButtonStates) => void;
 }
 interface PopoverBodyProps {
   collections: {
@@ -33,7 +39,12 @@ interface PopoverBodyProps {
   handleClose: () => void;
   handleRemove: (id: string) => void;
   handleSave: (id: string) => void;
-  setDefaultCollection: React.Dispatch<React.SetStateAction<null | {}>>;
+  setDefaultCollection: React.Dispatch<
+    React.SetStateAction<{
+      id: string;
+      name: string;
+    } | null>
+  >;
   handleChangeDefaultCollection: ({
     id,
     name,
@@ -41,7 +52,7 @@ interface PopoverBodyProps {
     id: string;
     name: string;
   }) => void;
-  setIsLoading: (some: string) => void;
+  setIsLoading: (some: ButtonStates) => void;
 }
 
 function PopoverButton({
@@ -93,7 +104,7 @@ function PopoverButton({
 
       {/* REDIRIGIR HACIA LA GALERIA SELECCIONADA */}
       <a
-        href={`/${user.name}/${defaultCollectionName}/${defaultCollection.id}`}
+        href={`/${user?.name}/${defaultCollectionName}/${defaultCollection.id}`}
         className="ml-3"
       >
         <svg
@@ -234,9 +245,7 @@ function PopoverBody({
                     Saved
                   </button>
                 ) : (
-                  <button
-                    className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white"
-                  >
+                  <button className="hidden group-hover:flex bg-red-500 px-4 py-2 rounded-full text-white">
                     Saved
                   </button>
                 )

@@ -5,7 +5,7 @@ export default {
     extend: {
       animation: {
         "card-squeleton": "reflect 2s linear infinite",
-        "fade-up":"fade_up 1s cubic-bezier(0, 0.83, 0.43, 1.02)"
+        "fade-up": "fade_up 1s cubic-bezier(0, 0.83, 0.43, 1.02)",
       },
       keyframes: {
         reflect: {
@@ -23,13 +23,13 @@ export default {
             backgroundPosition: "700px",
           },
         },
-        fade_up:{
-          "0%":{
-            transform:"translateY(100%)"
+        fade_up: {
+          "0%": {
+            transform: "translateY(100%)",
           },
-          "100%":{
-            transform:"translateY(0%)"
-          }
+          "100%": {
+            transform: "translateY(0%)",
+          },
         }
       },
     },

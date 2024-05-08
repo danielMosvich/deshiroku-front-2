@@ -11,7 +11,7 @@ export interface ImagesProps {
     id:            number;
     owner:         string;
     rating:        string;
-    tags:          string;
+    tags:          TagAttributes[];
     source:        string;
     file_url:      string;
     sample_url:    string;
@@ -23,7 +23,14 @@ export interface ImagesProps {
     sample_width:  number;
     extension:string
 }
-
+export interface TagAttributes {
+    type:      number;
+    count:     number;
+    name:      string;
+    ambiguous: number;
+    id:        number;
+    type_failed?: boolean;
+}
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {

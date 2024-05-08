@@ -18,6 +18,7 @@
     "@types/react-dom": "^18.2.22",
     "@vercel/analytics": "^1.2.2",
     "astro": "^4.5.10",
+    "axios": "^1.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-layout-masonry": "^1.1.0",

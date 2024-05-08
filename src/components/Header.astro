@@ -6,36 +6,75 @@ import HeaderUser from "./HeaderUser";
 ---
 
 <header
-  class="bg-white/90 backdrop-blur-lg w-full h-20 fixed md:flex hidden gap-0 px-10 items-center z-40"
+  class="bg-white w-full min-h-20 fixed md:flex md:flex-col md:justify-center  hidden gap-0 px-10 items-center z-40 "
 >
-  <a
-    href="/"
-    class="capitalize font-semibold bg-neutral-950 text-white px-4 py-2 rounded-full"
-    >Inicio
-  </a>
-  {
-    extension ? (
-      <a
-        href={`/extensions/${extension}`}
-        class="capitalize font-semibold  px-4 py-2 rounded-full"
-      >
-        {extension}
-      </a>
-    ) : (
-      <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full">
-        extensions
-      </a>
-    )
-  }
-  <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button>
-
-  <Searcher client:load />
-  <HeaderUser client:load />
+  <div class="flex w-full">
+    <a
+      href="/"
+      class="capitalize font-semibold bg-neutral-950 text-white px-4 py-2 rounded-full flex items-center"
+      >Inicio
+    </a>
+    {
+      extension ? (
+        <a
+          href={`/extensions/${extension}`}
+          class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center"
+        >
+          {extension}
+        </a>
+      ) : (
+        <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full">
+          extensions
+        </a>
+      )
+    }
+    <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button
+    >
+    <Searcher client:load />
+    <HeaderUser client:load />
+  </div>
+  <!-- <div>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea commodi illo ex unde, soluta dolor quia, expedita libero modi nam optio tempore ipsa iste! Reiciendis optio earum voluptate fugiat quibusdam.
+  </div> -->
   <!-- <div class="avatar flex items-center ml-3 z-[51]">
+    <ul
+      class="bg-white/90 backdrop-blur-lg w-full p-5  h-20 mt-20 z-10 flex gap-2 items-center"
+    >
+      <li
+        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
+      >
+        <img
+          class="w-12 h-12 rounded-full"
+          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
+          alt=""
+        />
+        <p class="font-semibold">nier</p>
+      </li>
+      <li
+        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
+      >
+        <img
+          class="w-12 h-12 rounded-full"
+          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
+          alt=""
+        />
+        <p class="font-semibold">nier</p>
+      </li>
+      <li
+        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
+      >
+        <img
+          class="w-12 h-12 rounded-full"
+          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
+          alt=""
+        />
+        <p class="font-semibold">nier</p>
+      </li>
+    </ul>
     
   </div> -->
 </header>
-<header
+<!-- <header
   class="flex md:hidden fixed bottom-0 z-50 bg-white w-full py-3 justify-center gap-10"
 >
   <a href="/" class="text-neutral-950">
@@ -84,7 +123,7 @@ import HeaderUser from "./HeaderUser";
       ></path></svg
     >
   </a>
-</header>
+</header> -->
 <style></style>
 <script>
   // import type { UserProps } from "../types/UserProps";

@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 type ButtonStates = "false" | "saving" | "removing" | "true";
 
 interface SaveButtonProps {
-  handleSave: (some: string) => Promise<boolean>;
-  handleRemove: (some: string) => Promise<boolean>;
+  handleSave: (some: string) => Promise<void>;
+  handleRemove: (some: string) => Promise<void>;
   defaultCollection: { name: string; id: string };
   isLoading: ButtonStates;
-  setIsLoading: (state: string) => void;
+  // setIsLoading: (state: ButtonStates) => void;
 }
 function SaveButton({
   handleSave,
   handleRemove,
   defaultCollection,
   isLoading,
-  setIsLoading,
+  // setIsLoading,
 }: SaveButtonProps) {
 
 useEffect(()=>{},[isLoading])
