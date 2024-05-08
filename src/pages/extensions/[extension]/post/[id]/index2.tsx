@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import getPostById from "../../../../../services/getPostById";
-import type { ImagesProps } from "types/ImagesProps";
+import type { ImagesProps, TagAttributes } from "types/ImagesProps";
 import Alert from "../../../../../components/global-native/alert";
 import type { Collection, UserProps } from "types/UserProps";
 import PopoverButton from "../../../../../components/popoverButton";
@@ -530,7 +530,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       <div className="">
                         <h2 className=" font-semibold capitalize">general</h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.slice(0, 20).map((el, i) => {
+                          {data.tags.slice(0, 20).map((el:TagAttributes, i:number) => {
                             if (el.type === 0) {
                               return (
                                 <TagButton
