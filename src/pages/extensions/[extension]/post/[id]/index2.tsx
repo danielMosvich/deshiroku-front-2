@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import getPostById from "../../../../../services/getPostById";
-import type { ImagesProps, TagAttributes } from "types/ImagesProps";
+import type { ImagesProps, TagAttributes } from "../../../../../types/ImagesProps";
 import Alert from "../../../../../components/global-native/alert";
-import type { Collection, UserProps } from "types/UserProps";
+import type { Collection, UserProps } from "../../../../../types/UserProps";
 import PopoverButton from "../../../../../components/popoverButton";
 import SaveButton from "../../../../../components/SaveButton";
 import TagButton from "../../../../../components/header/TagButton";
@@ -215,7 +215,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
       for (const [key, value] of searchParams.entries()) {
         params[key] = value;
       }
-      console.log(params)
+      console.log(params);
       const type =
         params.file_url.split(".")[params.file_url.split(".").length - 1];
       setParamsProperties({
@@ -307,11 +307,12 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         if (parsedLocalStorageUser) {
           setCollections(parsedLocalStorageUser.collections);
           const index = parsedLocalStorageUser.collections.findIndex(
-            (e) => e._id === parsedLocalStorageDefaultCollection.id
+            (e:Collection) => e._id === parsedLocalStorageDefaultCollection.id
           );
           if (index !== -1) {
             const match = parsedLocalStorageUser.collections[index].images.some(
-              (e) => e.file_url === data.file_url
+              (e: { file_url: string; preview_url: string }) =>
+                e.file_url === data.file_url
             );
             setIsLoading(String(match) as ButtonStates);
           } else {
@@ -447,11 +448,11 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 {/* CONTENT TO SAVED IN MOBILE */}
                 <div className="lg:flex mt-5  hidden">
                   <div className="">
-                    {data.tags.some((e) => e.type === 1) && (
+                    {data.tags.some((e: TagAttributes) => e.type === 1) && (
                       <div className="">
                         <h2 className=" font-semibold capitalize">artist</h2>
                         <div className="my-2 flex gap-1">
-                          {data.tags.map((el, i) => {
+                          {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 1) {
                               return (
                                 <TagButton
@@ -467,11 +468,11 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e) => e.type === 3) && (
+                    {data.tags.some((e: TagAttributes) => e.type === 3) && (
                       <div>
                         <h2 className=" font-semibold capitalize">copyright</h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el, i) => {
+                          {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 3) {
                               return (
                                 <TagButton
@@ -487,11 +488,11 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e) => e.type === 4) && (
+                    {data.tags.some((e: TagAttributes) => e.type === 4) && (
                       <div>
                         <h2 className=" font-semibold capitalize">character</h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el, i) => {
+                          {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 4) {
                               return (
                                 <TagButton
@@ -507,11 +508,11 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e) => e.type === 5) && (
+                    {data.tags.some((e: TagAttributes) => e.type === 5) && (
                       <div>
                         <h2 className=" font-semibold capitalize">meta</h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el, i) => {
+                          {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 5) {
                               return (
                                 <TagButton
@@ -526,22 +527,24 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                         </div>
                       </div>
                     )}
-                    {data.tags.some((e) => e.type === 0) && (
+                    {data.tags.some((e: TagAttributes) => e.type === 0) && (
                       <div className="">
                         <h2 className=" font-semibold capitalize">general</h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.slice(0, 20).map((el:TagAttributes, i:number) => {
-                            if (el.type === 0) {
-                              return (
-                                <TagButton
-                                  key={String(i) + String(el.id) + extension}
-                                  type={el.type}
-                                >
-                                  {el.name}
-                                </TagButton>
-                              );
-                            }
-                          })}
+                          {data.tags
+                            .slice(0, 20)
+                            .map((el: TagAttributes, i: number) => {
+                              if (el.type === 0) {
+                                return (
+                                  <TagButton
+                                    key={String(i) + String(el.id) + extension}
+                                    type={el.type}
+                                  >
+                                    {el.name}
+                                  </TagButton>
+                                );
+                              }
+                            })}
                         </div>
                       </div>
                     )}
