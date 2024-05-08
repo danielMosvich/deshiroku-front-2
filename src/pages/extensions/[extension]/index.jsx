@@ -238,7 +238,7 @@ function Extension({ extension }) {
                 columnClassName="my-mansory-grid-column"
               >
                 {Array.from({ length: 30 }).map((e, k) => {
-                  return <Card key={k} delay={k} />;
+                  return <Card key={k+e} delay={k} />;
                 })}
               </Masonry>
             </div>
