@@ -155,7 +155,7 @@ function Extension({ extension }) {
                   <a
                     className="w-full"
                     href={getHref(e)}
-                    key={`${e.id}-${Math.random() * 100 + page}`}
+                    key={e.id}
                   >
                     {e.type_file === "mp4" || e.type_file === "webm" ? (
                       <div>
