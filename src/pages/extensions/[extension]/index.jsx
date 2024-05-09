@@ -110,40 +110,24 @@ function Extension({ extension }) {
   }, []);
 
   // !SCROLL DETECT
-  // useEffect(() => {
-  //   if (data && data.length > 0 && !isLoadingMore) {
-  //     const handleScroll = () => {
-  //       const { scrollTop, scrollHeight, clientHeight } =
-  //         document.documentElement;
-  //       if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
-  //         console.log("LOAD MORE", page + 1);
-  //         setIsLoadingMore(false);
-  //         GetImages(page + 1);
-  //       }
-  //     };
-  //     handleScroll()
-  //   }
-  // }, [isLoadingMore]);
   useEffect(() => {
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } =
         document.documentElement;
 
-      if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 4) {
-        if (!isLoadingMore) {
-          console.log(`ya ${page}`);
+      if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 5) {
+        if (!isLoadingMore && data.length > 0) {
+          console.log(`ya ${page + 1}`);
           GetImages(page + 1);
           setIsLoadingMore(true);
         }
-      } else {
-        console.log("aun no");
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isLoadingMore]);
+  }, [data, isLoadingMore]);
   return (
     <div className="relative pt-5 md:pt-0">
       <div>
@@ -168,7 +152,11 @@ function Extension({ extension }) {
                   <Card delay={index} key={`${index}-load-${page}`} />
                 ) : (
                   // AQUI LAS CARTAS NORMALES
-                  <a className="w-full" href={getHref(e)} key={e.id}>
+                  <a
+                    className="w-full"
+                    href={getHref(e)}
+                    key={`${e.id}-${Math.random() * 100 + page}`}
+                  >
                     {e.type_file === "mp4" || e.type_file === "webm" ? (
                       <div>
                         <div
@@ -237,8 +225,8 @@ function Extension({ extension }) {
                 className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
                 columnClassName="my-mansory-grid-column"
               >
-                {Array.from({ length: 30 }).map((e, k) => {
-                  return <Card key={k+e} delay={k} />;
+                {Array.from({ length: 30 }).map((_e, k) => {
+                  return <Card key={k} delay={k} />;
                 })}
               </Masonry>
             </div>
