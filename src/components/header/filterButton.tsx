@@ -114,7 +114,7 @@ function FilterButton({
   };
   return (
     <a
-      className=" bg-neutral-200 hover:bg-neutral-300 rounded-full p-2 relative"
+      className=" bg-neutral-200 hover:bg-neutral-300 rounded-full p-2 relative dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-600 cursor-pointer"
       onClick={() => setActive((prev) => !prev)}
     >
       <svg
@@ -138,8 +138,8 @@ function FilterButton({
       {active && (
         <DropDown position="left" close={() => setActive(false)}>
           <div className="flex flex-col items-start">
-            <h2 className="font-semibold text-lg">Filters to search</h2>
-            <p className="text-sm text-start font-semibold text-neutral-600">
+            <h2 className="font-semibold text-lg dark:text-white">Filters to search</h2>
+            <p className="text-sm text-start font-semibold text-neutral-600 dark:text-neutral-300">
               this will remain in the other searches
             </p>
             <p></p>

@@ -3,6 +3,9 @@ export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
+      fontFamily:{
+        ui:["Open Sans", "sans-serif"]
+      },
       animation: {
         "card-squeleton": "reflect 2s linear infinite",
         "fade-up": "fade_up 1s cubic-bezier(0, 0.83, 0.43, 1.02)",

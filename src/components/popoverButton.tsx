@@ -77,11 +77,11 @@ function PopoverButton({
   }
   return (
     <div
-      className="relative flex items-center rounded-full px-4 font-semibold cursor-pointer select-none"
+      className="relative flex items-center rounded-full px-4 font-semibold cursor-pointer select-none dark:text-white"
       onClick={handleActive}
     >
       {/* NOMBRE DE LA COLECCION SELECIONADA */}
-      <label className="cursor-pointer capitalize">
+      <label className="cursor-pointer capitalize ">
         {defaultCollectionName}
       </label>
       {/* ICONO DE DROPDOWN */}
@@ -158,18 +158,18 @@ function PopoverBody({
       }}
     >
       <div
-        className="absolute shadow-2xl bg-white ring-1 top-[100%] left-[-60%] mx-auto w-72 rounded-xl p-2 flex flex-col justify-center mt-2 z-40 select-none overflow-auto"
+        className="absolute shadow-2xl bg-white dark:bg-neutral-900 ring-1 top-[100%] left-[-60%] mx-auto w-72 rounded-xl p-2 flex flex-col justify-center mt-2 z-40 select-none overflow-auto"
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <h4 className="text-center">Guardar</h4>
+        <h4 className="text-center my-2">Guardar</h4>
         <p className="text-xs mt-3 mb-1 px-2">Save it in your collections</p>
         {collections.map((collection, i) => {
           return (
             <div
               key={i + "collectionBy" + collection._id}
-              className="flex  w-full items-center justify-between gap-3 group hover:bg-neutral-200 p-2 rounded-md"
+              className="flex  w-full items-center justify-between gap-3 group hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 rounded-md"
               onClick={() => {
                 if (collection.images.length > 0) {
                   if (
@@ -260,7 +260,7 @@ function PopoverBody({
       </div>
       {/* PANTALLA PARA CERRAR EL POPOVER */}
       <div
-        className="fixed bg-rose-100/20  w-full h-screen left-0 top-0 z-30 "
+        className="fixed bg-white/40 dark:bg-black/40  w-full h-screen left-0 top-0 z-30 "
         onClick={handleClose}
       ></div>
     </div>

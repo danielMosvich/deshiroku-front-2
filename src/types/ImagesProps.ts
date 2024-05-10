@@ -12,6 +12,7 @@ export interface ImagesProps {
     owner:         string;
     rating:        string;
     tags:          TagAttributes[];
+    tags_length:number,
     source:        string;
     file_url:      string;
     sample_url:    string;

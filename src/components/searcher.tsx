@@ -485,12 +485,14 @@ function Searcher() {
     }
   };
   const typesTagsTransform = (type: string): number => {
-    if (type === "general") return 0;
-    if (type === "artist") return 1;
-    if (type === "copyrigth") return 3;
-    if (type === "character") return 4;
-    if (type === "meta") return 5;
-    if (type === "metadata") return 5;
+    // console.log(type)
+    // if(type === "1") console.log("Xd")
+    if (type === "general" || type === "0") return 0;
+    if (type === "artist" || type === "1") return 1;
+    if (type === "copyrigth" || type === "3") return 3;
+    if (type === "character" || type === "4") return 4;
+    if (type === "meta" || type === "5") return 5;
+    if (type === "metadata" || type === "2") return 5;
     return 0;
   };
   const getParams = () => {
@@ -557,28 +559,40 @@ function Searcher() {
         const params = getParams();
         if (params) {
           setSelectedTags(params.tags);
-          setFilters(params.filter);
+          if (params.filter) {
+            setFilters(params.filter);
+          } else {
+            setFilters({
+              sort: {
+                q: "sort",
+                type: "updated",
+                order: "desc",
+              },
+              score: {
+                value: 0,
+              },
+              rating: "all",
+            });
+          }
         }
       }
     }
   }, [active]);
 
-  useEffect(() => {
-    console.log("changed");
-  }, [filters]);
+  useEffect(() => {}, [filters]);
   //? SI ES QUE EL INPUT ESTA ESCRIBIENDOSE
   if (active) {
     return (
       //? CONTAINER PRINCIPAL
-      <div className="w-full  relative">
+      <div className="w-full relative">
         {/* searcher */}
         <div className="w-full ">
-          <div className="rounded-3xl bg-white relative">
+          <div className="rounded-3xl relative">
             <input
               ref={inputRef}
               value={inputValue}
               placeholder="search"
-              className="bg-neutral-200 w-full rounded-full px-4 py-3  outline-none placeholder:text-neutral-500 placeholder:font-semibold z-[52] relative"
+              className="bg-neutral-200 dark:bg-neutral-800 dark:text-white w-full rounded-full px-4 py-3  outline-none placeholder:text-neutral-500 placeholder:font-semibold z-[52] relative"
               type="text"
               onInput={handleChange}
               onKeyDown={handleKeyDown}
@@ -586,7 +600,7 @@ function Searcher() {
             {/* CONTENIDO DE BUSQUEDA DE TAGS O RECOMENDACIONES */}
             {/* ! solo se active si es que el input no tiene nada PARA NO INTERRUMPIR LA BUSQUEDA */}
 
-            <div className="w-full flex flex-col gap-2 p-5 absolute top-0 z-[51] bg-white rounded-3xl pt-14 ring-4">
+            <div className="w-full flex flex-col gap-2 p-5 absolute top-0 z-[51] bg-white dark:bg-neutral-900 rounded-3xl pt-14 ring-4">
               {extension && selectedTags && selectedTags.length > 0 && (
                 <button
                   onClick={handleGo}
@@ -596,20 +610,25 @@ function Searcher() {
                 </button>
               )}
               {selectedTags && selectedTags.length > 0 && (
-                <ul className="flex gap-2 overflow-auto">
-                  {selectedTags.map((item, index) => (
-                    <TagButton
-                      type={typesTagsTransform(item.type)}
-                      flat
-                      key={item.label + String(index)}
-                      action={() => {
-                        removeTag(item.value);
-                      }}
-                    >
-                      {item.value}
-                    </TagButton>
-                  ))}
-                </ul>
+                <div className="flex flex-col gap-2 overflow-auto">
+                  <h2 className="dark:text-white text-lg font-semibold">
+                    Selected
+                  </h2>
+                  <div className="flex flex-row gap-2">
+                    {selectedTags.map((item, index) => (
+                      <TagButton
+                        type={typesTagsTransform(item.type)}
+                        flat
+                        key={item.label + String(index)}
+                        action={() => {
+                          removeTag(item.value);
+                        }}
+                      >
+                        {item.value}
+                      </TagButton>
+                    ))}
+                  </div>
+                </div>
               )}
               {/* TAG SECTION */}
               {/* BUSQUEdAS RECIENTES */}
@@ -667,7 +686,9 @@ function Searcher() {
               cardsTags ? (
                 selectedTags?.length === 0 && (
                   <div>
-                    <h4 className="font-semibold text-lg">Recomendations</h4>
+                    <h4 className="font-semibold text-lg dark:text-white">
+                      Recomendations
+                    </h4>
                     <div className="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 grid-cols-2 gap-3">
                       {/* SWIPER CONTAINER */}
                       {cardsTags[
@@ -678,13 +699,12 @@ function Searcher() {
                         <a
                           href={item.url}
                           key={index}
-                          className="bg-neutral-100 flex gap-5 items-center  w-full h-fit rounded-2xl overflow-hidden hover:brightness-90 cursor-pointer"
+                          className="bg-neutral-100 dark:bg-neutral-900 dark:text-white flex gap-5 items-center  w-full h-fit rounded-2xl overflow-hidden hover:brightness-95 dark:hover:brightness-75 cursor-pointer"
                         >
                           <img
-                            style={{ filter: "brightness(0.95)" }}
                             className="lg:min-w-[110px] lg:max-w-[110px] lg:min-h-[110px] lg:max-h-[110px] 
                             min-w-[100px] max-w-[100px] min-h-[100px] max-h-[100px]
-                            object-cover"
+                            object-cover "
                             src={item.image_url}
                             alt=""
                           />
@@ -699,7 +719,9 @@ function Searcher() {
               ) : (
                 // BUSQUEDA RESULTADOS
                 <div>
-                  <h2 className="font-semibold text-lg">Busqueda</h2>
+                  <h2 className="font-semibold text-lg dark:text-white">
+                    Results
+                  </h2>
                   <ul className="flex flex-col gap-2 mt-3">
                     {tags &&
                       tags.map((item, index) => (
@@ -732,7 +754,7 @@ function Searcher() {
     return (
       //? CONTAINER PRINCIPAL
       <>
-        <div className="cursor-pointer w-full bg-neutral-200  rounded-full overflow-hidden pl-2 flex items-center text-neutral-500">
+        <div className="cursor-pointer w-full bg-neutral-200 dark:bg-neutral-800   rounded-full overflow-hidden pl-2 flex items-center text-neutral-500">
           <i className="mx-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -754,8 +776,8 @@ function Searcher() {
             }
             className={`font-semibold w-full bg-transparent pr-10 py-3 text-black outline-none ${
               selectedTags?.length === 0
-                ? "placeholder:text-neutral-500"
-                : "placeholder:text-black"
+                ? "placeholder:text-neutral-500 placeholder:dark:text-neutral-200"
+                : "placeholder:text-black placeholder:dark:text-white"
             }`}
             type="text"
             onFocus={() => {
@@ -769,7 +791,7 @@ function Searcher() {
         </div>
         {/* CUANDO SE HACE UNA BUSQUEDA XD */}
         {isSearch && (
-          <div className="fixed mt-20 bg-white   w-full top-0 left-0 min-h-20 px-10 flex gap-3 items-center z-50">
+          <div className="fixed mt-20 bg-white dark:bg-neutral-950 w-full top-0 left-0 min-h-20 px-10 flex gap-3 items-center z-50">
             <FilterButton
               filters={filters}
               setFilters={setFilters}

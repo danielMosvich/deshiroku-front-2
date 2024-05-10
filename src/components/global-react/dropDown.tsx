@@ -1,9 +1,10 @@
 interface DropDownProps {
   position: "center" | "left" | "right";
-  children: React.ReactNode;
+  children: React.ReactNode | JSX.Element;
   close: () => void;
+  padding?:boolean
 }
-function DropDown({ position = "left", children, close }: DropDownProps) {
+function DropDown({ position = "left", children, close, padding=true }: DropDownProps) {
   const getPosition = () => {
     if (position === "left") {
       return {
@@ -32,10 +33,10 @@ function DropDown({ position = "left", children, close }: DropDownProps) {
       className="absolute w-fit z-30"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="bg-white shadow-xl ring-2 rounded-xl w-fit h-fit absolute top-0 left-0 z-20 pointer-events-auto p-5">
+      <div style={{padding: padding ? "20px" : "0px"}} className="bg-white dark:bg-neutral-900 shadow-xl ring-2 rounded-xl w-fit h-fit absolute top-0 left-0 z-20 pointer-events-auto overflow-hidden">
         {children}
       </div>
-      <div onClick={close} className="bg-black/20 w-full  h-screen fixed top-0 left-0" />
+      <div onClick={close} className="bg-black/40 w-full  h-screen fixed top-0 left-0" />
     </div>
   );
 }

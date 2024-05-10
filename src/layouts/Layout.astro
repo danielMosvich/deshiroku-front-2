@@ -18,6 +18,13 @@ import Header from "../components/Header.astro";
     <meta name="referrer" content="no-referrer" />
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /> -->
     <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <Header />
@@ -27,9 +34,60 @@ import Header from "../components/Header.astro";
   </body>
 </html>
 <style is:global>
+  /* width */
+
+  html {
+    background-color: white;
+    /* font-family:'open sans' ; */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #d6d4d4;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #b4b4b4;
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3a3838;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    html {
+      background-color: rgb(10 10 10);
+
+    /* font-family:'open sans' ; */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #222121;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #4e4d4d;
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3a3838;
+    }
+    }
+  }
   .alert-1-container {
     background-color: rgb(0 0 0 / 0.95);
-    
+
     color: rgb(255, 255, 255);
     max-width: 300px;
     width: 100%;
@@ -46,7 +104,7 @@ import Header from "../components/Header.astro";
     backdrop-filter: blur(30px);
     animation: fade_up 1s cubic-bezier(0, 0.83, 0.43, 1.02);
   }
-  .alert-1-title{
+  .alert-1-title {
     display: flex;
     gap: 10px;
     align-items: center;
@@ -78,14 +136,26 @@ import Header from "../components/Header.astro";
     background-color: rgb(255 255 255 / 80%);
   }
 
-  .alert-1-bg-success{
-    background: linear-gradient(0deg, rgba(0,27,51,0.85) 0%, rgba(0,0,0) 100%);
+  .alert-1-bg-success {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 27, 51, 0.85) 0%,
+      rgba(0, 0, 0) 100%
+    );
   }
-  .alert-1-bg-error{
-    background: linear-gradient(0deg, rgba(51,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  .alert-1-bg-error {
+    background: linear-gradient(
+      0deg,
+      rgba(51, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
   }
-  .alert-1-bg-danger{
-    background: linear-gradient(0deg, rgba(51,34,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  .alert-1-bg-danger {
+    background: linear-gradient(
+      0deg,
+      rgba(51, 34, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
   }
 
   @keyframes hidden_down {

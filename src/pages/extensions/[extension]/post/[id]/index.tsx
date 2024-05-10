@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import getPostById from "../../../../../services/getPostById";
-import type { ImagesProps, TagAttributes } from "../../../../../types/ImagesProps";
+import type {
+  ImagesProps,
+  TagAttributes,
+} from "../../../../../types/ImagesProps";
 import Alert from "../../../../../components/global-native/alert";
 import type { Collection, UserProps } from "../../../../../types/UserProps";
 import PopoverButton from "../../../../../components/popoverButton";
 import SaveButton from "../../../../../components/SaveButton";
 import TagButton from "../../../../../components/header/TagButton";
+import MagicSearch from "../../../../../components/header/magicSearch";
 interface ParamsProps {
   preview_url: string;
   file_url: string;
@@ -307,7 +311,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         if (parsedLocalStorageUser) {
           setCollections(parsedLocalStorageUser.collections);
           const index = parsedLocalStorageUser.collections.findIndex(
-            (e:Collection) => e._id === parsedLocalStorageDefaultCollection.id
+            (e: Collection) => e._id === parsedLocalStorageDefaultCollection.id
           );
           if (index !== -1) {
             const match = parsedLocalStorageUser.collections[index].images.some(
@@ -328,7 +332,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
   }, [collections]);
   return (
     <div>
-      <div className="bg-white sm:shadow-2xl max-w-xl max-h-[1500px] lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl overflow-hidden flex flex-col lg:flex-row p-0">
+      <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl max-h-[800px] overflow-auto lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0">
         {paramsProperties ? (
           <section className="w-full lg:w-3/4 relative">
             {paramsProperties.type_file === "mp4" ||
@@ -339,7 +343,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 src={paramsProperties.file_url}
                 preload="auto"
                 controls
-                className="w-full object-cover"
+                className="rounded-2xl w-full object-cover"
                 onPlay={(e) => (e.currentTarget.volume = 0.5)}
               />
             ) : loadImage ? (
@@ -348,7 +352,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.file_url}
                 alt=""
-                className="rounded-l-2xl brightness-95 w-full object-cover"
+                className="rounded-2xl brightness-95 w-full object-cover"
               />
             ) : (
               <img
@@ -356,7 +360,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.preview_url}
                 alt=""
-                className="rounded-l-2xl brightness-95 w-full object-cover"
+                className="rounded-2xl brightness-95 w-full object-cover"
               />
             )}
           </section>
@@ -365,34 +369,17 @@ function PostById({ extension, id }: { extension: string; id: string }) {
             <div className="animate-card-squeleton max-w-[600px] min-h-[600px] w-full h-full"></div>
           </section>
         )}
-        <div className="lg:p-10 p-5 lg:w-[70%] w-full max-h-fit overflow-hidden border-b-[1px]">
+        {/* DATA SECTION */}
+        <div className="lg:px-10 px-5 lg:pb-10 pb-5 lg:w-[70%] w-full">
           {data ? (
             <div>
               {/* HEADER ----------------------------------- */}
-              <div className="hidden gap-1 justify-end lg:flex">
-                {data.source && (
-                  <a
-                    href={data.source}
-                    target="_blank"
-                    className=" p-2 grid place-content-center w-10 h-10 hover:bg-neutral-200  rounded-full"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.5rem"
-                      height="1.5rem"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5q0-2.725 1.888-4.612T9.5 3q2.725 0 4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5q0-1.875-1.312-3.187T9.5 5Q7.625 5 6.313 6.313T5 9.5q0 1.875 1.313 3.188T9.5 14"
-                      />
-                    </svg>
-                  </a>
-                )}
+              <div className="z-10 hidden gap-1 justify-end lg:flex bg-white dark:bg-neutral-900 items-center sticky top-0 lg:pt-10 pt-3 pb-3 lg:pb-5 ">
+                {data && <MagicSearch type={data.type_file} file_url={paramsProperties?.file_url} source={data.source} />}
                 {data.file_url && (
                   <a
                     onClick={() => handleDownloadClick(data.file_url)}
-                    className="hover:bg-neutral-300 p-2 grid place-content-center w-10 h-10 rounded-full capitalize text-black font-semibold"
+                    className="hover:bg-neutral-300 p-2 grid place-content-center w-10 h-10 rounded-full capitalize text-black font-semibold dark:text-white dark:hover:bg-white dark:hover:text-black"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -437,25 +424,30 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 )}
               </div>
               {/* BODY ------------------------------------ */}
-              <div>
-                <div className="flex items-center gap-3 mt-5">
-                  <div className="bg-rose-400 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white">
+              <div className="">
+                <div className="flex items-center gap-3">
+                  <div className="bg-rose-400 mt-5 lg:mt-0 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white">
                     {data?.owner.split("")[0]}
                   </div>
-                  <p className="font-semibold">{data?.owner}</p>
+                  <p className="font-semibold dark:text-white">{data?.owner}</p>
                 </div>
 
-                {/* CONTENT TO SAVED IN MOBILE */}
-                <div className="lg:flex mt-5  hidden">
+                {/* TAGS CONTENT */}
+                <div className="lg:flex mt-5 pl-1">
                   <div className="">
                     {data.tags.some((e: TagAttributes) => e.type === 1) && (
                       <div className="">
-                        <h2 className=" font-semibold capitalize">artist</h2>
-                        <div className="my-2 flex gap-1">
+                        <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
+                          artist
+                        </h2>
+                        <div className="my-2 flex gap-1 flex-wrap">
                           {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 1) {
                               return (
                                 <TagButton
+                                  action={() => {
+                                    window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                  }}
                                   key={String(i) + String(el.id) + extension}
                                   type={el.type}
                                 >
@@ -470,12 +462,17 @@ function PostById({ extension, id }: { extension: string; id: string }) {
 
                     {data.tags.some((e: TagAttributes) => e.type === 3) && (
                       <div>
-                        <h2 className=" font-semibold capitalize">copyright</h2>
+                        <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
+                          copyright
+                        </h2>
                         <div className="my-2 flex flex-wrap gap-2">
                           {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 3) {
                               return (
                                 <TagButton
+                                  action={() => {
+                                    window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                  }}
                                   key={String(i) + String(el.id) + extension}
                                   type={el.type}
                                 >
@@ -490,12 +487,17 @@ function PostById({ extension, id }: { extension: string; id: string }) {
 
                     {data.tags.some((e: TagAttributes) => e.type === 4) && (
                       <div>
-                        <h2 className=" font-semibold capitalize">character</h2>
+                        <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
+                          character
+                        </h2>
                         <div className="my-2 flex flex-wrap gap-2">
                           {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 4) {
                               return (
                                 <TagButton
+                                  action={() => {
+                                    window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                  }}
                                   key={String(i) + String(el.id) + extension}
                                   type={el.type}
                                 >
@@ -510,12 +512,17 @@ function PostById({ extension, id }: { extension: string; id: string }) {
 
                     {data.tags.some((e: TagAttributes) => e.type === 5) && (
                       <div>
-                        <h2 className=" font-semibold capitalize">meta</h2>
+                        <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
+                          meta
+                        </h2>
                         <div className="my-2 flex flex-wrap gap-2">
                           {data.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 5) {
                               return (
                                 <TagButton
+                                  action={() => {
+                                    window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                  }}
                                   key={String(i) + String(el.id) + extension}
                                   type={el.type}
                                 >
@@ -529,27 +536,72 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                     )}
                     {data.tags.some((e: TagAttributes) => e.type === 0) && (
                       <div className="">
-                        <h2 className=" font-semibold capitalize">general</h2>
-                        <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags
-                            .slice(0, 20)
-                            .map((el: TagAttributes, i: number) => {
-                              if (el.type === 0) {
-                                return (
-                                  <TagButton
-                                    key={String(i) + String(el.id) + extension}
-                                    type={el.type}
-                                  >
-                                    {el.name}
-                                  </TagButton>
-                                );
-                              }
-                            })}
+                        <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
+                          general
+                        </h2>
+                        <div className="">
+                          {data.tags_length < 30 ? (
+                            <div className="flex flex-wrap my-2 gap-1">
+                              {data.tags.map((el: TagAttributes, i: number) => {
+                                if (el.type === 0) {
+                                  return (
+                                    <TagButton
+                                      action={() => {
+                                        window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                      }}
+                                      key={
+                                        String(i) + String(el.id) + extension
+                                      }
+                                      type={el.type}
+                                    >
+                                      {el.name}
+                                    </TagButton>
+                                  );
+                                }
+                              })}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center">
+                              <div
+                                style={{
+                                  maskImage:
+                                    "linear-gradient(black 50%, transparent)",
+                                }}
+                                className="flex flex-wrap my-2 gap-1"
+                              >
+                                {data.tags
+                                  .slice(0, 30)
+                                  .map((el: TagAttributes, i: number) => {
+                                    if (el.type === 0) {
+                                      return (
+                                        <TagButton
+                                          action={() => {
+                                            window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                                          }}
+                                          key={
+                                            String(i) +
+                                            String(el.id) +
+                                            extension
+                                          }
+                                          type={el.type}
+                                        >
+                                          {el.name}
+                                        </TagButton>
+                                      );
+                                    }
+                                  })}
+                              </div>
+                              <button className="text-sm px-3 h-10 font-ui font-semibold text-white bg-neutral-600 rounded-full w-fit hover:bg-neutral-700">
+                                show all {data.tags_length} xd
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
                   </div>
                 </div>
+                {/* CONTENT TO SAVED IN MOBILE */}
                 <div className="lg:hidden flex  mt-5">
                   {/* {data && data.tags.tags.length} */}
                   {data && (
@@ -592,9 +644,9 @@ function PostById({ extension, id }: { extension: string; id: string }) {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="animate-card-squeleton w-2/3 self-end h-12 rounded-full"></div>
+              <div className="animate-card-squeleton w-2/3 self-end h-12 rounded-full mt-10"></div>
               <div className="w-full mt-5 flex gap-3">
-                <div className="w-14 h-14 min-w-14 min-h-14 animate-card-squeleton rounded-full"></div>
+                <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
                 <div className="w-1/2 h-12 animate-card-squeleton rounded-full"></div>
               </div>
               <div className="mt-5 flex flex-col gap-3">

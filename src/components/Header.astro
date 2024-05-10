@@ -6,29 +6,29 @@ import HeaderUser from "./HeaderUser";
 ---
 
 <header
-  class="bg-white w-full min-h-20 fixed md:flex md:flex-col md:justify-center  hidden gap-0 px-10 items-center z-40 "
+  class="bg-white dark:bg-neutral-950 w-full min-h-20 fixed md:flex md:flex-col md:justify-center hidden gap-0 px-10 items-center z-40"
 >
   <div class="flex w-full">
     <a
       href="/"
-      class="capitalize font-semibold bg-neutral-950 text-white px-4 py-2 rounded-full flex items-center"
+      class="capitalize font-semibold bg-neutral-950 dark:bg-white text-white dark:text-black px-4 py-2 rounded-full flex items-center"
       >Inicio
     </a>
     {
       extension ? (
         <a
           href={`/extensions/${extension}`}
-          class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center"
+          class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
         >
           {extension}
         </a>
       ) : (
-        <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full">
+        <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full dark:text-white">
           extensions
         </a>
       )
     }
-    <button class="capitalize font-semibold px-4 py-2 rounded-full">tags</button
+    <button class="capitalize font-semibold px-4 py-2 rounded-full dark:text-white">tags</button
     >
     <Searcher client:load />
     <HeaderUser client:load />

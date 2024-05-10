@@ -89,7 +89,21 @@ function Search({ extension }) {
       const filterString = paramsUri.get("filter");
       const tags = JSON.parse(decodeURIComponent(tagsString));
       const decodedFilterString = decodeURIComponent(filterString);
-      const filterParams = JSON.parse(decodedFilterString);
+      let filterParams = JSON.parse(decodedFilterString);
+      
+      if (!filterParams) {
+        filterParams = {
+          sort: {
+            q: "sort",
+            type: "updated",
+            order: "desc",
+          },
+          score: {
+            value: 0,
+          },
+          rating: "all",
+        };
+      }
       const params = {
         tags,
         filter: filterParams,
@@ -101,17 +115,12 @@ function Search({ extension }) {
           ? `+score:>${params.filter.score.value}`
           : ""
       }`;
-      console.log(tags);
       if (tags) {
-        console.log(
-          params.tags.map((item) => item.value).join("+") + filtersString
-        );
         GetImages(
           1,
           params.tags.map((item) => item.value).join("+") + filtersString
         );
       } else {
-        console.log(filtersString);
         GetImages(1, filtersString);
       }
     } catch (error) {
@@ -127,9 +136,6 @@ function Search({ extension }) {
     }
   }, [extension]);
 
-  // useEffect(()=>{
-
-  // },[])
   //   ? ------------------------------<
   return (
     <div className="md:mt-20 sm:mt-10 mt-2">

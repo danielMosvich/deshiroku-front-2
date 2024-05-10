@@ -32,14 +32,14 @@ useEffect(()=>{},[isLoading])
   }
   if (isLoading === "saving") {
     return (
-      <button className="bg-neutral-900 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
+      <button className="bg-neutral-900 dark:bg-neutral-800 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
         Saving...
       </button>
     );
   }
   if (isLoading === "removing") {
     return (
-      <button className="bg-neutral-900 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
+      <button className="bg-neutral-900 dark:bg-neutral-800 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
         Removing...
       </button>
     );
@@ -47,7 +47,7 @@ useEffect(()=>{},[isLoading])
   if (isLoading === "true") {
     return (
       <button
-        className="bg-neutral-900 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
+        className="bg-neutral-900 dark:bg-neutral-800 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
         onClick={() => {
           handleRemove(defaultCollection.id);
         }}

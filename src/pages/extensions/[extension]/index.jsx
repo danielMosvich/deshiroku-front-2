@@ -11,6 +11,7 @@ function Extension({ extension }) {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [pass, setPass] = useState(false);
 
   function getHref(element) {
     const queryParams = {
@@ -61,10 +62,10 @@ function Extension({ extension }) {
     } else {
       const newArray = new Array(30).fill().map(() => ({ extension: "load" }));
       // LOAD IMAGES
-      const data2 = await getImages(extension, pageParams);
       setData((prev) => {
         return [...prev, ...newArray];
       });
+      const data2 = await getImages(extension, pageParams);
       if (data2.success) {
         const imageUrls = data2.data.map((img) => img.preview_url);
         const imagePromises = imageUrls.map(
@@ -90,9 +91,8 @@ function Extension({ extension }) {
               return newValueToData;
             });
             setPage((prev) => prev + 1);
-            setTimeout(() => {
-              setIsLoadingMore(false);
-            }, 1000);
+            setIsLoadingMore(false);
+            setPass(false);
           } else {
             throw new Error("Algunas imágenes no se cargaron correctamente");
           }
@@ -109,25 +109,26 @@ function Extension({ extension }) {
     }
   }, []);
 
-  // !SCROLL DETECT
+  useEffect(() => {
+    if (!isLoadingMore && data && data.length > 0 && pass) {
+      GetImages(page + 1);
+      setIsLoadingMore(true);
+    }
+  }, [pass]);
   useEffect(() => {
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } =
         document.documentElement;
-
-      if (scrollTop + clientHeight >= scrollHeight - scrollHeight / 5) {
-        if (!isLoadingMore && data.length > 0) {
-          console.log(`ya ${page + 1}`);
-          GetImages(page + 1);
-          setIsLoadingMore(true);
-        }
+        const windowHeightInVH = (clientHeight * 99) / 100;
+      if (scrollTop + window.innerHeight >= scrollHeight - windowHeightInVH) {
+        setPass(true);
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [data, isLoadingMore]);
+  }, [isLoadingMore]);
   return (
     <div className="relative pt-5 md:pt-0">
       <div>
@@ -152,11 +153,7 @@ function Extension({ extension }) {
                   <Card delay={index} key={`${index}-load-${page}`} />
                 ) : (
                   // AQUI LAS CARTAS NORMALES
-                  <a
-                    className="w-full"
-                    href={getHref(e)}
-                    key={e.id}
-                  >
+                  <a className="w-full" href={getHref(e)} key={`${e.id}-page-${page}-index-${index}`}>
                     {e.type_file === "mp4" || e.type_file === "webm" ? (
                       <div>
                         <div
@@ -187,7 +184,7 @@ function Extension({ extension }) {
                           </i>
                         </div>
                         <div className="flex gap-1 items-center mt-2 mb-4">
-                          <h2 className="text-sm font-semibold">{e.id}</h2>
+                          <h2 className="text-sm font-semibold dark:text-white">{e.owner}</h2>
                         </div>
                       </div>
                     ) : (
@@ -200,7 +197,7 @@ function Extension({ extension }) {
                           loading="lazy"
                         />
                         <div className="flex gap-1 items-center mt-2 mb-4">
-                          <h2 className="text-sm font-semibold">{e.id}</h2>
+                          <h2 className="text-sm font-semibold dark:text-white">{e.owner}</h2>
                         </div>
                       </div>
                     )}
@@ -225,7 +222,7 @@ function Extension({ extension }) {
                 className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
                 columnClassName="my-mansory-grid-column"
               >
-                {Array.from({ length: 30 }).map((_e, k) => {
+                {Array.from({ length: 35 }).map((_e, k) => {
                   return <Card key={k} delay={k} />;
                 })}
               </Masonry>
