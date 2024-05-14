@@ -5,7 +5,7 @@ import { useState } from "react";
 interface LoginProps {
   close: () => void;
 }
-function Login({ close }: LoginProps) {
+function LoginComponent({ close }: LoginProps) {
   const [show, setShow] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -73,7 +73,9 @@ function Login({ close }: LoginProps) {
 
           // !LO QUE HACE UNA VEZ TENGA EL COOKIE XD
           close();
-          window.location.reload();
+          // window.location.reload();
+          // !!! MOBILE ONLY
+          window.history.back()
         } else {
           setError(true);
           Alert(
@@ -213,4 +215,4 @@ function Login({ close }: LoginProps) {
     </div>
   );
 }
-export default Login;
+export default LoginComponent;

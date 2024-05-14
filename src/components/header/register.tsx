@@ -6,7 +6,7 @@ interface RegisterProps {
   close: () => void;
 }
 type UsernameStates = "inuse" | "disused" | "null";
-function Register({ close }: RegisterProps) {
+function RegisterComponent({ close }: RegisterProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const currentRequestRef = useRef<AbortController | null>(null);
 
@@ -478,4 +478,4 @@ function Register({ close }: RegisterProps) {
   );
 }
 
-export default Register;
+export default RegisterComponent;

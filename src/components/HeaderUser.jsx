@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DropDown from "./dropDown";
-import Login from "../components/header/login";
-import Register from "../components/header/register";
+import LoginComponent from "../components/header/login";
+import RegisterComponent from "../components/header/register";
 
 function HeaderUser() {
   const [data, setData] = useState(undefined);
@@ -204,30 +204,51 @@ function HeaderUser() {
             >
               Register
             </button>
-            {activeLogin && <Login close={() => setActiveLogin(false)} />}
+            {activeLogin && (
+              <LoginComponent close={() => setActiveLogin(false)} />
+            )}
             {activeRegister && (
-              <Register close={() => setActiveRegister(false)} />
+              <RegisterComponent close={() => setActiveRegister(false)} />
             )}
           </div>
         )}
       </div>
-      <a  href="/login" className="flex md:hidden">
-        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-semibold">
-          <i>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1.5rem"
-              height="1.5rem"
-              viewBox="0 0 256 256"
+      {data ? (
+        <div className="flex items-center md:hidden">
+          <a
+            href={`/${data.username}`}
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-700 w-12 h-12 rounded-full grid
+      place-content-center font-semibold uppercase"
+          >
+            <div
+              className="bg-gradient-to-t
+      from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid
+      place-content-center font-semibold uppercase"
             >
-              <path
-                fill="currentColor"
-                d="M230.93 220a8 8 0 0 1-6.93 4H32a8 8 0 0 1-6.92-12c15.23-26.33 38.7-45.21 66.09-54.16a72 72 0 1 1 73.66 0c27.39 8.95 50.86 27.83 66.09 54.16a8 8 0 0 1 .01 8"
-              />
-            </svg>
-          </i>
+              {data.name.split("")[0]}
+            </div>
+          </a>
+          <DropDown data={data} />
         </div>
-      </a>
+      ) : (
+        <a href="/login" className="flex md:hidden">
+          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-semibold">
+            <i>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.5rem"
+                height="1.5rem"
+                viewBox="0 0 256 256"
+              >
+                <path
+                  fill="currentColor"
+                  d="M230.93 220a8 8 0 0 1-6.93 4H32a8 8 0 0 1-6.92-12c15.23-26.33 38.7-45.21 66.09-54.16a72 72 0 1 1 73.66 0c27.39 8.95 50.86 27.83 66.09 54.16a8 8 0 0 1 .01 8"
+                />
+              </svg>
+            </i>
+          </div>
+        </a>
+      )}
     </>
   );
 }
