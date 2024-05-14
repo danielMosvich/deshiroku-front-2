@@ -50,7 +50,7 @@ function Register({ close }: RegisterProps) {
       const signal = controller.signal;
       try {
         const response = await fetch(
-          `http://localhost:3000/api/user/register/${value}`,
+          `${import.meta.env.PUBLIC_SERVER_URL}/api/user/register/${value}`,
           {
             method: "GET",
             signal: signal,
