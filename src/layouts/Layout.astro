@@ -28,7 +28,7 @@ import Header from "../components/Header.astro";
   </head>
   <body>
     <Header />
-    <main class="md:pt-20">
+    <main class="md:pt-20 md:pb-0 pb-14">
       <slot />
     </main>
   </body>
@@ -108,6 +108,7 @@ import Header from "../components/Header.astro";
     display: flex;
     gap: 10px;
     align-items: center;
+    line-height: 100%;
   }
   .alert-1-description {
     font-size: 0.8rem;

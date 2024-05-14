@@ -12,6 +12,7 @@ import TagButton from "./header/TagButton";
 // import DropDown from "./global-react/dropDown";
 import FilterButton from "./header/filterButton";
 import MagicButtons from "./header/magicButtons";
+import Alert from "./global-native/alert";
 interface tagProps {
   label: string;
   value: string;
@@ -334,6 +335,8 @@ function Searcher() {
   const [filters, setFilters] = useState<null | FilterParams>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [limitSearch, setLimitSearch] = useState(false);
+
   const cardsTags = [
     {
       extension: "realbooru",
@@ -578,9 +581,69 @@ function Searcher() {
       }
     }
   }, [active]);
-
   useEffect(() => {}, [filters]);
+
+  useEffect(() => {
+    if(window.location.pathname === "/"){
+      setLimitSearch(true)
+    }
+  }, []);
+  // ! buscador por mientras que no se puede hacer una busqueda global.
+  if (limitSearch) {
+    return (
+      <>
+        <div
+          onClick={() =>
+            Alert(
+              "top",
+              3000,
+              "danger",
+              "can't use global search yet",
+              "will be added in future versions ^^"
+            )
+          }
+          className="cursor-default w-full bg-neutral-200 dark:bg-neutral-800   rounded-full overflow-hidden pl-2 flex items-center text-neutral-500"
+        >
+          <i className="mx-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.5rem"
+              height="1.5rem"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8m0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6"
+              ></path>
+            </svg>
+          </i>
+          <input
+            readOnly
+            placeholder={
+              selectedTags && selectedTags.length === 0
+                ? "Search"
+                : selectedTags?.map((item) => item.value).join(" ")
+            }
+            className={`font-semibold w-full bg-transparent pr-10 py-3 text-black outline-none ${
+              selectedTags?.length === 0
+                ? "placeholder:text-neutral-500 placeholder:dark:text-neutral-200"
+                : "placeholder:text-black placeholder:dark:text-white"
+            }`}
+            type="text"
+            onFocus={() => {
+              setActive(true);
+              setTimeout(() => {
+                inputRef.current?.focus();
+              }, 100);
+            }}
+            onBlur={() => setActive(false)}
+          />
+        </div>
+      </>
+    );
+  }
   //? SI ES QUE EL INPUT ESTA ESCRIBIENDOSE
+
   if (active) {
     return (
       //? CONTAINER PRINCIPAL

@@ -332,7 +332,8 @@ function PostById({ extension, id }: { extension: string; id: string }) {
   }, [collections]);
   return (
     <div>
-      <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl max-h-[800px] overflow-auto lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0">
+      <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl h-fit lg:max-h-[800px] lg:overflow-auto lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0 mb-5 border-b-[1px] sm:border-none dark:border-neutral-700">
+        {/* PARAMS PROPERTIES SON LAS PROPIEDADES DESDE LA URL PARA CARGAR MAS RAPIDO */}
         {paramsProperties ? (
           <section className="w-full lg:w-3/4 relative">
             {paramsProperties.type_file === "mp4" ||
@@ -343,7 +344,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 src={paramsProperties.file_url}
                 preload="auto"
                 controls
-                className="rounded-2xl w-full object-cover"
+                className="lg:rounded-2xl rounded-t-2xl w-full object-cover"
                 onPlay={(e) => (e.currentTarget.volume = 0.5)}
               />
             ) : loadImage ? (
@@ -352,7 +353,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.file_url}
                 alt=""
-                className="rounded-2xl brightness-95 w-full object-cover"
+                className="lg:rounded-2xl rounded-t-2xl brightness-95 w-full object-cover"
               />
             ) : (
               <img
@@ -360,7 +361,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.preview_url}
                 alt=""
-                className="rounded-2xl brightness-95 w-full object-cover"
+                className="lg:rounded-2xl rounded-t-2xl brightness-95 w-full object-cover"
               />
             )}
           </section>
@@ -372,10 +373,16 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         {/* DATA SECTION */}
         <div className="lg:px-10 px-5 lg:pb-10 pb-5 lg:w-[70%] w-full">
           {data ? (
-            <div>
+            <div className="">
               {/* HEADER ----------------------------------- */}
               <div className="z-10 hidden gap-1 justify-end lg:flex bg-white dark:bg-neutral-900 items-center sticky top-0 lg:pt-10 pt-3 pb-3 lg:pb-5 ">
-                {data && <MagicSearch type={data.type_file} file_url={paramsProperties?.file_url} source={data.source} />}
+                {data && (
+                  <MagicSearch
+                    type={data.type_file}
+                    file_url={paramsProperties?.file_url}
+                    source={data.source}
+                  />
+                )}
                 {data.file_url && (
                   <a
                     onClick={() => handleDownloadClick(data.file_url)}
@@ -394,7 +401,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                     </svg>
                   </a>
                 )}
-                {/* THIS IS A TOOLTIP :D */}
+                {/* THIS IS A Popover para guardar imagenes :D */}
                 {defaultCollection && collections && (
                   <PopoverButton
                     user={user}
@@ -414,26 +421,35 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 )}
 
                 {/* BUTON SECTION FOR SAVE OR DELETE IMG FROM COLLECTION */}
-                {defaultCollection && collections && (
-                  <SaveButton
-                    isLoading={isLoading}
-                    handleSave={handleSave}
-                    handleRemove={handleRemove}
-                    defaultCollection={defaultCollection}
-                  />
+                {defaultCollection ? (
+                  collections && (
+                    <SaveButton
+                      isLoading={isLoading}
+                      handleSave={handleSave}
+                      handleRemove={handleRemove}
+                      defaultCollection={defaultCollection}
+                    />
+                  )
+                ) : (
+                  <a
+                    href="/login"
+                    className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
+                  >
+                    save
+                  </a>
                 )}
               </div>
               {/* BODY ------------------------------------ */}
               <div className="">
-                <div className="flex items-center gap-3">
-                  <div className="bg-rose-400 mt-5 lg:mt-0 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white">
+                <div className="flex items-center gap-3 mt-5">
+                  <div className="bg-rose-400 lg:mt-0 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white">
                     {data?.owner.split("")[0]}
                   </div>
                   <p className="font-semibold dark:text-white">{data?.owner}</p>
                 </div>
 
                 {/* TAGS CONTENT */}
-                <div className="lg:flex mt-5 pl-1">
+                <div className="lg:flex mt-5 pl-1 hidden">
                   <div className="">
                     {data.tags.some((e: TagAttributes) => e.type === 1) && (
                       <div className="">
@@ -602,11 +618,11 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                   </div>
                 </div>
                 {/* CONTENT TO SAVED IN MOBILE */}
-                <div className="lg:hidden flex  mt-5">
+                <div className="lg:hidden flex  mt-3 ">
                   {/* {data && data.tags.tags.length} */}
                   {data && (
                     <div className="flex items-center justify-center gap-3 w-full">
-                      <button className=" px-4 py-3 rounded-full font-semibold">
+                      <button className=" px-4 py-3 dark:text-white rounded-full font-semibold">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1.5rem"
@@ -622,8 +638,22 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       <button className="bg-neutral-200 px-4 py-3 rounded-full font-semibold  gap-1">
                         Source
                       </button>
+                      {defaultCollection ? (
+                        <a
+                          className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
+                        >
+                          save
+                        </a>
+                      ) : (
+                        <a
+                          href="/login"
+                          className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
+                        >
+                          save
+                        </a>
+                      )}
                       {/* <SaveButton /> */}
-                      <button className="flex hover:bg-neutral-100 px-4 py-3 rounded-full font-semibold gap-1">
+                      <button className="flex hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 px-4 py-3 rounded-full font-semibold gap-1">
                         <label htmlFor="">Tags</label>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -657,7 +687,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           )}
         </div>
       </div>
-      {/* FOOTER */}
+      {/* FOOTER (more posts) */}
       <section></section>
     </div>
   );

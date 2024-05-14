@@ -27,7 +27,7 @@ function DropDownProfile({ data }) {
   return (
     <div className="relative">
       <button
-        className="flex items-center w-8 h-8 justify-center rounded-full hover:bg-neutral-200 cursor-pointer relative"
+        className="flex items-center w-8 h-8 justify-center rounded-full hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-700 cursor-pointer relative"
         onClick={toggleActive}
       >
         <svg

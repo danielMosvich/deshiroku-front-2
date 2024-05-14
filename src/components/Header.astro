@@ -1,194 +1,44 @@
 ---
 const { extension } = Astro.params;
-import DropDown from "./dropDown";
 import Searcher from "./searcher";
 import HeaderUser from "./HeaderUser";
+import MobileHeader from "../components/header/mobileHeader";
 ---
 
-<header
-  class="bg-white dark:bg-neutral-950 w-full min-h-20 fixed md:flex md:flex-col md:justify-center hidden gap-0 px-10 items-center z-40"
->
-  <div class="flex w-full">
-    <a
-      href="/"
-      class="capitalize font-semibold bg-neutral-950 dark:bg-white text-white dark:text-black px-4 py-2 rounded-full flex items-center"
-      >Inicio
-    </a>
-    {
-      extension ? (
-        <a
-          href={`/extensions/${extension}`}
-          class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
-        >
-          {extension}
-        </a>
-      ) : (
-        <a href={`/`} class="capitalize font-semibold  px-4 py-2 rounded-full dark:text-white">
-          extensions
-        </a>
-      )
-    }
-    <button class="capitalize font-semibold px-4 py-2 rounded-full dark:text-white">tags</button
-    >
-    <Searcher client:load />
-    <HeaderUser client:load />
+<header>
+  <div
+    class="bg-white dark:bg-neutral-950 w-full min-h-20 fixed md:flex md:flex-col md:justify-center hidden gap-0 px-10 items-center z-40"
+  >
+    <div class="flex w-full">
+      <a
+        href="/"
+        class="capitalize font-semibold bg-neutral-950 dark:bg-white text-white dark:text-black px-4 py-2 rounded-full flex items-center"
+        >Inicio
+      </a>
+      {
+        extension ? (
+          <a
+            href={`/extensions/${extension}`}
+            class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
+          >
+            {extension}
+          </a>
+        ) : (
+          <a
+            href={`/`}
+            class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
+          >
+            extensions
+          </a>
+        )
+      }
+      <button
+        class="capitalize font-semibold px-4 py-2 rounded-full dark:text-white"
+        >tags</button
+      >
+      <Searcher client:load />
+      <HeaderUser client:load />
+    </div>
   </div>
-  <!-- <div>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea commodi illo ex unde, soluta dolor quia, expedita libero modi nam optio tempore ipsa iste! Reiciendis optio earum voluptate fugiat quibusdam.
-  </div> -->
-  <!-- <div class="avatar flex items-center ml-3 z-[51]">
-    <ul
-      class="bg-white/90 backdrop-blur-lg w-full p-5  h-20 mt-20 z-10 flex gap-2 items-center"
-    >
-      <li
-        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
-      >
-        <img
-          class="w-12 h-12 rounded-full"
-          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
-          alt=""
-        />
-        <p class="font-semibold">nier</p>
-      </li>
-      <li
-        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
-      >
-        <img
-          class="w-12 h-12 rounded-full"
-          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
-          alt=""
-        />
-        <p class="font-semibold">nier</p>
-      </li>
-      <li
-        class="bg-rose-400 rounded-full w-fit flex gap-2 items-center pr-5 py-1 pl-1"
-      >
-        <img
-          class="w-12 h-12 rounded-full"
-          src="https://i.pinimg.com/60x60/cc/fb/f6/ccfbf6312acefac296c0181c433bbfde.jpg"
-          alt=""
-        />
-        <p class="font-semibold">nier</p>
-      </li>
-    </ul>
-    
-  </div> -->
+  <MobileHeader client:load extension={extension} />
 </header>
-<!-- <header
-  class="flex md:hidden fixed bottom-0 z-50 bg-white w-full py-3 justify-center gap-10"
->
-  <a href="/" class="text-neutral-950">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="2rem"
-      height="2rem"
-      viewBox="0 0 24 24"
-      ><path fill="currentColor" d="M4 21V9l8-6l8 6v12h-6v-7h-4v7z"></path></svg
-    >
-  </a>
-  <a href={extension && `/extensions/${extension}`} class="text-neutral-800">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="2rem"
-      height="2rem"
-      viewBox="0 0 24 24"
-      ><path
-        fill="currentColor"
-        d="M20 15v-5q0-1.25-.875-2.125T17 7H6V4q0-.825.588-1.412T8 2h12q.825 0 1.413.588T22 4v9q0 .825-.587 1.413T20 15M4 22q-.825 0-1.412-.587T2 20v-9q0-.825.588-1.412T4 9h12q.825 0 1.413.588T18 11v9q0 .825-.587 1.413T16 22z"
-      ></path></svg
-    >
-  </a>
-  <a class="text-neutral-800">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="2rem"
-      height="2rem"
-      viewBox="0 0 24 24"
-      ><path
-        fill="currentColor"
-        d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5q0-2.725 1.888-4.612T9.5 3q2.725 0 4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5q0-1.875-1.312-3.187T9.5 5Q7.625 5 6.313 6.313T5 9.5q0 1.875 1.313 3.188T9.5 14"
-      ></path></svg
-    >
-  </a>
-
-  <a href="/" class="text-neutral-800">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="2rem"
-      height="2rem"
-      viewBox="0 0 256 256"
-      ><path
-        fill="currentColor"
-        d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8M72 96a56 56 0 1 1 56 56a56.06 56.06 0 0 1-56-56"
-      ></path></svg
-    >
-  </a>
-</header> -->
-<style></style>
-<script>
-  // import type { UserProps } from "../types/UserProps";
-  // if (document.cookie) {
-  //   interface Cookie {
-  //     [key: string]: string;
-  //   }
-  //   function obtenerCookies(): Cookie {
-  //     const cookies: Cookie = {};
-  //     document.cookie.split(";").forEach((cookie) => {
-  //       const [nombre, valor] = cookie.split("=").map((part) => part.trim());
-  //       cookies[nombre] = decodeURIComponent(valor);
-  //     });
-  //     return cookies;
-  //   }
-  //   // console.log("XD")
-  //   const container = document.querySelector(".avatar");
-  //   const localStorageData = localStorage.getItem("user") as string;
-  //   const localStorageCollection = localStorage.getItem(
-  //     "defaultCollection"
-  //   ) as string;
-
-  //   if (localStorageData) {
-  //     const data = JSON.parse(localStorageData) as UserProps;
-  //     if (!localStorageCollection) {
-  //       const firstCollection = {
-  //         name: data.collections[0].name,
-  //         id: data.collections[0]._id,
-  //       };
-  //       localStorage.setItem(
-  //         "defaultCollection",
-  //         JSON.stringify(firstCollection)
-  //       );
-  //     }
-  //     const a = document.createElement("a");
-  //     a.href = `/${data.username}`;
-  //     a.className =
-  //       "hover:bg-neutral-200 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase";
-  //     const div = document.createElement("div");
-  //     div.className = `bg-gradient-to-t from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase`;
-  //     div.innerHTML = data.name.split("")[0];
-  //     a.appendChild(div);
-  //     container?.insertBefore(a, container.firstChild);
-  //   } else {
-  //     async function getProfile() {
-  //       const token = obtenerCookies();
-  //       // console.log(token.token);
-  //       const res = await fetch(
-  //         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             Authorization: `Bearer ${JSON.stringify(token)}`,
-  //           },
-  //         }
-  //       );
-  //       const data = await res.json();
-  //       console.log(data);
-  //       localStorage.setItem("user", JSON.stringify(data.data));
-  //       window.location.reload();
-  //     }
-  //     getProfile();
-  //   }
-  // }
-</script>
-<!-- <script is:inline>
- 
-</script> -->
