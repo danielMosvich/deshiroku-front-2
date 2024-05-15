@@ -5,15 +5,13 @@
 // }
 import Layout from "../../layouts/Layout.astro";
 const { user } = Astro.params;
-// console.log(id)
-import getUser from "../../services/getUser";
-const dataEntire = await getUser(String(user));
-const data = dataEntire.data;
-// console.log("xd", data);
+import User from "./user";
 ---
 
 <Layout title={String(user)}>
-  <h2>
+  <User user={user} client:load />
+  <!-- <h2>
+    {data.username === user}
     {
       data !== undefined ? (
         <div>
@@ -75,9 +73,9 @@ const data = dataEntire.data;
         <div>loading</div>
       )
     }
-  </h2>
+  </h2> -->
 </Layout>
-<script>
+<!-- <script>
   const addButton = document.querySelector("#button-add");
 
   if (addButton) {
@@ -118,4 +116,4 @@ const data = dataEntire.data;
       }
     });
   }
-</script>
+</script> -->

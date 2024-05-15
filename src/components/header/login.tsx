@@ -63,7 +63,7 @@ function LoginComponent({ close }: LoginProps) {
           const expirationDateStringRefresh = expirationDateRefresh;
           const refresh_token = `refresh_token=${dataCookie.refresh_token.token}; expires=${expirationDateStringRefresh}; path=/`;
 
-          console.log(access_token, refresh_token);
+          // console.log(access_token, refresh_token);
           document.cookie = access_token;
           document.cookie = refresh_token;
           localStorage.setItem(
@@ -73,9 +73,9 @@ function LoginComponent({ close }: LoginProps) {
 
           // !LO QUE HACE UNA VEZ TENGA EL COOKIE XD
           close();
-          // window.location.reload();
+          window.location.reload();
           // !!! MOBILE ONLY
-          window.history.back()
+          // window.history.back()
         } else {
           setError(true);
           Alert(

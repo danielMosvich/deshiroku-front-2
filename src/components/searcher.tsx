@@ -521,17 +521,21 @@ function Searcher() {
   // TODO--------------------
   useEffect(() => {
     if (window) {
-      const url = window.location.pathname;
-      function getExtension() {
-        const parts = url.split("/extensions/");
-        // console.log(parts)
-        if (parts[0] !== "/") {
-          const extensionName = parts[1].split("/")[0].trim();
-          // console.log(extensionName);
-          setExtension(extensionName);
+      try {
+        const url = window.location.pathname;
+        function getExtension() {
+          const parts = url.split("/extensions/");
+          // console.log(parts)
+          if (parts[0] !== "/") {
+            const extensionName = parts[1].split("/")[0].trim();
+            // console.log(extensionName);
+            setExtension(extensionName);
+          }
         }
+        getExtension();
+      } catch (error) {
+        setLimitSearch(true);
       }
-      getExtension();
     }
   }, []);
   useEffect(() => {
@@ -584,8 +588,8 @@ function Searcher() {
   useEffect(() => {}, [filters]);
 
   useEffect(() => {
-    if(window.location.pathname === "/"){
-      setLimitSearch(true)
+    if (window.location.pathname === "/") {
+      setLimitSearch(true);
     }
   }, []);
   // ! buscador por mientras que no se puede hacer una busqueda global.

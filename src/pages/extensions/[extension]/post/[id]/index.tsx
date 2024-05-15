@@ -344,7 +344,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 src={paramsProperties.file_url}
                 preload="auto"
                 controls
-                className="lg:rounded-2xl rounded-t-2xl w-full object-cover"
+                className="lg:rounded-2xl rounded-t-3xl w-full object-cover "
                 onPlay={(e) => (e.currentTarget.volume = 0.5)}
               />
             ) : loadImage ? (
@@ -353,7 +353,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.file_url}
                 alt=""
-                className="lg:rounded-2xl rounded-t-2xl brightness-95 w-full object-cover"
+                className="lg:rounded-2xl rounded-t-3xl brightness-95 w-full object-cover "
               />
             ) : (
               <img
@@ -361,7 +361,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.preview_url}
                 alt=""
-                className="lg:rounded-2xl rounded-t-2xl brightness-95 w-full object-cover"
+                className="lg:rounded-2xl rounded-t-3xl brightness-95 w-full object-cover "
               />
             )}
           </section>

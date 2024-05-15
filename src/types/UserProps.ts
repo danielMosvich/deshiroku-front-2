@@ -1,12 +1,3 @@
-// To parse this data:
-//
-//   import { Convert, UserProps } from "./file";
-//
-//   const userProps = Convert.toUserProps(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
-
 export interface UserProps {
     name:        string;
     username:    string;
@@ -15,14 +6,77 @@ export interface UserProps {
 }
 
 export interface Collection {
-    name: string;
-    images: {
-        file_url: string;
-        preview_url: string;
-    }[];
-    _id: string;
+    name:   string;
+    _id:    string;
+    images: Image[];
 }
 
+export interface Image {
+    id:            number;
+    owner:         string;
+    rating:        Rating;
+    tags:          PurpleTag[] | TagsClass | string;
+    tags_length?:  number;
+    source:        null | string;
+    file_url:      string;
+    sample_url:    string;
+    preview_url:   string;
+    type_file:     TypeFile;
+    height:        number;
+    width:         number;
+    sample_height: number;
+    sample_width:  number;
+    extension:     Extension;
+    tags_count?:   number;
+}
+
+export enum Extension {
+    Gelbooru = "gelbooru",
+    Realbooru = "realbooru",
+    Rule34 = "rule34",
+    Safebooru = "safebooru",
+}
+
+export enum Rating {
+    Explicit = "explicit",
+    General = "general",
+    Questionable = "questionable",
+    Safe = "safe",
+    Sensitive = "sensitive",
+}
+
+export interface PurpleTag {
+    id:           number | null;
+    name:         string;
+    count:        number | null;
+    type:         number;
+    ambiguous?:   number | null;
+    ambigouis?:   null;
+    type_failed?: boolean;
+}
+
+export interface TagsClass {
+    tags:        FluffyTag[];
+    count?:      number;
+    tags_count?: number;
+}
+
+export interface FluffyTag {
+    id:        string;
+    name:      string;
+    count:     string;
+    type:      string;
+    ambiguous: string;
+}
+
+export enum TypeFile {
+    GIF = "gif",
+    JPEG = "jpeg",
+    Jpg = "jpg",
+    Mp4 = "mp4",
+    PNG = "png",
+    Webm = "webm",
+}
 
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
@@ -197,7 +251,67 @@ const typeMap: any = {
     ], false),
     "Collection": o([
         { json: "name", js: "name", typ: "" },
-        { json: "images", js: "images", typ: a("any") },
         { json: "_id", js: "_id", typ: "" },
+        { json: "images", js: "images", typ: a(r("Image")) },
     ], false),
+    "Image": o([
+        { json: "id", js: "id", typ: 0 },
+        { json: "owner", js: "owner", typ: "" },
+        { json: "rating", js: "rating", typ: r("Rating") },
+        { json: "tags", js: "tags", typ: u(a(r("PurpleTag")), r("TagsClass"), "") },
+        { json: "tags_length", js: "tags_length", typ: u(undefined, 0) },
+        { json: "source", js: "source", typ: u(null, "") },
+        { json: "file_url", js: "file_url", typ: "" },
+        { json: "sample_url", js: "sample_url", typ: "" },
+        { json: "preview_url", js: "preview_url", typ: "" },
+        { json: "type_file", js: "type_file", typ: r("TypeFile") },
+        { json: "height", js: "height", typ: 0 },
+        { json: "width", js: "width", typ: 0 },
+        { json: "sample_height", js: "sample_height", typ: 0 },
+        { json: "sample_width", js: "sample_width", typ: 0 },
+        { json: "extension", js: "extension", typ: r("Extension") },
+        { json: "tags_count", js: "tags_count", typ: u(undefined, 0) },
+    ], false),
+    "PurpleTag": o([
+        { json: "id", js: "id", typ: u(0, null) },
+        { json: "name", js: "name", typ: "" },
+        { json: "count", js: "count", typ: u(0, null) },
+        { json: "type", js: "type", typ: 0 },
+        { json: "ambiguous", js: "ambiguous", typ: u(undefined, u(0, null)) },
+        { json: "ambigouis", js: "ambigouis", typ: u(undefined, null) },
+        { json: "type_failed", js: "type_failed", typ: u(undefined, true) },
+    ], false),
+    "TagsClass": o([
+        { json: "tags", js: "tags", typ: a(r("FluffyTag")) },
+        { json: "count", js: "count", typ: u(undefined, 0) },
+        { json: "tags_count", js: "tags_count", typ: u(undefined, 0) },
+    ], false),
+    "FluffyTag": o([
+        { json: "id", js: "id", typ: "" },
+        { json: "name", js: "name", typ: "" },
+        { json: "count", js: "count", typ: "" },
+        { json: "type", js: "type", typ: "" },
+        { json: "ambiguous", js: "ambiguous", typ: "" },
+    ], false),
+    "Extension": [
+        "gelbooru",
+        "realbooru",
+        "rule34",
+        "safebooru",
+    ],
+    "Rating": [
+        "explicit",
+        "general",
+        "questionable",
+        "safe",
+        "sensitive",
+    ],
+    "TypeFile": [
+        "gif",
+        "jpeg",
+        "jpg",
+        "mp4",
+        "png",
+        "webm",
+    ],
 };

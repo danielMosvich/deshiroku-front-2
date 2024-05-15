@@ -119,7 +119,7 @@ function Extension({ extension }) {
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } =
         document.documentElement;
-        const windowHeightInVH = (clientHeight * 99) / 100;
+      const windowHeightInVH = (clientHeight * 99) / 100;
       if (scrollTop + window.innerHeight >= scrollHeight - windowHeightInVH) {
         setPass(true);
       }
@@ -130,10 +130,10 @@ function Extension({ extension }) {
     };
   }, [isLoadingMore]);
   return (
-    <div className="relative pt-5 md:pt-0">
+    <div className="relative lg:px-20 sm:px-10  px-2">
       <div>
         {data && data.length > 0 ? (
-          <div className="lg:px-20 sm:px-10  px-2">
+          <div className="">
             <Masonry
               breakpointCols={{
                 0: 2,
@@ -153,7 +153,11 @@ function Extension({ extension }) {
                   <Card delay={index} key={`${index}-load-${page}`} />
                 ) : (
                   // AQUI LAS CARTAS NORMALES
-                  <a className="w-full" href={getHref(e)} key={`${e.id}-page-${page}-index-${index}`}>
+                  <a
+                    className="w-full"
+                    href={getHref(e)}
+                    key={`${e.id}-page-${page}-index-${index}`}
+                  >
                     {e.type_file === "mp4" || e.type_file === "webm" ? (
                       <div>
                         <div
@@ -184,7 +188,9 @@ function Extension({ extension }) {
                           </i>
                         </div>
                         <div className="flex gap-1 items-center mt-2 mb-4">
-                          <h2 className="text-sm font-semibold dark:text-white">{e.owner}</h2>
+                          <h2 className="text-sm font-semibold dark:text-white">
+                            {e.owner}
+                          </h2>
                         </div>
                       </div>
                     ) : (
@@ -197,7 +203,9 @@ function Extension({ extension }) {
                           loading="lazy"
                         />
                         <div className="flex gap-1 items-center mt-2 mb-4">
-                          <h2 className="text-sm font-semibold dark:text-white">{e.owner}</h2>
+                          <h2 className="text-sm font-semibold dark:text-white">
+                            {e.owner}
+                          </h2>
                         </div>
                       </div>
                     )}
@@ -207,26 +215,24 @@ function Extension({ extension }) {
             </Masonry>
           </div>
         ) : (
-          <div className=" w-full max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] max h-full lg:px-20 sm:px-10 px-2 overflow-hidden">
-            <div className="animate-fade-up">
-              <Masonry
-                breakpointCols={{
-                  0: 2,
-                  520: 2,
-                  1000: 3,
-                  1300: 4,
-                  1550: 5,
-                  1750: 6,
-                  default: 7,
-                }}
-                className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
-                columnClassName="my-mansory-grid-column"
-              >
-                {Array.from({ length: 35 }).map((_e, k) => {
-                  return <Card key={k} delay={k} />;
-                })}
-              </Masonry>
-            </div>
+          <div className="animate-fade-up max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] overflow-hidden">
+            <Masonry
+              breakpointCols={{
+                0: 2,
+                520: 2,
+                1000: 3,
+                1300: 4,
+                1550: 5,
+                1750: 6,
+                default: 7,
+              }}
+              className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
+              columnClassName="my-mansory-grid-column"
+            >
+              {Array.from({ length: 35 }).map((_e, k) => {
+                return <Card key={k} delay={k} />;
+              })}
+            </Masonry>
           </div>
         )}
       </div>
