@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { UserProps } from "types/UserProps";
+import type { UserProps } from "../../types/UserProps";
 import Me from "./Me";
 import Other from "./Other";
 

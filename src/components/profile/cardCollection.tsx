@@ -1,4 +1,4 @@
-import type { Collection } from "types/UserProps";
+import type { Collection } from "../../types/UserProps";
 
 function CardCollection({ item }: { item: Collection }) {
   return (

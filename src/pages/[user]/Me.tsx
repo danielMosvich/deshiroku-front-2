@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { UserProps } from "types/UserProps";
+import type { Collection, UserProps } from "../../types/UserProps";
 import "./user.css";
 import CardCollection from "../../components/profile/cardCollection";
 function Me() {
@@ -124,7 +124,7 @@ function Me() {
             </aside>
             <section className="mt-5">
               <ul className="flex gap-5 flex-wrap">
-                {user.collections.map((item) => (
+                {user.collections.map((item:Collection) => (
                     <CardCollection item={item} key={item._id}/>
                 ))}
               </ul>
