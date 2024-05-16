@@ -1,4 +1,4 @@
-import type { UserProps } from "types/UserProps";
+import type { UserProps } from "../../../types/UserProps";
 import getCookieByName from "../../../helpers/getCookieByName";
 
 interface GetMeProps {
