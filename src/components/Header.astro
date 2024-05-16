@@ -36,8 +36,8 @@ import MobileHeader from "../mobile/components/mobileHeader";
         class="capitalize font-semibold px-4 py-2 rounded-full dark:text-white"
         >tags</button
       >
-      <Searcher client:load />
-      <HeaderUser client:load />
+      <Searcher client:only="react" />
+      <HeaderUser client:only="react"/>
     </div>
   </div>
   <MobileHeader client:load extension={extension} />

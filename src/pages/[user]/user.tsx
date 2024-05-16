@@ -20,10 +20,14 @@ function User({ user }: { user?: string }) {
             <Me />
           </div>
         ) : (
-          <div><Other user={user} /></div>
+          <div>
+            <Other user={user as string} />
+          </div>
         )
       ) : (
-        <div><Other user={user} /></div>
+        <div>
+          <Other user={user as string} />
+        </div>
       )}
     </div>
   );

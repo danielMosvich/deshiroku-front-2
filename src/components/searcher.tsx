@@ -13,6 +13,7 @@ import TagButton from "./header/TagButton";
 import FilterButton from "./header/filterButton";
 import MagicButtons from "./header/magicButtons";
 import Alert from "./global-native/alert";
+import getMe from "../api/user/get/getMe";
 interface tagProps {
   label: string;
   value: string;
@@ -520,6 +521,9 @@ function Searcher() {
   //TODO MAGIC BUTONS EVENT
   // TODO--------------------
   useEffect(() => {
+    // getMe().then((res) => {
+    //   console.log(res)
+    // });
     if (window) {
       try {
         const url = window.location.pathname;

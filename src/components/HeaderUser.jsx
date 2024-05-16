@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
+// import { UserProps } from "../types/UserProps";
 import DropDown from "./dropDown";
 import LoginComponent from "../components/header/login";
 import RegisterComponent from "../components/header/register";
+import { username, defaultCollection } from "../store/userStore";
+import { useStore } from "@nanostores/react";
+// import getMe from "../api/user/get/getMe";
 
 function HeaderUser() {
+  // !GLOBAL STATES
+  const $username = useStore(username);
+  const $defaultCollection = useStore(defaultCollection);
+
   const [data, setData] = useState(undefined);
   const [activeLogin, setActiveLogin] = useState(false);
   const [activeRegister, setActiveRegister] = useState(false);
@@ -98,7 +106,7 @@ function HeaderUser() {
       document.cookie = `${nombre}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     }
     // alert("LOGOUT");
-    console.log("logut")
+    console.log("logut");
     window.location.href = "/";
   }
   //!!! LOGIN STATE
@@ -150,7 +158,8 @@ function HeaderUser() {
             }
           );
           const data = await res.json();
-          console.log(data);
+          // console.log(data, 'xd');
+          console.log("XDDDDDDDDDDDDDDDDDD");
           localStorage.setItem("user", JSON.stringify(data.data));
           window.location.reload();
         }
@@ -165,7 +174,6 @@ function HeaderUser() {
       }
     }
   }, []);
-
   return (
     <>
       <div className="hidden gap-1 ml-3 items-center md:flex">
@@ -214,6 +222,10 @@ function HeaderUser() {
           </div>
         )}
       </div>
+      {/* <h2>{$username}</h2>
+      <p>default</p>
+      <h2>{$defaultCollection.name}</h2>
+      <h2>{$defaultCollection.id}</h2> */}
       {data ? (
         <div className="flex items-center md:hidden">
           <a

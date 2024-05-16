@@ -618,7 +618,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                   </div>
                 </div>
                 {/* CONTENT TO SAVED IN MOBILE */}
-                <div className="lg:hidden flex  mt-3 ">
+                <div className="lg:hidden flex  mt-5 ">
                   {/* {data && data.tags.tags.length} */}
                   {data && (
                     <div className="flex items-center justify-center gap-3 w-full">
@@ -639,9 +639,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                         Source
                       </button>
                       {defaultCollection ? (
-                        <a
-                          className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
-                        >
+                        <a className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
                           save
                         </a>
                       ) : (
@@ -674,14 +672,31 @@ function PostById({ extension, id }: { extension: string; id: string }) {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="animate-card-squeleton w-2/3 self-end h-12 rounded-full mt-10"></div>
-              <div className="w-full mt-5 flex gap-3">
-                <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
-                <div className="w-1/2 h-12 animate-card-squeleton rounded-full"></div>
+              {/* DESKTOP */}
+              <div className="md:flex md:flex-col hidden">
+                <div className="animate-card-squeleton w-2/3 self-end h-12 rounded-full mt-10"></div>
+                <div className="w-full mt-5 flex gap-3">
+                  <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
+                  <div className="w-1/2 h-12 animate-card-squeleton rounded-full"></div>
+                </div>
+                <div className="mt-5 flex flex-col gap-3">
+                  <div className="animate-card-squeleton w-1/2 h-12 rounded-full"></div>
+                  <div className="animate-card-squeleton w-full h-12 rounded-full"></div>
+                  <div className="animate-card-squeleton w-full h-12 rounded-full"></div>
+                </div>
               </div>
-              <div className="mt-5 flex flex-col gap-3">
-                <div className="animate-card-squeleton w-1/2 h-12 rounded-full"></div>
-                <div className="animate-card-squeleton w-full h-12 rounded-full"></div>
+              {/* mobile */}
+              <div className="md:hidden flex flex-col">
+                <div className="w-full mt-5 flex gap-3 items-center">
+                  <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
+                  <div className="w-1/2 h-8 animate-card-squeleton rounded-full"></div>
+                </div>
+                <div className="mt-5 flex gap-3">
+                  <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
+                  <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
+                  <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
+                  <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
+                </div>
               </div>
             </div>
           )}

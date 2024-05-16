@@ -158,7 +158,7 @@ function headerUserMobile() {
             }
           );
           const data = await res.json();
-          console.log(data);
+          console.log("XDDDDDDDDDDDDDDDDDDDD");
           localStorage.setItem("user", JSON.stringify(data.data));
           window.location.reload();
         }

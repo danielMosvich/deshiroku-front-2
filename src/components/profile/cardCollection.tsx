@@ -1,12 +1,12 @@
 import type { Collection } from "../../types/UserProps";
 
-function CardCollection({ item }: { item: Collection }) {
+function CardCollection({ item, href }: { item: Collection,href:string }) {
   return (
     item && (
-      <a className="flex flex-col">
+      <a href={href} className="flex flex-col">
         <div
-          style={{ gridTemplateColumns: "2fr 1fr" }}
-          className="sm:w-60 h-40  sm:max-h-40 sm:min-h-40 bg-white ring-1 ring-white shadow-md rounded-2xl grid grid-rows-1 gap-[1px] overflow-hidden"
+          style={{ gridTemplateColumns: "2fr 1fr", gridAutoRows: "120px" }}
+          className="md:w-60 md:h-40 h-[120px] md:max-h-40 md:min-h-40 bg-white ring-1 ring-white shadow-md rounded-2xl grid grid-rows-1 gap-[1px] overflow-hidden"
         >
           <div className="h-full">
             {item.images[0]?.preview_url ? (
@@ -29,10 +29,10 @@ function CardCollection({ item }: { item: Collection }) {
             ) : (
               <div className="bg-neutral-300 w-full h-full" />
             )}
-            {item.images[1]?.preview_url ? (
+            {item.images[2]?.preview_url ? (
               <img
                 className="h-full object-cover w-full"
-                src={item.images[1].preview_url}
+                src={item.images[2].preview_url}
                 alt=""
               />
             ) : (

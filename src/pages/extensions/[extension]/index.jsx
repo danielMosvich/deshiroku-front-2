@@ -215,24 +215,26 @@ function Extension({ extension }) {
             </Masonry>
           </div>
         ) : (
-          <div className="animate-fade-up max-h-[calc(100vh-80px)]  min-h-[calc(100vh-80px)] overflow-hidden">
-            <Masonry
-              breakpointCols={{
-                0: 2,
-                520: 2,
-                1000: 3,
-                1300: 4,
-                1550: 5,
-                1750: 6,
-                default: 7,
-              }}
-              className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
-              columnClassName="my-mansory-grid-column"
-            >
-              {Array.from({ length: 35 }).map((_e, k) => {
-                return <Card key={k} delay={k} />;
-              })}
-            </Masonry>
+          <div className="md:max-h-[calc(100vh-80px)]  md:min-h-[calc(100vh-80px)] max-h-[calc(100vh-56px)]  min-h-[calc(100vh-56px)] overflow-y-clip">
+            <div className="animate-fade-up">
+              <Masonry
+                breakpointCols={{
+                  0: 2,
+                  520: 2,
+                  1000: 3,
+                  1300: 4,
+                  1550: 5,
+                  1750: 6,
+                  default: 7,
+                }}
+                className="my-mansory-grid flex gap-2 md:gap-4 w-auto"
+                columnClassName="my-mansory-grid-column"
+              >
+                {Array.from({ length: 35 }).map((_e, k) => {
+                  return <Card key={k} delay={k} />;
+                })}
+              </Masonry>
+            </div>
           </div>
         )}
       </div>

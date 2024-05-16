@@ -1,6 +1,6 @@
 ---
 import Collection from "./index";
-import Layout from "../../../../layouts/Layout.astro";
+import Layout from "../../../layouts/Layout.astro";
 // import getCollection from "@/services/getCollection";
 const { user, collection, id } = Astro.params;
 // console.log(collection)
@@ -9,7 +9,7 @@ const { user, collection, id } = Astro.params;
 ---
 
 <Layout title={String(collection)}>
-  <Collection client:load id={id} user={user} />
+  <Collection client:load id={id} user={user} collection={collection} />
 </Layout>
 <!-- <script is:inline>
   async function getCollection() {

@@ -47,6 +47,13 @@
   transform: scale(0.95); /* Reducir la escala al hacer clic */
 }
 
+.button:disabled,
+.button_active:disabled {
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+  transform: none;
+  /* opacity: 0.8; */
+}
 /* ! SOLID */
 .button_solid {
   font-weight: 500;
@@ -72,6 +79,92 @@
   transform: scale(0.95);
 }
 
+.button_solid:disabled,
+.button_solid_active:disabled {
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* !ICONS  */
+
+.button_icon {
+  font-weight: 500;
+  padding: var(--padding-y);
+  border: 1px solid var(--primary-color);
+  background-color: var(--five-color);
+  color: var(--primary-color);
+  border-radius: 9999px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.button_icon:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--third-color);
+}
+.button_active_icon {
+  font-weight: 500;
+  padding: var(--padding-y);
+  border: 2px solid var(--primary-color);
+  background-color: var(--four-color);
+  color: var(--primary-color);
+  border-radius: 9999px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.button_icon:active,
+.button_active_icon:active {
+  transform: scale(0.95); /* Reducir la escala al hacer clic */
+}
+
+.button_icon:disabled,
+.button_active_icon:disabled {
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+  transform: none;
+  /* opacity: 0.8; */
+}
+/* ? solid */
+.button_solid_icon {
+  font-weight: 500;
+  padding: var(--padding-y);
+  border-radius: 9999px;
+  background-color: #3785fa;
+  color: var(--primary-text);
+  transition: all 0.2s;
+}
+.button_solid_icon:hover {
+  background-color: var(--second-color);
+}
+.button_solid_active_icon {
+  font-weight: 500;
+  padding: var(--padding-y);
+  border-radius: 9999px;
+  background-color: #006fee33;
+  color: var(--second-text);
+  transition: all 0.2s;
+}
+.button_solid_icon:active,
+.button_solid_active_icon:active {
+  transform: scale(0.95);
+}
+
+.button_solid_icon:disabled,
+.button_solid_active_icon:disabled {
+  filter: grayscale(0.8);
+  cursor: not-allowed;
+  transform: none;
+}
+
+
 /* * DARK */
 
 @media (prefers-color-scheme: dark) {
@@ -87,5 +180,12 @@
 
     --primary-text: #ffffff;
     --second-text: #006fee;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --padding-y: 0.5rem;
+    --padding-x: 1.25rem;
   }
 }

@@ -30,6 +30,7 @@ function RegisterComponent({ close }: RegisterProps) {
     password: false,
     passwordConfirmation: false,
   });
+  const [isMobile, setIsMobile] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -166,8 +167,12 @@ function RegisterComponent({ close }: RegisterProps) {
               );
 
               // !LO QUE HACE UNA VEZ TENGA EL COOKIE XD
-              close();
-              window.location.reload();
+              if (!isMobile) {
+                close();
+                window.location.reload();
+              } else {
+                window.location.href = "/"
+              }
             } else {
               // setError(true);
               Alert(
@@ -252,13 +257,31 @@ function RegisterComponent({ close }: RegisterProps) {
     return () => clearTimeout(passwordConfirmationTimeout);
   }, [password, passwordConfirmation]);
 
+  useEffect(() => {
+    if (window.innerWidth >= 768) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+    function checkingSize() {
+      const screenWidth = window.innerWidth;
+      if (screenWidth >= 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    }
+    window.addEventListener("resize", checkingSize);
+
+    return () => window.removeEventListener("resize", checkingSize);
+  }, []);
   return (
     <div
       className="fixed bg-black/40 w-full h-screen left-0 top-0 flex justify-center items-center"
       onClick={close}
     >
       <div
-        className="bg-white dark:bg-neutral-800 md:max-w-lg md:w-full md:h-4/5 h-full md:rounded-[30px] md:mx-auto md:p-5 md:relative z-40 overflow-auto"
+        className="bg-white dark:bg-neutral-800 md:max-w-lg w-full sm:px-20 md:px-none  md:h-4/5 h-full md:rounded-[30px] md:mx-auto md:p-5 md:relative z-40 overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div

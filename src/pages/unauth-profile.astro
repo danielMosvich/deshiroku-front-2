@@ -28,18 +28,16 @@ import Button from "../components/global-react/button";
         <span class="blob"></span>
       </div>
     </div>
-    <h2
-      class="text-5xl font-extrabold mt-3 dark:text-blue-50/90 text-black/80"
-    >
+    <h2 class="text-5xl md:text-7xl font-extrabold mt-3 dark:text-blue-50/90 text-black/80">
       DESHIROKU
     </h2>
     <p
-      class="text-normal text-center max-w-[90%] mt-4 text-black/70 font-semibold font-ui dark:text-sky-50/70"
+      class="text-normal text-center max-w-[90%] mt-4 text-black/70 font-semibold md:font-normal font-ui dark:text-sky-50/70 md:text-3xl md:max-w-[50%]"
     >
       We invite you to register and if you already have an account Log in, so
       you can save your images in a collection.
     </p>
-    <div class="flex gap-3 mt-5">
+    <div class="flex gap-3 mt-5 md:mt-10">
       <Button href="/register" client:load variant="solid" text="register" />
       <Button href="/login" client:load text="login" />
       <!-- <Button client:load variant="solid" text="register" active ></Button>
@@ -48,10 +46,10 @@ import Button from "../components/global-react/button";
   </main>
 
   <footer
-    class="dark:bg-black/30 bg-white/30 dark:text-white/30 text-neutral-400 bottom-0 py-2"
+    class="dark:bg-black/30 bg-white/30 dark:text-white/30 text-neutral-400 bottom-0 py-2 "
   >
     <div class="flex px-4">
-      <p class="text-xs">
+      <p class="text-xs w-full md:text-center md:text-sm py-4">
         We do not require an email for security reasons, since this is a small
         project, only a username and password are required.
       </p>

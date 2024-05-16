@@ -8,7 +8,8 @@ interface ButtonProps {
   active?: boolean;
   size?: number;
   text?: string;
-  href?:string
+  href?: string;
+  disabled?: boolean;
 }
 function Button({
   children,
@@ -17,28 +18,67 @@ function Button({
   active = false,
   size = 1,
   text,
-  href
+  href,
+  disabled,
 }: ButtonProps) {
   if (variant === "normal") {
     return (
       <>
-        <button className={`${active ? styles.button_active : styles.button}`}
-        onClick={() => { href && (window.location.href = href); }}>
-          {children ? children : text}
-        </button>
+        {icon ? (
+          <button
+            disabled={disabled}
+            className={`${
+              active ? styles.button_active_icon : styles.button_icon
+            }`}
+            onClick={() => {
+              href && (window.location.href = href);
+            }}
+          >
+            {children ? children : text}
+          </button>
+        ) : (
+          <button
+            disabled={disabled}
+            className={`${active ? styles.button_active : styles.button}`}
+            onClick={() => {
+              href && (window.location.href = href);
+            }}
+          >
+            {children ? children : text}
+          </button>
+        )}
       </>
     );
   }
   if (variant === "solid") {
     return (
-      <button
-        className={`${
-          active ? styles.button_solid_active : styles.button_solid
-        }`}
-        onClick={() => { href && (window.location.href = href); }}
-      >
-        {children ? children : text}
-      </button>
+      <>
+        {icon ? (
+          <button
+            disabled={disabled}
+            className={`${
+              active ? styles.button_solid_active_icon : styles.button_solid_icon
+            }`}
+            onClick={() => {
+              href && (window.location.href = href);
+            }}
+          >
+            {children ? children : text}
+          </button>
+        ) : (
+          <button
+            disabled={disabled}
+            className={`${
+              active ? styles.button_solid_active : styles.button_solid
+            }`}
+            onClick={() => {
+              href && (window.location.href = href);
+            }}
+          >
+            {children ? children : text}
+          </button>
+        )}
+      </>
     );
   }
 }

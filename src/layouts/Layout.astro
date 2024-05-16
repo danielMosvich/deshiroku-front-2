@@ -64,26 +64,26 @@ import Header from "../components/Header.astro";
     html {
       background-color: rgb(10 10 10);
 
-    /* font-family:'open sans' ; */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
+      /* font-family:'open sans' ; */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
 
-    /* Track */
-    ::-webkit-scrollbar-track {
-      background: #222121;
-    }
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #222121;
+      }
 
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-      background: #4e4d4d;
-      border-radius: 10px;
-    }
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #4e4d4d;
+        border-radius: 10px;
+      }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3a3838;
-    }
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3a3838;
+      }
     }
   }
   .alert-1-container {
@@ -171,3 +171,13 @@ import Header from "../components/Header.astro";
     }
   }
 </style>
+<script>
+  // import { defaultCollection } from "../store/userStore";
+
+  // if (localStorage.getItem("defaultCollection")) {
+  //   const defaultCollection2 = JSON.parse(
+  //     localStorage.getItem("defaultCollection") as string
+  //   );
+  //   defaultCollection.set(defaultCollection2);
+  // }
+</script>
