@@ -1,0 +1,91 @@
+:root {
+  --padding-y: 0.5rem;
+  --padding-x: 1rem;
+
+  --primary-color: #0a60e0;
+  --second-color: #5695f5;
+  --third-color: #bbd4f533;
+  --four-color: #ffffff33;
+  --five-color: rgba(255, 255, 255, 0.397);
+
+  --primary-text: #ffffff;
+  --second-text: #006fee;
+}
+.button {
+  font-weight: 500;
+  padding: var(--padding-y) var(--padding-x);
+  border: 1px solid var(--primary-color);
+  background-color: var(--five-color);
+  color: var(--primary-color);
+  border-radius: 9999px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.button:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--third-color);
+}
+.button_active {
+  font-weight: 500;
+  padding: var(--padding-y) var(--padding-x);
+  border: 1px solid var(--primary-color);
+  background-color: var(--four-color);
+  color: var(--primary-color);
+  border-radius: 9999px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.button:active,
+.button_active:active {
+  transform: scale(0.95); /* Reducir la escala al hacer clic */
+}
+
+/* ! SOLID */
+.button_solid {
+  font-weight: 500;
+  padding: var(--padding-y) var(--padding-x);
+  border-radius: 9999px;
+  background-color: #3785fa;
+  color: var(--primary-text);
+  transition: all 0.2s;
+}
+.button_solid:hover {
+  background-color: var(--second-color);
+}
+.button_solid_active {
+  font-weight: 500;
+  padding: var(--padding-y) var(--padding-x);
+  border-radius: 9999px;
+  background-color: #006fee33;
+  color: var(--second-text);
+  transition: all 0.2s;
+}
+.button_solid:active,
+.button_solid_active:active {
+  transform: scale(0.95);
+}
+
+/* * DARK */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --padding-y: 0.2rem;
+    --padding-x: 1rem;
+
+    --primary-color: #006fee;
+    --second-color: #356dc0;
+    --third-color: #51698833;
+    --four-color: #22416ef8;
+    --five-color: #102038f8;
+
+    --primary-text: #ffffff;
+    --second-text: #006fee;
+  }
+}

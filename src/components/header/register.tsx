@@ -258,11 +258,11 @@ function RegisterComponent({ close }: RegisterProps) {
       onClick={close}
     >
       <div
-        className="bg-white dark:bg-neutral-800 max-w-lg w-full h-4/5 rounded-[30px] mx-auto p-5 relative z-40"
+        className="bg-white dark:bg-neutral-800 md:max-w-lg md:w-full md:h-4/5 h-full md:rounded-[30px] md:mx-auto md:p-5 md:relative z-40 overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="absolute right-5 rounded-full hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-700 cursor-pointer"
+          className=" md:block hidden absolute right-5 rounded-full hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-700 cursor-pointer"
           onClick={close}
         >
           <svg

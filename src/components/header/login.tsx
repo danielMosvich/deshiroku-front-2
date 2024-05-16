@@ -68,7 +68,10 @@ function LoginComponent({ close }: LoginProps) {
           document.cookie = refresh_token;
           localStorage.setItem(
             "time",
-            JSON.stringify({ expires_in: dataCookie.access_token.expires_in, current_time: new Date().getTime()})
+            JSON.stringify({
+              expires_in: dataCookie.access_token.expires_in,
+              current_time: new Date().getTime(),
+            })
           );
 
           // !LO QUE HACE UNA VEZ TENGA EL COOKIE XD
@@ -103,12 +106,13 @@ function LoginComponent({ close }: LoginProps) {
       onClick={close}
     >
       <div
-        className="bg-white dark:bg-neutral-800 max-w-lg w-full h-4/5 rounded-[30px] mx-auto p-5 relative z-40"
+        // className="w-full h-full bg-white dark:bg-neutral-800 flex flex-col items-center justify-center pb-14  md:max-w-lg md:w-full md:h-4/5 md:rounded-[30px] md:mx-auto md:p-0 z-40 relative"
+        className="bg-white dark:bg-neutral-800 md:max-w-lg md:w-full md:h-4/5 h-full md:rounded-[30px] md:mx-auto md:p-5 md:relative z-40"
         onClick={(e) => e.stopPropagation()}
       >
         {/* CLOSE BUTTON */}
         <div
-          className="absolute right-5 rounded-full hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-700 cursor-pointer"
+          className="hidden md:flex absolute right-5 rounded-full hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-700 cursor-pointer"
           onClick={close}
         >
           <svg

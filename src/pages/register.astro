@@ -1,9 +1,13 @@
 ---
+import MobileRegister from "../mobile/components/register";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="register">
-  <div class="pt-20 max-w-xl mx-auto flex flex-col items-center">
+  <div>
+    <MobileRegister client:load />
+  </div>
+  <!-- <div class="pt-20 max-w-xl mx-auto flex flex-col items-center">
     <input
       class="bg-red-500 w-full py-3 px-3"
       id="nameInput"
@@ -26,10 +30,10 @@ import Layout from "../layouts/Layout.astro";
       <h2 id="text_password">idk</h2>
     </div>
     <button id="buttonCreate" type="button">CREATE ACOUNT</button>
-  </div>
+  </div> -->
 </Layout>
 
-<script is:inline>
+<!-- <script is:inline>
   //   import {redirect} from "astro";
   const text_user = document.querySelector("#text_user");
   const text_password = document.querySelector("#text_password");
@@ -123,4 +127,4 @@ import Layout from "../layouts/Layout.astro";
       console.log("FALTA ALGO WE");
     }
   });
-</script>
+</script> -->

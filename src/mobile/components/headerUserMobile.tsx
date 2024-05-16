@@ -191,13 +191,13 @@ function headerUserMobile() {
           {user.username.split("")[0]}
         </a>
       ) : (
-        <a href="/unauth-profile" className="p-2 rounded-full">
+        <a href="/unauth-profile" className="p-2 rounded-full dark:text-white">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             width={24}
             height={24}
-            color={"#000000"}
+            color={"currentColor"}
             fill={"none"}
           >
             <path

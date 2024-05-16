@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // import HeaderUserMobile from "./HeaderUserMobile";
-import HeaderUserMobile from "../mobile/headerUserMobile";
+import HeaderUserMobile from "./headerUserMobile";
 import "./mobileHeader.css";
 function MobileHeader({ extension }: { extension?: string }) {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
