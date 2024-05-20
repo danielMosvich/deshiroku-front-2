@@ -21,7 +21,7 @@ function SelectCollection({ post }: { post: ImagesProps }) {
           Save it in your collections
         </p>
         <ul className="flex flex-col mt-1">
-          {$user.collections.map((collection) => (
+          {$user.collections.map((collection:Collection) => (
             <li
               key={collection._id}
               className="h-16 flex flex-row gap-2 items-center hover:bg-neutral-800 px-2 rounded-lg "

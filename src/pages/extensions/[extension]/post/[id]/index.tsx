@@ -502,7 +502,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                           save
                         </a>
                       )}
-                      {/* <SaveButton /> */}
                       <MyButton radius="full" variant="light" onClick={()=> setShowAllTags(true)}>
                         <label htmlFor="">Tags</label>
                         <svg
