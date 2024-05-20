@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/react";
 import { STORE_defaultCollection, STORE_user } from "../../store/userStore";
-import type { Collection, UserProps } from "types/UserProps";
+import type { Collection, UserProps } from "../../types/UserProps";
 // import Button from "../../components/global-react/button";
 import ButtonSave from "./buttonSave";
 import type { ImagesProps } from "../../types/ImagesProps";
