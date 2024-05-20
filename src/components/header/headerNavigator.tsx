@@ -42,7 +42,7 @@ function HeaderNavigator({ extension }: { extension?: string }) {
         {/* <h2 className="text-white" onClick={()=> Alert("top-right", 5000, "success", "Success!", "Your operation completed successfully.") }>XD</h2> */}
         <a href={HOME_ROUTE} className="mr-3 rounded-full text-white">
           <MyButton radius="full" icon variant="light">
-            <img className="w-24 h-24" src="/public/favicon.svg" alt="logo" />
+            <img className="w-24 h-24" src="/favicon.svg" alt="logo" />
           </MyButton>
         </a>
 
