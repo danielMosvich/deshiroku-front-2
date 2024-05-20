@@ -14,10 +14,11 @@ interface TagButtonProps {
 }
 function TagButton({ children, type, action }: TagButtonProps) {
   // console.log(type)
-  let globalStyles = "w-fit cursor-pointer select-none rounded-full px-1 text-sm h-7 flex items-center font-[500] focus:outline-none focus:ring-2 dark:focus:ring-neutral-500 focus:ring-neutral-300 whitespace-nowrap"
+  let globalStyles =
+    "w-fit cursor-pointer select-none rounded-full px-1 text-sm h-7 flex items-center font-[500] focus:outline-none focus:ring-2 dark:focus:ring-neutral-500 focus:ring-neutral-300 whitespace-nowrap";
   if (type === 0) {
     return (
-    <button
+      <button
         onClick={action}
         className={`${globalStyles} bg-neutral-200/60 text-black/80 dark:bg-neutral-800 dark:text-white`}
       >

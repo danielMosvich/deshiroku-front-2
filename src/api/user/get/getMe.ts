@@ -30,7 +30,7 @@ async function fetchUserDataFromServer(
 }
 
 async function getMe(): Promise<GetMeProps> {
-  const token = getCookieByName("token");
+  const token = getCookieByName("access_token");
   if (!token) {
     return { success: false, data: null, message: "cookies is not there" };
   }

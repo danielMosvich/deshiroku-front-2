@@ -610,7 +610,7 @@ function Searcher() {
               "will be added in future versions ^^"
             )
           }
-          className="cursor-default w-full bg-neutral-200 dark:bg-neutral-800   rounded-full overflow-hidden pl-2 flex items-center text-neutral-500"
+          className="cursor-default w-full bg-neutral-200 dark:bg-neutral-800  h-10 max-h-10  rounded-full overflow-hidden pl-2 flex items-center text-neutral-500"
         >
           <i className="mx-2">
             <svg
@@ -663,7 +663,7 @@ function Searcher() {
               ref={inputRef}
               value={inputValue}
               placeholder="search"
-              className="bg-neutral-200 dark:bg-neutral-800 dark:text-white w-full rounded-full px-4 py-3  outline-none placeholder:text-neutral-500 placeholder:font-semibold z-[52] relative"
+              className="bg-neutral-200 dark:bg-neutral-800 dark:text-white w-full rounded-full px-4 py-2  outline-none placeholder:text-neutral-500 placeholder:font-semibold z-[52] relative"
               type="text"
               onInput={handleChange}
               onKeyDown={handleKeyDown}
@@ -825,7 +825,7 @@ function Searcher() {
     return (
       //? CONTAINER PRINCIPAL
       <>
-        <div className="cursor-pointer w-full bg-neutral-200 dark:bg-neutral-800   rounded-full overflow-hidden pl-2 flex items-center text-neutral-500">
+        <div className="cursor-pointer w-full bg-neutral-200 dark:bg-neutral-800 rounded-full overflow-hidden pl-2 flex items-center text-neutral-500 h-10 max-h-10 ml-2">
           <i className="mx-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -845,7 +845,7 @@ function Searcher() {
                 ? "Search"
                 : selectedTags?.map((item) => item.value).join(" ")
             }
-            className={`font-semibold w-full bg-transparent pr-10 py-3 text-black outline-none ${
+            className={`font-semibold w-full bg-transparent pr-10 text-black outline-none ${
               selectedTags?.length === 0
                 ? "placeholder:text-neutral-500 placeholder:dark:text-neutral-200"
                 : "placeholder:text-black placeholder:dark:text-white"

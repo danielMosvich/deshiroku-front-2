@@ -28,7 +28,7 @@ async function fetchUserDataFromServer(
 }
 
 async function getCollectionByUsername(username: string, collection: string) {
-  const token = getCookieByName("token");
+  const token = getCookieByName("access_token") as string
 //   if (!token) {
 //     return { success: false, data: null, message: "cookies is not there" };
 //   }

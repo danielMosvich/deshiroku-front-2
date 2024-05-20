@@ -55,3 +55,19 @@
     transform: rotate(360deg);
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .button-profile {
+    color: rgba(247, 247, 247, 0.87);
+  }
+  .hoverEffect div {
+    background: rgb(222, 0, 74);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 59, 124, 0.801) 0%,
+      rgba(208, 120, 255, 0.863) 49%,
+      rgba(128, 234, 255, 0.897) 100%
+    );
+    opacity: 0.9;
+  }
+}

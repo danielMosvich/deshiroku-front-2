@@ -28,8 +28,8 @@ function Other({ user: username }: { user: string }) {
               </div>
             </button>
 
-            <h2 className="font-semibold text-2xl mt-5">{user.name}</h2>
-            <h3 className=" text-lg">@{user.username}</h3>
+            <h2 className="font-semibold text-2xl mt-5 dark:text-neutral-50">{user.name}</h2>
+            <h3 className=" text-lg dark:text-neutral-50">@{user.username}</h3>
 
             <div className="flex gap-3 mt-5">
               <Button variant="solid">Share profile</Button>
@@ -38,7 +38,7 @@ function Other({ user: username }: { user: string }) {
 
           <div className="md:px-10 px-4">
             <section className="flex items-center justify-between border-b mt-10  pb-2">
-              <h2 className="sm:text-2xl text-xl font-ui font-semibold">
+              <h2 className="sm:text-2xl text-xl font-ui font-semibold dark:text-neutral-50">
                 collections
               </h2>
             </section>

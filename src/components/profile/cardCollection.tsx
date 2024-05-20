@@ -40,10 +40,10 @@ function CardCollection({ item, href }: { item: Collection,href:string }) {
             )}
           </div>
         </div>
-        <h2 className="font-semibold text-lg overflow-hidden whitespace-nowrap text-ellipsis mt-2 font-ui">
+        <h2 className="font-semibold text-lg overflow-hidden whitespace-nowrap text-ellipsis mt-2 font-ui dark:text-neutral-50">
           {item.name}
         </h2>
-        <p className="text-xs text-neutral-600 font-semibold">
+        <p className="text-xs text-neutral-600 font-semibold dark:text-neutral-400">
           {item.images.length} images
         </p>
       </a>

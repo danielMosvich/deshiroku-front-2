@@ -21,7 +21,7 @@ function DropDownProfile({ data }) {
       const nombre = igualPos > -1 ? cookie.slice(0, igualPos) : cookie;
       document.cookie = `${nombre}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     }
-    alert("LOGOUT");
+    // alert("LOGOUT");
     window.location.href = "/";
   }
   return (

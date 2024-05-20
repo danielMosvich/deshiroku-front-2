@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
 import Masonry from "react-masonry-css";
 import Card from "../../../components/Card";
-import Button from "../../../components/global-react/button";
 import getCollectionByUsername from "../../../api/user/get/getCollectionByUsername";
+import MyButton from "../../../components/global-react/myButton";
+import getCookieByName from "../../../helpers/getCookieByName";
+import Alert from "../../../components/global-native/alert";
+import { STORE_defaultCollection } from "../../../store/userStore";
 function Collection({ id, user, collection }) {
   const [data, setData] = useState(null);
-  function obtenerCookies() {
-    const cookies = {};
-    document.cookie.split(";").forEach((cookie) => {
-      const [nombre, valor] = cookie.split("=").map((part) => part.trim());
-      cookies[nombre] = decodeURIComponent(valor);
-    });
-    return cookies;
-  }
+
   async function handleDeleteCollection() {
     const token = obtenerCookies();
     const response = await fetch(
@@ -56,26 +52,45 @@ function Collection({ id, user, collection }) {
   async function handleEditCollection() {
     const newName = prompt("NUEVO NOMBRE DE LA COLECCION");
     if (newName) {
-      const token = obtenerCookies();
+      const token = getCookieByName("access_token");
+      let isDefaultCollection = STORE_defaultCollection.get()._id === data.id;
+      console.log(isDefaultCollection);
       const response = await fetch(
         `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collections`,
         {
           method: "PUT",
-          // credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.stringify(token)}`,
+            Authorization: `Bearer ${JSON.stringify({ token: token })}`,
           },
           body: JSON.stringify({
-            id: id,
+            id: data.id,
             name: newName,
           }),
         }
       );
       const dat = await response.json();
+      console.log(dat);
       if (dat.success) {
         localStorage.setItem("user", JSON.stringify(dat.r));
-        window.location.reload();
+        const localDefaultCollection = JSON.parse(
+          localStorage.getItem("defaultCollection")
+        );
+        localDefaultCollection.name = newName;
+        localStorage.setItem(
+          "defaultCollection",
+          JSON.stringify(localDefaultCollection)
+        );
+        // window.location.href = `/${user}/${newName}`;
+        window.history.replaceState({}, "", `/${user}/${newName}`);
+        // window.location.reload();
+        Alert(
+          "bottom",
+          3000,
+          "success",
+          "Collection edited",
+          `Your collection has been to ${newName}`
+        );
       } else {
         alert(dat.message);
       }
@@ -106,25 +121,35 @@ function Collection({ id, user, collection }) {
     return cookies;
   }
   useEffect(() => {
-    getCollectionByUsername(user,collection).then(res =>{
-      console.log(res)
-      if(res.success){
-        setData(res.data)
+    getCollectionByUsername(user, collection).then((res) => {
+      if (res.success) {
+        setData(res.data);
       }
-    })
+    });
   }, []);
 
   return (
     <div className="relative lg:px-20 sm:px-10  px-2">
       {data ? (
         <div className="flex items-center justify-center flex-col mt-10 mb-5">
-          <h2 className="text-3xl font-semibold font-ui">{data.name}</h2>
-          <h2>by @{user}</h2>
+          <h2 className="text-3xl font-semibold font-ui dark:text-neutral-50">
+            {data.name}
+          </h2>
+          <h2 className=" dark:text-neutral-50">by @{user}</h2>
 
           {data.isOwner && (
-            <div className="flex gap-2 mt-5">
-              <Button>Edit name</Button>
-              <Button variant="solid">Delete</Button>
+            <div className="flex gap-3 mt-5">
+              <MyButton
+                onClick={handleEditCollection}
+                radius="full"
+                color="warning"
+                variant="solid"
+              >
+                Edit name
+              </MyButton>
+              <MyButton radius="full" variant="flat" color="danger">
+                Delete
+              </MyButton>
             </div>
           )}
         </div>
@@ -142,7 +167,7 @@ function Collection({ id, user, collection }) {
       )}
       {data ? (
         <div className="pb-3">
-          <h2 className="font-semibold text-neutral-900 border-b w-fit border-neutral-900 md:text-lg">
+          <h2 className="font-semibold text-neutral-900 border-b w-fit border-neutral-900 md:text-lg dark:text-neutral-50 dark:border-neutral-50">
             {data.images.length} images
           </h2>
         </div>

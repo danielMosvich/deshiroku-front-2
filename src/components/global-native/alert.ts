@@ -6,6 +6,15 @@ type positionAlert =
   | "top-right"
   | "bottom-left"
   | "bottom-right";
+  /**
+ * Muestra una alerta en la interfaz de usuario.
+ * 
+ * @param position - La posición de la alerta (e.g., "bottom", "top").
+ * @param duration - La duración en milisegundos durante la cual la alerta será visible.
+ * @param type - El tipo de alerta (e.g., "success", "error").
+ * @param title - El título de la alerta.
+ * @param message - El mensaje detallado de la alerta.
+ */
 function Alert(
   position: positionAlert = "top",
   duration: number = 3000,
@@ -79,7 +88,7 @@ function Alert(
   }
   icon_container.addEventListener("click", removeAlert);
   container.appendChild(icon_container);
-  document.body.append(container);
+  document.body.appendChild(container);
   setTimeout(() => {
     removeAlert();
   }, duration);

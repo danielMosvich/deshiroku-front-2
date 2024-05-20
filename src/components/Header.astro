@@ -2,43 +2,17 @@
 const { extension } = Astro.params;
 import Searcher from "./searcher";
 import HeaderUser from "./HeaderUser";
-import MobileHeader from "../mobile/components/mobileHeader";
+import HeaderNavigator from "./header/headerNavigator";
 ---
 
 <header>
   <div
-    class="bg-white dark:bg-neutral-950 w-full min-h-20 fixed md:flex md:flex-col md:justify-center hidden gap-0 px-10 items-center z-40"
+    class="bg-transparent md:bg-white md:top-0 bottom-0 md:dark:bg-neutral-950 w-full md:min-h-20 md:h-20 min-h-14 max-h-14 fixed flex md:justify-center gap-0 md:px-10 px-0 items-center z-40"
   >
-    <div class="flex w-full">
-      <a
-        href="/"
-        class="capitalize font-semibold bg-neutral-950 dark:bg-white text-white dark:text-black px-4 py-2 rounded-full flex items-center"
-        >Inicio
-      </a>
-      {
-        extension ? (
-          <a
-            href={`/extensions/${extension}`}
-            class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
-          >
-            {extension}
-          </a>
-        ) : (
-          <a
-            href={`/`}
-            class="capitalize font-semibold  px-4 py-2 rounded-full flex items-center dark:text-white"
-          >
-            extensions
-          </a>
-        )
-      }
-      <button
-        class="capitalize font-semibold px-4 py-2 rounded-full dark:text-white"
-        >tags</button
-      >
+    <HeaderNavigator extension={extension} client:only="react" />
+    <div class="md:flex w-full hidden md:items-center">
       <Searcher client:only="react" />
-      <HeaderUser client:only="react"/>
+      <HeaderUser client:only="react" />
     </div>
   </div>
-  <MobileHeader client:load extension={extension} />
 </header>

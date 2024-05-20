@@ -1,4 +1,4 @@
-import DropDown from "../../components/global-react/dropDown";
+import DropdownContainer from "../../components/global-react/dropdownContainer";
 import { useState } from "react";
 interface tagProps {
   label: string;
@@ -35,7 +35,6 @@ function FilterButton({
   extension,
   selectedTags,
 }: FilterButtonProps) {
-  const [active, setActive] = useState<boolean>(false);
   function handleGo(newValue: FilterParams) {
     if (extension) {
       const queryParams: QueryParams = {
@@ -113,32 +112,14 @@ function FilterButton({
     }
   };
   return (
-    <a
-      className=" bg-neutral-200 hover:bg-neutral-300 rounded-full p-2 relative dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-600 cursor-pointer"
-      onClick={() => setActive((prev) => !prev)}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1.5rem"
-        height="1.5rem"
-        viewBox="0 0 24 24"
-      >
-        <g
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="2.3"
-        >
-          <path d="M3 5h4m14 0H11m-8 7h12m6 0h-2M3 19h2m16 0H9" />
-          <circle cx="9" cy="5" r="2" />
-          <circle cx="17" cy="12" r="2" />
-          <circle cx="7" cy="19" r="2" />
-        </g>
-      </svg>
-      {active && (
-        <DropDown position="left" close={() => setActive(false)}>
+    <DropdownContainer
+      position="bottom-left"
+      dropdownContent={
+        <div className="bg-white/70 dark:bg-black/70 backdrop-blur-2xl p-5 mt-3 rounded-xl ring-1">
           <div className="flex flex-col items-start">
-            <h2 className="font-semibold text-lg dark:text-white">Filters to search</h2>
+            <h2 className="font-semibold text-lg dark:text-white">
+              Filters to search
+            </h2>
             <p className="text-sm text-start font-semibold text-neutral-600 dark:text-neutral-300">
               this will remain in the other searches
             </p>
@@ -149,15 +130,15 @@ function FilterButton({
                 className={
                   filters?.sort.type === "score"
                     ? `bg-black px-3 py-2 rounded-full font-semibold font-mono flex gap-2 items-center
-                  bg-gradient-to-tr from-rose-800 to-red-400
-                  ring-4 ring-rose-300
-                  text-white shadow-xl shadow-rose-500/40
-                  transition-all
-              `
+                bg-gradient-to-tr from-rose-800 to-red-400
+                ring-4 ring-rose-300
+                text-white shadow-xl shadow-rose-500/40
+                transition-all
+            `
                     : `bg-black px-3 py-2 rounded-full font-semibold font-mono flex gap-2 items-center
-              bg-gradient-to-tr from-neutral-800 to-neutral-700
-              text-neutral-300
-              `
+            bg-gradient-to-tr from-neutral-800 to-neutral-700
+            text-neutral-300
+            `
                 }
               >
                 {filters?.sort.type === "score" ? (
@@ -196,9 +177,9 @@ function FilterButton({
               <button
                 onClick={toggleDate}
                 className=" px-3 py-2 rounded-full w-[120px] justify-center font-semibold font-mono flex gap-2 items-center
-                        bg-gradient-to-tr from-blue-800 to-sky-600
-                        text-white
-                        "
+                      bg-gradient-to-tr from-blue-800 to-sky-600
+                      text-white
+                      "
               >
                 {filters?.sort.order === "desc" ? (
                   <svg
@@ -230,9 +211,9 @@ function FilterButton({
               <button
                 onClick={handleScore}
                 className=" bg-black px-3 py-2 rounded-full font-semibold font-mono flex gap-1 items-center
-                        bg-gradient-to-tr from-neutral-800 to-neutral-700
-                        text-neutral-300 whitespace-nowrap
-                        "
+                      bg-gradient-to-tr from-neutral-800 to-neutral-700
+                      text-neutral-300 whitespace-nowrap
+                      "
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -253,9 +234,33 @@ function FilterButton({
               </button>
             </div>
           </div>
-        </DropDown>
-      )}
-    </a>
+        </div>
+      }
+    >
+      <div
+        className=" bg-neutral-200 hover:bg-neutral-300 rounded-full p-2 relative dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-600 cursor-pointer"
+        // onClick={() => setActive((prev) => !prev)}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1.5rem"
+          height="1.5rem"
+          viewBox="0 0 24 24"
+        >
+          <g
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="2.3"
+          >
+            <path d="M3 5h4m14 0H11m-8 7h12m6 0h-2M3 19h2m16 0H9" />
+            <circle cx="9" cy="5" r="2" />
+            <circle cx="17" cy="12" r="2" />
+            <circle cx="7" cy="19" r="2" />
+          </g>
+        </svg>
+      </div>
+    </DropdownContainer>
   );
 }
 

@@ -1,0 +1,135 @@
+:root {
+  --color-primary: #0070f3;
+  --color-secondary: #f4f4f5;
+  --color-tertiary: #006fee33;
+
+  --color-shadow-primary: #006fee66;
+
+  --color-border: #d4d4d8;
+
+  --text-color-primary: #fff;
+  --text-color-secondary: #0070f3;
+
+  --height: 40px;
+  --padding-x: 16px;
+  --border-radius: 4px;
+  --transition: 0.2s;
+}
+.secondary {
+  --color-primary: #14b8a6;
+  /* --color-secondary:; */
+  --color-tertiary: #51beb55e;
+  --color-shadow-primary: #00eec666;
+
+  /* --color-border:#d4d4d8; */
+  --text-color-primary: #000;
+  --text-color-secondary: #14a795;
+}
+.warning {
+  --color-primary: #fbbf24;
+  /* --color-secondary:; */
+  --color-tertiary: #f5a52533;
+  --color-shadow-primary: #f5a5242f;
+
+  /* --color-border:#d4d4d8; */
+  --text-color-primary: #000;
+  --text-color-secondary: #fbbf24;
+}
+.danger {
+  --color-primary: #f43f5e;
+  /* --color-secondary:; */
+  --color-tertiary: #e4175f33;
+  --color-shadow-primary: #f524635e;
+
+  /* --color-border:#d4d4d8; */
+  --text-color-primary: #fff;
+  --text-color-secondary: #f43f5e;
+}
+
+.my-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: var(--height);
+  height: var(--height);
+  max-height: var(--height);
+
+  padding: 0 var(--padding-x);
+  transition: opacity var(--transition), transform var(--transition), background var(--transition), text var(--transition);
+}
+.my-button:active{
+  transform: scale(0.95);
+}
+.my-button:focus-visible {
+  outline-offset: 2px;
+  outline: 2px solid #3b82f6;
+}
+.my-button:disabled{
+  transform: scale(1);
+  opacity: 0.8;
+  filter: grayscale(1);
+}
+
+.my-button.solid {
+  background-color: var(--color-primary);
+  color: var(--text-color-primary);
+}
+.my-button.solid:hover {
+  opacity: 0.9;
+}
+.my-button.faded {
+  border: 2px solid var(--color-border);
+  background-color: var(--color-secondary);
+  color: var(--text-color-secondary);
+}
+.my-button.faded:hover {
+  opacity: 0.8;
+}
+.my-button.flat {
+  background-color: var(--color-tertiary);
+  color: var(--text-color-secondary);
+}
+.my-button.flat:hover {
+  opacity: 0.8;
+}
+.my-button.ghost {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+.my-button.ghost:hover {
+  background-color: var(--color-primary);
+  color: var(--text-color-primary);
+}
+
+.my-button.light {
+  color: var(--text-color-secondary);
+}
+.my-button.light:hover {
+  background-color: var(--color-tertiary);
+}
+
+.my-button.outline {
+  background-color: transparent;
+  border: 2px solid var(--color-primary);
+  outline: none;
+  color: var(--color-primary);
+}
+.my-button.outline:hover {
+  opacity: 0.7;
+}
+.my-button.shadow {
+  background-color: var(--color-primary);
+  color: var(--text-color-primary);
+  box-shadow: 0 5px 10px var(--color-shadow-primary);
+}
+.my-button.shadow:hover {
+  opacity: 0.9;
+}
+@media (prefers-color-scheme: dark) {
+  :root{
+    --color-secondary: #27272a;
+    --color-border: #3f3f46;
+  }
+}

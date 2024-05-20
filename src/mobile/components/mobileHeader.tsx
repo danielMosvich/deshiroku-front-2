@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 // import HeaderUserMobile from "./HeaderUserMobile";
 import HeaderUserMobile from "./headerUserMobile";
 import "./mobileHeader.css";
+import { useStore } from "@nanostores/react";
+import { STORE_location, STORE_name, STORE_user, STORE_username } from "../../store/userStore";
+
 function MobileHeader({ extension }: { extension?: string }) {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -62,7 +65,7 @@ function MobileHeader({ extension }: { extension?: string }) {
           href="/"
           className="dark:text-white whitespace-nowrap text-ellipsis overflow-hidden bg-gradient-to-bl w-fit h-fit rounded-full py-[5px] px-3 font-semibold capitalize text-sm outline-1 outline-black border border-black dark:border-white dark:outline-white hover:bg-neutral-300 dark:hover:bg-neutral-700"
         >
-          Extensions
+          Extensions xd
         </a>
       )}
       <a

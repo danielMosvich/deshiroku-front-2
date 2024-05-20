@@ -67,7 +67,6 @@ function MagicSearch({ type, file_url, source }: MagicSearchProps) {
                   href={source}
                   className="whitespace-nowrap px-3 py-3 w-full text-start flex items-center gap-3 bg-neutral-900 text-white border-b-2 border-blue-500/50"
                 >
-                  
                   <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
                     <img
                       className="w-full h-full"
@@ -142,15 +141,15 @@ function MagicSearch({ type, file_url, source }: MagicSearchProps) {
                 target="_blank"
                 href={`https://yandex.ru/images/search?rpt=imageview&img_url=${file_url}`}
                 className="whitespace-nowrap px-3 py-3 w-full text-start flex items-center gap-3 bg-neutral-900 text-white"
-                >
-                  <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
-                    <img
-                      className="w-full h-full"
-                      src={`https://icons.duckduckgo.com/ip2/yandex.com.ico`}
-                      alt=""
-                    />
-                  </i>
-                  <span>Search with Yandex</span>
+              >
+                <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/yandex.com.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with Yandex</span>
               </a>
             </div>
           </DropDown>

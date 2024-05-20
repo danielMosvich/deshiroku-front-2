@@ -9,6 +9,6 @@ const { extension, id } = Astro.params;
 // console.log(data)
 ---
 
-<Layout title={`${extension} - post ${id}`}>
+<Layout title={`${extension} - ${id}`}>
   <PostById extension={extension as string} id={id as string} client:load />
 </Layout>

@@ -10,6 +10,7 @@ interface ButtonProps {
   text?: string;
   href?: string;
   disabled?: boolean;
+  onClick?: () => void;
 }
 function Button({
   children,
@@ -20,6 +21,7 @@ function Button({
   text,
   href,
   disabled,
+  onClick
 }: ButtonProps) {
   if (variant === "normal") {
     return (
@@ -32,6 +34,7 @@ function Button({
             }`}
             onClick={() => {
               href && (window.location.href = href);
+              onClick && onClick();
             }}
           >
             {children ? children : text}
@@ -42,6 +45,7 @@ function Button({
             className={`${active ? styles.button_active : styles.button}`}
             onClick={() => {
               href && (window.location.href = href);
+              onClick && onClick();
             }}
           >
             {children ? children : text}
@@ -61,6 +65,7 @@ function Button({
             }`}
             onClick={() => {
               href && (window.location.href = href);
+              onClick && onClick();
             }}
           >
             {children ? children : text}
@@ -73,6 +78,7 @@ function Button({
             }`}
             onClick={() => {
               href && (window.location.href = href);
+              onClick && onClick();
             }}
           >
             {children ? children : text}

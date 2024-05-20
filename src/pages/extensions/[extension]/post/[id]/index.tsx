@@ -1,15 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import getPostById from "../../../../../services/getPostById";
 import type {
   ImagesProps,
   TagAttributes,
 } from "../../../../../types/ImagesProps";
-import Alert from "../../../../../components/global-native/alert";
 import type { Collection, UserProps } from "../../../../../types/UserProps";
-import PopoverButton from "../../../../../components/popoverButton";
-import SaveButton from "../../../../../components/SaveButton";
 import TagButton from "../../../../../components/header/TagButton";
 import MagicSearch from "../../../../../components/header/magicSearch";
+import {
+  STORE_defaultCollection,
+  STORE_user,
+} from "../../../../../store/userStore.ts";
+import { useStore } from "@nanostores/react";
+import getMe from "../../../../../api/user/get/getMe";
+import DropdownContainer from "../../../../../components/global-react/dropdownContainer";
+import SelectCollection from "../../../../../components/post/selectCollection";
+import ButtonSave from "../../../../../components/post/buttonSave";
+import DownloadButton from "../../../../../components/header/downloadButton";
+import MyButton from "../../../../../components/global-react/myButton";
+import ModalContainer from "../../../../../components/global-react/modalContainer.tsx";
 interface ParamsProps {
   preview_url: string;
   file_url: string;
@@ -17,198 +26,23 @@ interface ParamsProps {
   height: number;
   type_file: string;
 }
-interface Cookies {
-  [key: string]: string;
-}
-type ButtonStates = "false" | "saving" | "removing" | "true";
 function PostById({ extension, id }: { extension: string; id: string }) {
+  // * NANOSTATES ------------------------->
+  const $user = useStore(STORE_user) as UserProps;
+  const $defaultCollection = useStore(STORE_defaultCollection) as Collection;
   // ?^^ hooks--------------------------->
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [paramsProperties, setParamsProperties] = useState<null | ParamsProps>(
     null
   );
   const [loadImage, setLoadImage] = useState<boolean>(false);
-  const [data, setData] = useState<null | ImagesProps>(null);
-
-  const [defaultCollection, setDefaultCollection] = useState<null | {
-    id: string;
-    name: string;
-  }>(null);
-  const [user, setUser] = useState<null | UserProps>(null);
-
+  const [post, setPost] = useState<null | ImagesProps>(null);
+  const [defaultCollection, setDefaultCollection] = useState<null | Collection>(
+    null
+  );
   const [collections, setCollections] = useState<null | Collection[]>(null);
-  const [isLoading, setIsLoading] = useState<ButtonStates>("false");
-  // ?^^ hooks--------------------------<
-
+  const [showAllTags, setShowAllTags] = useState<boolean>(false);
   // TODO FUNCTIONS --------------------->
-
-  function obtenerCookies(): Cookies {
-    const cookies: Cookies = {};
-    document.cookie.split(";").forEach((cookie) => {
-      const [nombre, valor] = cookie.split("=").map((part) => part.trim());
-      cookies[nombre] = decodeURIComponent(valor);
-    });
-    return cookies;
-  }
-
-  async function handleSave(id: string): Promise<void> {
-    setIsLoading("saving");
-    // console.log("SAVE");
-    const token = obtenerCookies();
-    if (document.cookie) {
-      // console.log("FETCH");
-
-      const resp = await fetch(
-        `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.stringify(token)}`,
-          },
-          body: JSON.stringify({ id: id, image: data }),
-        }
-      );
-      const response = await resp.json();
-      if (response.success) {
-        async function getProfile() {
-          const res = await fetch(
-            `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${JSON.stringify(token)}`,
-              },
-            }
-          );
-          const data = await res.json();
-          localStorage.setItem("user", JSON.stringify(data.data));
-          setCollections(data.data.collections);
-        }
-        getProfile();
-        Alert(
-          "bottom",
-          3000,
-          "success",
-          "Saved",
-          `Image was saved in: ${response.direction.name}`
-        );
-        setIsLoading("true");
-      } else {
-        alert();
-        Alert(
-          "bottom",
-          3000,
-          "error",
-          "Error when saving",
-          `${response.message}`
-        );
-        setIsLoading("false");
-      }
-    }
-  }
-  async function handleRemove(id: string): Promise<void> {
-    setIsLoading("removing");
-    if (document.cookie) {
-      const token = obtenerCookies();
-      const fileUrl = data?.file_url;
-      const resp = await fetch(
-        `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${JSON.stringify(token)}`,
-          },
-          body: JSON.stringify({
-            id_collection: id,
-            url: fileUrl,
-          }),
-        }
-      );
-      const response = await resp.json();
-      // console.log(response);
-      if (response.success) {
-        async function getProfile() {
-          const res = await fetch(
-            `${import.meta.env.PUBLIC_SERVER_URL}/api/user/profile`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${JSON.stringify(token)}`,
-              },
-            }
-          );
-          const data = await res.json();
-          localStorage.setItem("user", JSON.stringify(data.data));
-          setCollections(data.data.collections);
-          // console.log("SE ACTUALIZO EL LOCAL STORAGE DE USER");
-        }
-        getProfile();
-        setIsLoading("false");
-      } else {
-        alert(response.message);
-        setIsLoading("true");
-      }
-    }
-  }
-  async function handleChangeDefaultCollection(obj: {
-    id: string;
-    name: string;
-  }) {
-    setDefaultCollection(obj);
-    localStorage.setItem("defaultCollection", JSON.stringify(obj));
-  }
-  const handleDownloadClick = async (imageUrl: string): Promise<void> => {
-    try {
-      const proxyUrl = `${
-        import.meta.env.PUBLIC_SERVER_URL
-      }/proxy?imageUrl=${encodeURIComponent(imageUrl)}`;
-
-      // Descarga la imagen
-      const response = await fetch(proxyUrl, {
-        headers: { "Content-Type": "image/png" },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(new Blob([blob]));
-
-      // Crea un enlace para descargar la imagen
-      const link = document.createElement("a");
-      link.href = url;
-      const extension = imageUrl.split(".").pop();
-      if (extension) {
-        link.setAttribute(
-          "download",
-          `${extension}-${Date.now()}.${extension}`
-        );
-      }
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode?.removeChild(link);
-
-      // Obtiene el tamaño del archivo de imagen
-      const sizeResponse = await fetch(
-        `${
-          import.meta.env.PUBLIC_SERVER_URL
-        }/proxy/size?imageUrl=${encodeURIComponent(imageUrl)}`
-      );
-      if (!sizeResponse.ok) {
-        throw new Error(`HTTP error! status: ${sizeResponse.status}`);
-      }
-      const sizeData = await sizeResponse.json();
-      if (sizeData.success) {
-        Alert("bottom", 3000, "success", "Image downloaded", sizeData.data);
-      } else {
-        throw new Error(`Server error: ${sizeData.message}`);
-      }
-    } catch (error: any) {
-      console.error("Error downloading or fetching image size:", error);
-      Alert("bottom", 2000, "error", "Download error", error.message);
-    }
-  };
-
   async function setParams() {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -219,7 +53,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
       for (const [key, value] of searchParams.entries()) {
         params[key] = value;
       }
-      console.log(params);
       const type =
         params.file_url.split(".")[params.file_url.split(".").length - 1];
       setParamsProperties({
@@ -254,7 +87,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
   async function getDataById() {
     const data = await getPostById(extension, id);
     if (data?.success) {
-      setData(data.data);
+      setPost(data.data);
       if (!paramsProperties) {
         setParamsProperties({
           file_url: data.data.file_url,
@@ -264,7 +97,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           type_file: data.data.type_file,
         });
         if (data.data.type_file !== "mp4" && data.data.type_file !== "webm") {
-          // console.log("XD")
           const imagePromise = new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => resolve(img);
@@ -284,54 +116,87 @@ function PostById({ extension, id }: { extension: string; id: string }) {
       }
     }
   }
-  // TODO FUNCTIONS ---------------------<
+  // VOLUME DETECTOR
+  useEffect(() => {
+    const savedVolume = localStorage.getItem("videoVolume");
+    if (savedVolume !== null && videoRef.current) {
+      videoRef.current.volume = parseFloat(savedVolume);
+    }
+
+    // Añadir un event listener para el cambio de volumen
+    const handleVolumeChange = () => {
+      if (videoRef.current) {
+        const currentVolume = videoRef.current.volume;
+        localStorage.setItem("videoVolume", String(currentVolume));
+      }
+    };
+
+    if (videoRef.current) {
+      videoRef.current.addEventListener("volumechange", handleVolumeChange);
+    }
+
+    // Limpiar el event listener cuando el componente se desmonta
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener(
+          "volumechange",
+          handleVolumeChange
+        );
+      }
+    };
+  }, [videoRef.current]);
+
   useEffect(() => {
     setParams();
     getDataById();
   }, []);
   useEffect(() => {
-    if (data) {
+    if (post) {
       // ! ESTO VERIFICA SI ES QUE EXISTE UNA COLLECTION POR DEFECTO DONDE GUARDAR LAS IMAGENES.
-      const localStorageDefaultCollection = localStorage.getItem(
-        "defaultCollection"
-      ) as string;
-      const parsedLocalStorageDefaultCollection = JSON.parse(
-        localStorageDefaultCollection
-      );
-      parsedLocalStorageDefaultCollection &&
-        setDefaultCollection(parsedLocalStorageDefaultCollection);
-
-      const localStorageUser = localStorage.getItem("user");
-      // !VERIFICA SI ES QUE LA IMAGEN YA EXISTE EN LA COLECCION DEFAULT O SELECIONADA.
-      if (localStorageUser) {
-        const parsedLocalStorageUser = JSON.parse(
-          localStorageUser
-        ) as UserProps;
-        // console.log(parsedLocalStorageUser)
-        if (parsedLocalStorageUser) {
-          setCollections(parsedLocalStorageUser.collections);
-          const index = parsedLocalStorageUser.collections.findIndex(
-            (e: Collection) => e._id === parsedLocalStorageDefaultCollection.id
-          );
-          if (index !== -1) {
-            const match = parsedLocalStorageUser.collections[index].images.some(
-              (e: { file_url: string; preview_url: string }) =>
-                e.file_url === data.file_url
-            );
-            setIsLoading(String(match) as ButtonStates);
-          } else {
-            setIsLoading("false");
-          }
-        }
+      $defaultCollection &&
+        setDefaultCollection($defaultCollection as Collection);
+      if ($user) {
+        setCollections($user.collections);
       }
     }
-  }, [data]);
+  }, [post]);
   useEffect(() => {
-    const userLocal = localStorage.getItem("user") as string;
-    setUser(JSON.parse(userLocal));
+    if (!$user) {
+      getMe().then((res) => {
+        if (res.success) {
+          STORE_user.set(res.data);
+        }
+      });
+    }
   }, [collections]);
   return (
     <div>
+      {showAllTags && (
+        <ModalContainer
+          icon
+          height="80%"
+          onClose={() => setShowAllTags(false)}
+          title={`All tags about this post - ${post?.tags_length}`}
+        >
+          <div className="flex flex-wrap  overflow-auto min-h-fit max-h-full p-2 pb-10 gap-2">
+            {post?.tags.map((el: TagAttributes, i: number) => {
+              if (el.type || el.type === 0) {
+                return (
+                  <TagButton
+                    action={() => {
+                      window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                    }}
+                    key={String(i) + String(el.id) + extension}
+                    type={el.type}
+                  >
+                    {el.name}
+                  </TagButton>
+                );
+              }
+            })}
+          </div>
+        </ModalContainer>
+      )}
       <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl h-fit lg:max-h-[800px] lg:overflow-auto lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0 mb-5 border-b-[1px] sm:border-none dark:border-neutral-700">
         {/* PARAMS PROPERTIES SON LAS PROPIEDADES DESDE LA URL PARA CARGAR MAS RAPIDO */}
         {paramsProperties ? (
@@ -339,13 +204,13 @@ function PostById({ extension, id }: { extension: string; id: string }) {
             {paramsProperties.type_file === "mp4" ||
             paramsProperties.type_file === "webm" ? (
               <video
+                ref={videoRef}
                 width={paramsProperties.width}
                 height={paramsProperties.height}
                 src={paramsProperties.file_url}
                 preload="auto"
                 controls
                 className="lg:rounded-2xl rounded-t-3xl w-full object-cover "
-                onPlay={(e) => (e.currentTarget.volume = 0.5)}
               />
             ) : loadImage ? (
               <img
@@ -372,92 +237,75 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         )}
         {/* DATA SECTION */}
         <div className="lg:px-10 px-5 lg:pb-10 pb-5 lg:w-[70%] w-full">
-          {data ? (
+          {post ? (
             <div className="">
               {/* HEADER ----------------------------------- */}
-              <div className="z-10 hidden gap-1 justify-end lg:flex bg-white dark:bg-neutral-900 items-center sticky top-0 lg:pt-10 pt-3 pb-3 lg:pb-5 ">
-                {data && (
+
+              <div className="z-10 hidden justify-end lg:flex bg-white dark:bg-neutral-900 items-center sticky top-0 lg:pt-10 pt-3 pb-3 lg:pb-5 gap-2">
+                {post && (
                   <MagicSearch
-                    type={data.type_file}
+                    type={post.type_file}
                     file_url={paramsProperties?.file_url}
-                    source={data.source}
+                    source={post.source}
                   />
                 )}
-                {data.file_url && (
-                  <a
-                    onClick={() => handleDownloadClick(data.file_url)}
-                    className="hover:bg-neutral-300 p-2 grid place-content-center w-10 h-10 rounded-full capitalize text-black font-semibold dark:text-white dark:hover:bg-white dark:hover:text-black"
+                {post.file_url && <DownloadButton url={post.file_url} />}
+
+                {$defaultCollection && $defaultCollection.name && (
+                  <DropdownContainer
+                    position="bottom"
+                    dropdownContent={<SelectCollection post={post} />}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.5rem"
-                      height="1.5rem"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m12 16l-5-5l1.4-1.45l2.6 2.6V4h2v8.15l2.6-2.6L17 11zm-6 4q-.825 0-1.412-.587T4 18v-3h2v3h12v-3h2v3q0 .825-.587 1.413T18 20z"
-                      />
-                    </svg>
-                  </a>
-                )}
-                {/* THIS IS A Popover para guardar imagenes :D */}
-                {defaultCollection && collections && (
-                  <PopoverButton
-                    user={user}
-                    defaultCollectionName={defaultCollection.name}
-                    defaultCollection={defaultCollection}
-                    collections={collections}
-                    file_url={data.file_url}
-                    handleRemove={handleRemove}
-                    handleSave={handleSave}
-                    setDefaultCollection={setDefaultCollection}
-                    handleChangeDefaultCollection={
-                      handleChangeDefaultCollection
-                    }
-                    // isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                  />
+                    <MyButton variant="faded" radius="full">
+                      <div className="flex items-center gap-2">
+                        {$defaultCollection.name}{" "}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 20"
+                          width={24}
+                          height={24}
+                          color={"currentColor"}
+                          fill={"none"}
+                        >
+                          <path
+                            d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </MyButton>
+                  </DropdownContainer>
                 )}
 
-                {/* BUTON SECTION FOR SAVE OR DELETE IMG FROM COLLECTION */}
-                {defaultCollection ? (
-                  collections && (
-                    <SaveButton
-                      isLoading={isLoading}
-                      handleSave={handleSave}
-                      handleRemove={handleRemove}
-                      defaultCollection={defaultCollection}
-                    />
-                  )
+                {$defaultCollection ? (
+                  <ButtonSave id={$defaultCollection._id} post={post} />
                 ) : (
-                  <a
-                    href="/login"
-                    className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
-                  >
-                    save
-                  </a>
+                  <MyButton radius="full">Save</MyButton>
                 )}
               </div>
+
               {/* BODY ------------------------------------ */}
               <div className="">
                 <div className="flex items-center gap-3 mt-5">
                   <div className="bg-rose-400 lg:mt-0 w-12 h-12 rounded-full grid place-content-center uppercase font-semibold text-white">
-                    {data?.owner.split("")[0]}
+                    {post?.owner.split("")[0]}
                   </div>
-                  <p className="font-semibold dark:text-white">{data?.owner}</p>
+                  <p className="font-semibold dark:text-white">{post?.owner}</p>
                 </div>
 
                 {/* TAGS CONTENT */}
                 <div className="lg:flex mt-5 pl-1 hidden">
                   <div className="">
-                    {data.tags.some((e: TagAttributes) => e.type === 1) && (
+                    {post.tags.some((e: TagAttributes) => e.type === 1) && (
                       <div className="">
                         <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
                           artist
                         </h2>
                         <div className="my-2 flex gap-1 flex-wrap">
-                          {data.tags.map((el: TagAttributes, i: number) => {
+                          {post.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 1) {
                               return (
                                 <TagButton
@@ -476,13 +324,13 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e: TagAttributes) => e.type === 3) && (
+                    {post.tags.some((e: TagAttributes) => e.type === 3) && (
                       <div>
                         <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
                           copyright
                         </h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el: TagAttributes, i: number) => {
+                          {post.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 3) {
                               return (
                                 <TagButton
@@ -501,13 +349,13 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e: TagAttributes) => e.type === 4) && (
+                    {post.tags.some((e: TagAttributes) => e.type === 4) && (
                       <div>
                         <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
                           character
                         </h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el: TagAttributes, i: number) => {
+                          {post.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 4) {
                               return (
                                 <TagButton
@@ -526,13 +374,13 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       </div>
                     )}
 
-                    {data.tags.some((e: TagAttributes) => e.type === 5) && (
+                    {post.tags.some((e: TagAttributes) => e.type === 5) && (
                       <div>
                         <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
                           meta
                         </h2>
                         <div className="my-2 flex flex-wrap gap-2">
-                          {data.tags.map((el: TagAttributes, i: number) => {
+                          {post.tags.map((el: TagAttributes, i: number) => {
                             if (el.type === 5) {
                               return (
                                 <TagButton
@@ -550,15 +398,15 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                         </div>
                       </div>
                     )}
-                    {data.tags.some((e: TagAttributes) => e.type === 0) && (
+                    {post.tags.some((e: TagAttributes) => e.type === 0) && (
                       <div className="">
                         <h2 className=" font-semibold capitalize text-sm dark:text-white/50">
                           general
                         </h2>
                         <div className="">
-                          {data.tags_length < 30 ? (
+                          {post.tags_length < 30 ? (
                             <div className="flex flex-wrap my-2 gap-1">
-                              {data.tags.map((el: TagAttributes, i: number) => {
+                              {post.tags.map((el: TagAttributes, i: number) => {
                                 if (el.type === 0) {
                                   return (
                                     <TagButton
@@ -585,7 +433,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                                 }}
                                 className="flex flex-wrap my-2 gap-1"
                               >
-                                {data.tags
+                                {post.tags
                                   .slice(0, 30)
                                   .map((el: TagAttributes, i: number) => {
                                     if (el.type === 0) {
@@ -607,9 +455,13 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                                     }
                                   })}
                               </div>
-                              <button className="text-sm px-3 h-10 font-ui font-semibold text-white bg-neutral-600 rounded-full w-fit hover:bg-neutral-700">
-                                show all {data.tags_length} xd
-                              </button>
+                              <MyButton
+                                onClick={() => setShowAllTags(true)}
+                                variant="flat"
+                                radius="full"
+                              >
+                                show all tags ({post.tags_length})
+                              </MyButton>
                             </div>
                           )}
                         </div>
@@ -619,8 +471,8 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 </div>
                 {/* CONTENT TO SAVED IN MOBILE */}
                 <div className="lg:hidden flex  mt-5 ">
-                  {/* {data && data.tags.tags.length} */}
-                  {data && (
+                  {/* {post && post.tags.tags.length} */}
+                  {post && (
                     <div className="flex items-center justify-center gap-3 w-full">
                       <button className=" px-4 py-3 dark:text-white rounded-full font-semibold">
                         <svg
@@ -651,7 +503,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                         </a>
                       )}
                       {/* <SaveButton /> */}
-                      <button className="flex hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 px-4 py-3 rounded-full font-semibold gap-1">
+                      <MyButton radius="full" variant="light" onClick={()=> setShowAllTags(true)}>
                         <label htmlFor="">Tags</label>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -664,7 +516,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                             d="M7.5 10.207L11.707 6H3.293z"
                           />
                         </svg>
-                      </button>
+                      </MyButton>
                     </div>
                   )}
                 </div>
