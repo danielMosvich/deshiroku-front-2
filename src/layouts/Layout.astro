@@ -25,10 +25,11 @@ import Header from "../components/Header.astro";
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     />
+    <meta name="referrer" content="no-referrer" />
   </head>
   <body>
     <Header />
-    <main class="md:pt-20 md:pb-0 pb-14">
+    <main class="md:pb-0 pb-14 md:pt-20">
       <slot />
     </main>
   </body>
@@ -213,5 +214,4 @@ import Header from "../components/Header.astro";
     }
   }
   STORE_location.set(`${window.location.pathname}`);
-  console.log(window.location.pathname);
 </script>

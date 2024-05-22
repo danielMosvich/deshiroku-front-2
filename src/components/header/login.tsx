@@ -29,10 +29,10 @@ function LoginComponent() {
 
   return (
     <div
-      className="bg-white dark:bg-neutral-800 md:max-w-lg w-full sm:px-20 md:px-none md:h-4/5 h-full md:rounded-[30px] md:mx-auto md:p-5 md:relative z-40"
+      className=" w-full"
     >
       <form onSubmit={onSubmit}>
-        <div className="flex gap-3  flex-col mt-10 mx-14">
+        <div className="flex gap-3  flex-col mt-10 w-full">
           <div>
             <label className="ml-2 dark:text-white" htmlFor="username-input">
               Username

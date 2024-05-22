@@ -8,6 +8,7 @@ import MyButton from "../../components/global-react/myButton";
 import { useEffect, useState } from "react";
 import ModalContainer from "../../components/global-react/modalContainer";
 import LoginRegister from "../../components/loginRegister";
+// import LoginRegister from "@components/loginRegister";
 // import Alert from "../../components/global-react/alert";
 
 const HOME_ROUTE = "/";

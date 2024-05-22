@@ -17,52 +17,41 @@ const ModalContainer: React.FC<ModalProps> = ({
   title,
   icon,
 }) => {
+  const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (
-  //       modalRef.current &&
-  //       !modalRef.current.contains(event.target as Node)
-  //     ) {
-  //       onClose();
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [onClose]);
-
-  //   const getModalPosition = (): React.CSSProperties => {
-  //     switch (position) {
-  //       case "top":
-  //         return { top: "10%", left: "50%", transform: "translate(-50%, 0)" };
-  //       case "left":
-  //         return { top: "50%", left: "10%", transform: "translate(0, -50%)" };
-  //       case "right":
-  //         return {
-  //           top: "50%",
-  //           right: "10%",
-  //         //   height: "1000px",
-  //           transform: "translate(0, -50%)",
-  //         };
-  //       case "bottom":
-  //         return { bottom: "10%", left: "50%", transform: "translate(-50%, 0)" };
-  //       case "center":
-  //       default:
-  //         return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
-  //     }
-  //   };
-
+  const handleClickOutside = () => {
+    if (window.innerWidth < 768) {
+      if (modalRef.current && modalContainerRef.current) {
+        modalContainerRef.current.style.animation =
+          "fade-out 0.4s forwards cubic-bezier(0.4, 0, 0, 1)";
+        modalRef.current.style.animation =
+          "slide-down 0.4s forwards cubic-bezier(0.4, 0, 0, 1)";
+        modalRef.current.addEventListener("animationend", () => {
+          if (modalRef.current) {
+            onClose();
+            document.body.style.overflow = "auto";
+          }
+        });
+      }
+    } else {
+      onClose();
+      document.body.style.overflow = "auto";
+    }
+  };
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+  }, []);
   return (
-    <div className="modal-overlay fixed w-full h-full top-0 left-0 z-50 flex justify-center items-center" onClick={onClose}>
+    <div
+      ref={modalContainerRef}
+      className="my_modal-overlay fixed w-full h-full top-0 left-0 z-50 flex justify-center items-center"
+      onClick={handleClickOutside}
+    >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="modal absolute bottom-0 rounded-t-2xl md:rounded-2xl md:relative md:w-4/5 lg:w-3/5 xl:w-2/4 bg-white dark:bg-neutral-900"
-        ref={modalRef}
+        className="my_modal overflow-auto absolute bottom-0 rounded-t-2xl md:rounded-2xl w-full md:relative md:w-4/5 lg:w-3/5 xl:w-2/4 bg-white dark:bg-neutral-900"
         style={{ height: height, paddingTop: icon ? "2.2rem" : "0" }}
+        ref={modalRef}
       >
         {title && (
           <h2 className="text-2xl  font-semibold w-[90%] pl-3 dark:text-white">

@@ -153,7 +153,7 @@ function RegisterComponent() {
   return (
     <div className=" h-full w-full">
       <form ref={formRef} onSubmit={handleSubmit}>
-        <div className="flex gap-3 flex-col mt-10 mx-14">
+        <div className="flex gap-3 flex-col">
           <div>
             <label
               className="ml-2 dark:text-white"

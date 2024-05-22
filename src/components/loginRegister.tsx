@@ -8,7 +8,7 @@ function LoginRegister() {
     { label: "Register", content: <RegisterComponent /> },
   ];
   return (
-    <Tabs className="mt-5 px-5" size="xl" rounded="full" full="full" tabs={tabs} />
+    <Tabs className="mt-5 px-5 md:px-10 lg:px-20 xl:px-32 gap-5" size="xl" rounded="full" full="full" tabs={tabs} />
   );
 }
 export default LoginRegister;

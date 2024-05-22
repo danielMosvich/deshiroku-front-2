@@ -8,6 +8,7 @@ import type { Collection, UserProps } from "../../../../../types/UserProps";
 import TagButton from "../../../../../components/header/TagButton";
 import MagicSearch from "../../../../../components/header/magicSearch";
 import {
+  STORE_auth_modal,
   STORE_defaultCollection,
   STORE_user,
 } from "../../../../../store/userStore.ts";
@@ -42,6 +43,9 @@ function PostById({ extension, id }: { extension: string; id: string }) {
   );
   const [collections, setCollections] = useState<null | Collection[]>(null);
   const [showAllTags, setShowAllTags] = useState<boolean>(false);
+
+  const [showSaveCollectionModal, setShowSaveCollectionModal] = useState(false);
+  const [showSourceModal, setShowSourceModal] = useState(false);
   // TODO FUNCTIONS --------------------->
   async function setParams() {
     try {
@@ -116,6 +120,16 @@ function PostById({ extension, id }: { extension: string; id: string }) {
       }
     }
   }
+  function searchSource(url: string) {
+    if (url) {
+      try {
+        const dominio = new URL(url).origin;
+        return dominio.split("//")[1];
+      } catch (error) {
+        return "https://icons.duckduckgo.com/ip2/.ico";
+      }
+    }
+  }
   // VOLUME DETECTOR
   useEffect(() => {
     const savedVolume = localStorage.getItem("videoVolume");
@@ -178,7 +192,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           onClose={() => setShowAllTags(false)}
           title={`All tags about this post - ${post?.tags_length}`}
         >
-          <div className="flex flex-wrap  overflow-auto min-h-fit max-h-full p-2 pb-10 gap-2">
+          <div className="flex flex-wrap min-h-fit max-h-full p-2 pb-10 gap-2">
             {post?.tags.map((el: TagAttributes, i: number) => {
               if (el.type || el.type === 0) {
                 return (
@@ -197,10 +211,10 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           </div>
         </ModalContainer>
       )}
-      <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl h-fit lg:max-h-[800px] lg:overflow-auto lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0 mb-5 border-b-[1px] sm:border-none dark:border-neutral-700">
+      <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl h-fit  lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0 mb-5 border-b-[1px] sm:border-none dark:border-neutral-700">
         {/* PARAMS PROPERTIES SON LAS PROPIEDADES DESDE LA URL PARA CARGAR MAS RAPIDO */}
         {paramsProperties ? (
-          <section className="w-full lg:w-3/4 relative">
+          <section className="w-full lg:w-3/4 relative overflow-hidden lg:max-h-[calc(170vh)] max-h-[calc(190vh)] rounded-t-2xl lg:rounded-2xl">
             {paramsProperties.type_file === "mp4" ||
             paramsProperties.type_file === "webm" ? (
               <video
@@ -211,6 +225,19 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 preload="auto"
                 controls
                 className="lg:rounded-2xl rounded-t-3xl w-full object-cover "
+                onPlay={(e) => {
+                  const savedVolume = localStorage.getItem(
+                    "videoVolume"
+                  ) as string;
+                  if (savedVolume) {
+                    if (e.target && "volume" in e.target) {
+                      e.target.volume =
+                        savedVolume !== null
+                          ? parseFloat(savedVolume)
+                          : e.target.volume;
+                    }
+                  }
+                }}
               />
             ) : loadImage ? (
               <img
@@ -218,7 +245,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.file_url}
                 alt=""
-                className="lg:rounded-2xl rounded-t-3xl brightness-95 w-full object-cover "
+                className="rounded-t-2xl lg:rounded-2xl brightness-95 w-full object-cover relative"
               />
             ) : (
               <img
@@ -226,17 +253,20 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 height={paramsProperties.height}
                 src={paramsProperties.preview_url}
                 alt=""
-                className="lg:rounded-2xl rounded-t-3xl brightness-95 w-full object-cover "
+                className="rounded-t-2xl lg:rounded-2xl brightness-95 w-full object-cover "
               />
             )}
+            <a target="_blank" href={`${paramsProperties.file_url}`} className="absolute top-3 left-3 flex items-center">
+              <MyButton radius="full" size="sm" variant="faded">show original</MyButton>
+            </a>
           </section>
         ) : (
-          <section className="w-full lg:w-3/4 relative">
-            <div className="animate-card-squeleton max-w-[600px] min-h-[600px] w-full h-full"></div>
+          <section className="w-full lg:w-3/4 relative max-h-[1200px] overflow-hidden">
+            <div className="animate-card-squeleton max-w-[1200px] min-h-[600px] w-full h-full rounded-t-2xl lg:rounded-2xl"></div>
           </section>
         )}
         {/* DATA SECTION */}
-        <div className="lg:px-10 px-5 lg:pb-10 pb-5 lg:w-[70%] w-full">
+        <div className="lg:px-10 px-5 lg:pb-10 pb-5 lg:w-[70%] w-full ">
           {post ? (
             <div className="">
               {/* HEADER ----------------------------------- */}
@@ -258,7 +288,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                   >
                     <MyButton variant="faded" radius="full">
                       <div className="flex items-center gap-2">
-                        {$defaultCollection.name}{" "}
+                        {$defaultCollection.name}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 20"
@@ -469,40 +499,44 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                     )}
                   </div>
                 </div>
+
                 {/* CONTENT TO SAVED IN MOBILE */}
                 <div className="lg:hidden flex  mt-5 ">
                   {/* {post && post.tags.tags.length} */}
                   {post && (
                     <div className="flex items-center justify-center gap-3 w-full">
-                      <button className=" px-4 py-3 dark:text-white rounded-full font-semibold">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1.5rem"
-                          height="1.5rem"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M3 19h18v2H3zm10-5.828L19.071 7.1l1.414 1.414L12 17L3.515 8.515L4.929 7.1L11 13.173V2h2z"
-                          />
-                        </svg>
-                      </button>
-                      <button className="bg-neutral-200 px-4 py-3 rounded-full font-semibold  gap-1">
+                      <DownloadButton url={post.file_url} />
+                      <MyButton
+                        radius="full"
+                        variant="flat"
+                        onClick={() => {
+                          setShowSourceModal(true);
+                        }}
+                      >
                         Source
-                      </button>
+                      </MyButton>
                       {defaultCollection ? (
-                        <a className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white">
-                          save
-                        </a>
-                      ) : (
-                        <a
-                          href="/login"
-                          className="bg-red-500 rounded-full px-4 py-3 flex justify-center items-center font-semibold text-white"
+                        <MyButton
+                          onClick={() => setShowSaveCollectionModal(true)}
+                          radius="full"
+                          variant="shadow"
                         >
                           save
-                        </a>
+                        </MyButton>
+                      ) : (
+                        // CUANDO NO HAY UNA CUENTA
+                        <MyButton
+                          onClick={() => STORE_auth_modal.set(true)}
+                          radius="full"
+                        >
+                          save
+                        </MyButton>
                       )}
-                      <MyButton radius="full" variant="light" onClick={()=> setShowAllTags(true)}>
+                      <MyButton
+                        radius="full"
+                        variant="light"
+                        onClick={() => setShowAllTags(true)}
+                      >
                         <label htmlFor="">Tags</label>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -524,7 +558,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           ) : (
             <div className="flex flex-col">
               {/* DESKTOP */}
-              <div className="md:flex md:flex-col hidden">
+              <div className="lg:flex md:flex-col hidden">
                 <div className="animate-card-squeleton w-2/3 self-end h-12 rounded-full mt-10"></div>
                 <div className="w-full mt-5 flex gap-3">
                   <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
@@ -537,12 +571,12 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 </div>
               </div>
               {/* mobile */}
-              <div className="md:hidden flex flex-col">
+              <div className="lg:hidden flex flex-col ">
                 <div className="w-full mt-5 flex gap-3 items-center">
                   <div className="w-12 h-12 min-w-12 min-h-12 animate-card-squeleton rounded-full"></div>
                   <div className="w-1/2 h-8 animate-card-squeleton rounded-full"></div>
                 </div>
-                <div className="mt-5 flex gap-3">
+                <div className=" mt-5 flex gap-3">
                   <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
                   <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
                   <div className="animate-card-squeleton flex-1 h-12 rounded-full"></div>
@@ -553,6 +587,156 @@ function PostById({ extension, id }: { extension: string; id: string }) {
           )}
         </div>
       </div>
+      {/* MODALS !--------------------> */}
+      {showSaveCollectionModal && (
+        // TODO save image in collection - modal
+        <ModalContainer
+          onClose={() => setShowSaveCollectionModal(false)}
+          height="80%"
+        >
+          <div className="flex gap-5 pb-2 flex-col">
+            <div className="w-full py-5 sticky top-0 bg-white dark:bg-neutral-900/90 backdrop-blur-2xl">
+              <h2 className="text-center text-xl font-[500] dark:text-white ">
+                Save image
+              </h2>
+            </div>
+            <div className="flex flex-col overflow-auto px-2">
+              <div className="dark:text-white text-sm font-ui flex mb-2 ml-2">
+                Your collections
+              </div>
+              {$user &&
+                post &&
+                $user.collections.map((collection: Collection) => (
+                  <ButtonSave
+                    key={collection._id}
+                    id={collection._id}
+                    post={post}
+                    isContainer
+                  >
+                    <div
+                      key={collection._id}
+                      className="flex items-center gap-2 rounded-xl p-2 active:bg-neutral-600 select-none"
+                    >
+                      <div className="w-16 h-16 overflow-hidden rounded-lg">
+                        <img
+                          src={collection.images[0].preview_url}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1 text-lg font-semibold dark:text-white">
+                        <h3>{collection.name}</h3>
+                      </div>
+                    </div>
+                  </ButtonSave>
+                ))}
+            </div>
+          </div>
+        </ModalContainer>
+      )}
+      {showSourceModal && post && (
+        <ModalContainer height="65%" onClose={() => setShowSourceModal(false)}>
+          <div className="flex flex-col">
+            <div className="w-full py-5 sticky top-0 bg-white dark:bg-neutral-900/90 backdrop-blur-2xl">
+              <h2 className="text-center text-xl font-[500] dark:text-white ">
+                Search Image
+              </h2>
+            </div>
+            <div className="flex flex-col">
+              {post.source && (
+                <a
+                  target="_blank"
+                  href={post.source}
+                  className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800 border-b border-t dark:border-neutral-700"
+                >
+                  <i className="w-6 h-6 max-w-6 max-h-6 min-w-6 min-h-6 rounded-md overflow-hidden">
+                    <img
+                      className="w-full h-full"
+                      src={`https://icons.duckduckgo.com/ip2/${searchSource(
+                        post.source
+                      )}.ico`}
+                      alt=""
+                    />
+                  </i>
+                  <span>Original source</span>
+                </a>
+              )}
+              <a
+                target="_blank"
+                href={`https://saucenao.com/search.php?db=999&url=${post.file_url}`}
+                className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <i className="w-6 h-6 max-w-6 max-h-6 min-w-6 min-h-6 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/saucenao.com.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with Saoucenao</span>
+              </a>
+              <a
+                target="_blank"
+                href={`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(
+                  post.file_url
+                )}`}
+                className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/google.com.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with Google lens</span>
+              </a>
+              <a
+                target="_blank"
+                href={`https://ascii2d.net/search/url/${post.file_url}`}
+                className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/ascii2d.net.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with ASCII2D</span>
+              </a>
+              <a
+                target="_blank"
+                href={`https://iqdb.org/?url=${post.file_url}`}
+                className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/iqdb.org.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with IQDB</span>
+              </a>
+              <a
+                target="_blank"
+                href={`https://yandex.ru/images/search?rpt=imageview&img_url=${post.file_url}`}
+                className="whitespace-nowrap text-ellipsis font-semibold px-3 py-4 w-full text-start flex items-center gap-3 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <i className="w-5 h-5 max-w-5 max-h-5 min-w-5 min-h-5 rounded-md overflow-hidden">
+                  <img
+                    className="w-full h-full"
+                    src={`https://icons.duckduckgo.com/ip2/yandex.com.ico`}
+                    alt=""
+                  />
+                </i>
+                <span>Search with Yandex</span>
+              </a>
+            </div>
+          </div>
+        </ModalContainer>
+      )}
       {/* FOOTER (more posts) */}
       <section></section>
     </div>

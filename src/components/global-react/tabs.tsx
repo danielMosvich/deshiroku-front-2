@@ -9,7 +9,7 @@ interface Tab {
 interface TabsProps {
   tabs: Tab[];
   rounded?: "none" | "sm" | "md" | "lg" | "full";
-  size?: "sm" | "md" | "lg" | "xl"
+  size?: "sm" | "md" | "lg" | "xl";
   padding?: string;
   full?: "fit-content" | "full";
   className?: string;

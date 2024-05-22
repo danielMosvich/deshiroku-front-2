@@ -1,4 +1,4 @@
-.modal-overlay {
+.my_modal-overlay {
   /* position: fixed;
   top: 0;
   left: 0;
@@ -12,13 +12,13 @@
   animation: fade 0.3s forwards;
 }
 
-.modal {
+.my_modal {
   /* opacity: 0; */
   /* display: flex; */
   /* position: fixed; */
   /* width: fit-content; */
   animation: up 0.3s forwards;
-  overflow: hidden;
+  overflow: auto;
   /* animation-fill-mode: forwards; */
 }
 @keyframes fade {
@@ -32,15 +32,48 @@
     /* transform: translateY(0%); */
   }
 }
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 @keyframes up {
   0% {
     opacity: 0;
-    /* transform: translateY(5%); */
     scale: 1.05;
   }
   100% {
     opacity: 1;
-    /* transform: translateY(0%); */
     scale: 1;
+  }
+}
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+@keyframes slide-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+}
+
+@media (max-width: 768px) {
+  .my_modal {
+    animation: slide-in 0.4s forwards cubic-bezier(0.4, 0, 0, 1);
+    /* overflow: hidden; */
   }
 }

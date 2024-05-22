@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 import Masonry from "react-masonry-css";
+import ImageNullFilter from "../../../helpers/imageNullFilter";
 
 function Extension({ extension }) {
   const [data, setData] = useState([]);
@@ -32,7 +33,6 @@ function Extension({ extension }) {
   async function GetImages(pageParams) {
     if (pageParams === 1 && extension) {
       const data = await getImages(extension, pageParams);
-      console.log(data);
       if (data.success) {
         const imageUrls = data.data.map((img) => img.preview_url);
         const imagePromises = imageUrls.map(
@@ -40,17 +40,15 @@ function Extension({ extension }) {
             new Promise((resolve, reject) => {
               const img = new Image();
               img.onload = () => resolve(img);
-              img.onerror = () =>
-                reject(new Error(`error al cargar la imagen desde ${url}`));
+              img.onerror = () => resolve(null);
               img.src = url;
             })
         );
         try {
           const loadedImages = await Promise.all(imagePromises);
-          if (
-            loadedImages.every((img) => img.complete && img.naturalWidth !== 0)
-          ) {
-            setData(data.data);
+          if (loadedImages) {
+            const filteredImages = ImageNullFilter(loadedImages, data.data);
+            setData(filteredImages);
             setTimeout(() => {
               setIsLoadingMore(false);
             }, 1000);
@@ -58,10 +56,14 @@ function Extension({ extension }) {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        // !SI ES QUE NO CARGA QUE LO HAGA DE NUEVO CADA 3 SEGUNDOS
+        setTimeout(() => {
+          GetImages(pageParams);
+        }, 3000);
       }
     } else {
       const newArray = new Array(30).fill().map(() => ({ extension: "load" }));
-      // LOAD IMAGES
       setData((prev) => {
         return [...prev, ...newArray];
       });
@@ -73,16 +75,13 @@ function Extension({ extension }) {
             new Promise((resolve, reject) => {
               const img = new Image();
               img.onload = () => resolve(img);
-              img.onerror = () =>
-                reject(new Error(`error al cargar la imagen desde ${url}`));
+              img.onerror = () => resolve(null);
               img.src = url;
             })
         );
         try {
           const loadedImages = await Promise.all(imagePromises);
-          if (
-            loadedImages.every((img) => img.complete && img.naturalWidth !== 0)
-          ) {
+          if (loadedImages) {
             setData((prev) => {
               const newValueToData = [
                 ...prev.filter((e) => e.extension !== "load"),
@@ -99,6 +98,10 @@ function Extension({ extension }) {
         } catch (error) {
           console.error(error);
         }
+      } else {
+        setTimeout(() => {
+          GetImages(pageParams);
+        }, 4000);
       }
     }
   }
@@ -111,6 +114,7 @@ function Extension({ extension }) {
 
   useEffect(() => {
     if (!isLoadingMore && data && data.length > 0 && pass) {
+      console.log("NEXT",pass)
       GetImages(page + 1);
       setIsLoadingMore(true);
     }

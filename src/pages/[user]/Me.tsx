@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { Collection, UserProps } from "../../types/UserProps";
 import "./user.css";
 import CardCollection from "../../components/profile/cardCollection";
-import Button from "../../components/global-react/button";
 import getMe from "../../api/user/get/getMe";
 import { STORE_user } from "../../store/userStore";
 import { useStore } from "@nanostores/react";
@@ -11,16 +10,15 @@ function Me() {
   const [user, setUser] = useState<null | UserProps>(null);
   const $user = useStore(STORE_user) as UserProps;
   useEffect(() => {
-    if ($user) {
-      setUser($user);
-      // console.log("local fetch");
-    } else {
+    // if ($user) {
+    //   setUser($user);
+    // } else {
       getMe().then((res) => {
         if (res.success) {
           setUser(res.data);
         }
       });
-    }
+    // }
   }, []);
   return (
     <>
