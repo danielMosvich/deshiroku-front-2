@@ -256,7 +256,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 className="rounded-t-2xl lg:rounded-2xl brightness-95 w-full object-cover "
               />
             )}
-            <a target="_blank" href={`${paramsProperties.file_url}`} className="absolute top-3 left-3 flex items-center">
+            <a target="_blank" href={`${paramsProperties.file_url}`} className="absolute top-3 left-3 flex items-center opacity-50 hover:opacity-100 transition-opacity">
               <MyButton radius="full" size="sm" variant="faded">show original</MyButton>
             </a>
           </section>
