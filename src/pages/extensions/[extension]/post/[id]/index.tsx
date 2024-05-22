@@ -592,7 +592,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         // TODO save image in collection - modal
         <ModalContainer
           onClose={() => setShowSaveCollectionModal(false)}
-          height="80%"
+          height="65%"
         >
           <div className="flex gap-5 pb-2 flex-col">
             <div className="w-full py-5 sticky top-0 bg-white dark:bg-neutral-900/90 backdrop-blur-2xl">
