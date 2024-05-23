@@ -158,7 +158,7 @@ function Extension({ extension }) {
                 ) : (
                   // AQUI LAS CARTAS NORMALES
                   <a
-                    className="w-full"
+                    className="w-full block"
                     href={getHref(e)}
                     key={`${e.id}-page-${page}-index-${index}`}
                   >

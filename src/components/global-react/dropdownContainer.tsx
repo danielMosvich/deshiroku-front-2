@@ -3,6 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 interface DropdownContainerProps {
   children: React.ReactNode;
   dropdownContent: React.ReactNode;
+  className?:string
+  classNamePather?:string
+  props?:any
+  classNameDropdown?:string
   position?:
     | "top"
     | "bottom"
@@ -18,6 +22,9 @@ function DropdownContainer({
   children,
   dropdownContent,
   position = "bottom",
+  classNameDropdown,
+  props,
+  classNamePather
 }: DropdownContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -68,9 +75,14 @@ function DropdownContainer({
   return (
     <div
       ref={dropdownRef}
-      style={{ position: "relative", display: "inline-block" }}
+      // style={{ position: "relative", display: "flex" }}
+      className={`${classNamePather ? classNamePather : "relative flex"}`}
     >
-      <div className="w-fit h-fit" onClick={toggleDropdown} style={{ cursor: "pointer" }}>
+      <div
+        {...props}
+        className="w-full"
+        onClick={toggleDropdown}
+      >
         {children}
       </div>
       {isOpen && (
@@ -79,7 +91,7 @@ function DropdownContainer({
             position: "absolute",
             ...getDropdownStyles(),
           }}
-          className=""
+          className={`${classNameDropdown ? classNameDropdown : ""}`}
         >
           {dropdownContent}
         </div>

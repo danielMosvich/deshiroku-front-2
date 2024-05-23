@@ -8,3 +8,4 @@ export const STORE_defaultCollection = atom<object | null>(null);
 export const STORE_location = atom<string>("/");
 export const STORE_auth_modal = atom<boolean>(false);
 export const STORE_global_volume = atom<number>(0);
+export const STORE_global_default_extension = atom<string | null>("safebooru");

@@ -185,32 +185,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
   }, [collections]);
   return (
     <div>
-      {showAllTags && (
-        <ModalContainer
-          icon
-          height="80%"
-          onClose={() => setShowAllTags(false)}
-          title={`All tags about this post - ${post?.tags_length}`}
-        >
-          <div className="flex flex-wrap min-h-fit max-h-full p-2 pb-10 gap-2">
-            {post?.tags.map((el: TagAttributes, i: number) => {
-              if (el.type || el.type === 0) {
-                return (
-                  <TagButton
-                    action={() => {
-                      window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
-                    }}
-                    key={String(i) + String(el.id) + extension}
-                    type={el.type}
-                  >
-                    {el.name}
-                  </TagButton>
-                );
-              }
-            })}
-          </div>
-        </ModalContainer>
-      )}
       <div className="bg-white dark:bg-neutral-900 dark:shadow-none sm:shadow-2xl max-w-xl h-fit  lg:max-w-5xl xl:max-w-6xl mx-auto sm:rounded-3xl flex flex-col lg:flex-row p-0 mb-5 border-b-[1px] sm:border-none dark:border-neutral-700">
         {/* PARAMS PROPERTIES SON LAS PROPIEDADES DESDE LA URL PARA CARGAR MAS RAPIDO */}
         {paramsProperties ? (
@@ -524,7 +498,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                           save
                         </MyButton>
                       ) : (
-                        // CUANDO NO HAY UNA CUENTA
                         <MyButton
                           onClick={() => STORE_auth_modal.set(true)}
                           radius="full"
@@ -556,6 +529,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
               </div>
             </div>
           ) : (
+            //! SKELETON
             <div className="flex flex-col">
               {/* DESKTOP */}
               <div className="lg:flex md:flex-col hidden">
@@ -734,6 +708,30 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 <span>Search with Yandex</span>
               </a>
             </div>
+          </div>
+        </ModalContainer>
+      )}
+      {showAllTags && (
+        <ModalContainer
+          height="65%"
+          onClose={() => setShowAllTags(false)}
+        >
+          <div className="flex overflow-auto flex-wrap min-h-fit max-h-full p-4 pb-10 gap-2">
+            {post?.tags.map((el: TagAttributes, i: number) => {
+              if (el.type || el.type === 0) {
+                return (
+                  <TagButton
+                    action={() => {
+                      window.location.href = `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22${el.name}%20${el.count}%22%2C%22type%22%3A%22${el.type}%22%2C%22value%22%3A%22${el.name}%22%7D%5D`;
+                    }}
+                    key={String(i) + String(el.id) + extension}
+                    type={el.type}
+                  >
+                    {el.name}
+                  </TagButton>
+                );
+              }
+            })}
           </div>
         </ModalContainer>
       )}

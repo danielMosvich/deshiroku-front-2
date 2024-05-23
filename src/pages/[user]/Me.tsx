@@ -10,15 +10,11 @@ function Me() {
   const [user, setUser] = useState<null | UserProps>(null);
   const $user = useStore(STORE_user) as UserProps;
   useEffect(() => {
-    // if ($user) {
-    //   setUser($user);
-    // } else {
       getMe().then((res) => {
         if (res.success) {
           setUser(res.data);
         }
       });
-    // }
   }, []);
   return (
     <>
@@ -42,7 +38,6 @@ function Me() {
               <MyButton variant="flat" color="warning" disabled>
                 Edit profile
               </MyButton>
-              {/* <Button disabled>Edit profile</Button> */}
             </div>
           </div>
 

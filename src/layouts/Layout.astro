@@ -53,7 +53,7 @@ import Header from "../components/Header.astro";
     /* Handle */
     ::-webkit-scrollbar-thumb {
       background: #b4b4b4;
-      border-radius: 10px;
+      border-radius: 0px;
     }
 
     /* Handle on hover */
@@ -78,7 +78,7 @@ import Header from "../components/Header.astro";
       /* Handle */
       ::-webkit-scrollbar-thumb {
         background: #4e4d4d;
-        border-radius: 10px;
+        border-radius: 0px;
       }
 
       /* Handle on hover */
@@ -172,7 +172,7 @@ import Header from "../components/Header.astro";
     }
   }
 </style>
-
+<!-- 
 <script>
   import type { UserProps } from "../types/UserProps";
   import {
@@ -184,34 +184,5 @@ import Header from "../components/Header.astro";
   } from "../store/userStore";
   import refreshToken from "../api/user/get/refreshToken";
 
-  if (localStorage.length > 0) {
-    if (
-      localStorage.getItem("defaultCollection") &&
-      localStorage.getItem("user")
-    ) {
-      const defaultCollection = JSON.parse(
-        localStorage.getItem("defaultCollection") as string
-      );
-      const user = JSON.parse(
-        localStorage.getItem("user") as string
-      ) as UserProps;
-      STORE_user.set(user);
-      STORE_username.set(user.username);
-      STORE_name.set(user.name);
-
-      if (defaultCollection) {
-        STORE_defaultCollection.set(defaultCollection);
-      } else {
-        if (user.collections) {
-          STORE_defaultCollection.set(user.collections[0]);
-        }
-      }
-      // !CURRENT TIME FOR REFRESH TOKEN
-      if (localStorage.getItem("time")) {
-        const time = JSON.parse(localStorage.getItem("time") as string);
-      }
-      refreshToken();
-    }
-  }
-  STORE_location.set(`${window.location.pathname}`);
-</script>
+ 
+</script> -->

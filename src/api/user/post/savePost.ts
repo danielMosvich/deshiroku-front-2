@@ -18,7 +18,9 @@ async function savePost(
   post: ImagesProps,
   setState: React.Dispatch<React.SetStateAction<ButtonStates>>
 ) {
-  const token = getCookieByName("access_token");
+  let token;
+  if (getCookieByName("access_token")) token = getCookieByName("access_token");
+  if (getCookieByName("refresh_token")) token = getCookieByName("refresh_token");
   if (document.cookie) {
     setState("saving");
     const response = await fetch(

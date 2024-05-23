@@ -52,7 +52,9 @@ function Collection({ id, user, collection }) {
   async function handleEditCollection() {
     const newName = prompt("NUEVO NOMBRE DE LA COLECCION");
     if (newName) {
-      const token = getCookieByName("access_token");
+      let token;
+      if (getCookieByName("access_token")) token = getCookieByName("access_token");
+      if (getCookieByName("refresh_token")) token = getCookieByName("refresh_token");
       let isDefaultCollection = STORE_defaultCollection.get()._id === data.id;
       console.log(isDefaultCollection);
       const response = await fetch(

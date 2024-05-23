@@ -18,69 +18,71 @@ async function deletePost(
   post: ImagesProps,
   setState: React.Dispatch<React.SetStateAction<ButtonStates>>
 ) {
-  const token = getCookieByName("access_token");
-  if (document.cookie) {
-    setState("removing");
-    console.log("REMOVE");
-    const response = await fetch(
-      `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${JSON.stringify({ token: token })}`,
-        },
-        body: JSON.stringify({
-          id_collection: id,
-          url: post.file_url,
-        }),
+  let token;
+  if (getCookieByName("access_token")) token = getCookieByName("access_token");
+  if (getCookieByName("refresh_token")) token = getCookieByName("refresh_token");
+    if (document.cookie) {
+      setState("removing");
+      console.log("REMOVE");
+      const response = await fetch(
+        `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.stringify({ token: token })}`,
+          },
+          body: JSON.stringify({
+            id_collection: id,
+            url: post.file_url,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem("user", JSON.stringify(data.data));
+        STORE_user.set(data.data);
+        Alert("bottom", 3000, "success", "Saved", `Image was removed`);
+        setState("save");
       }
-    );
-    const data = await response.json();
-    if (data.success) {
-      localStorage.setItem("user", JSON.stringify(data.data));
-      STORE_user.set(data.data);
-      Alert("bottom", 3000, "success", "Saved", `Image was removed`);
-      setState("save");
-    }
-    // setState("save");
-    // localStorage.setItem("user", JSON.stringify(data.data));
-    // setCollections(data.data.collections);
+      // setState("save");
+      // localStorage.setItem("user", JSON.stringify(data.data));
+      // setCollections(data.data.collections);
 
-    // const response = await fetch(
-    //   `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${JSON.stringify({ token: token })}`,
-    //     },
-    //     body: JSON.stringify({ id: id, image: post }),
-    //   }
-    // );
-    // const data = (await response.json()) as {
-    //   data: UserProps;
-    //   success: boolean;
-    //   message?: string;
-    //   direction: { name: string; id: string };
-    // };
-    // if (data.success) {
-    //   console.log(data)
-    //   localStorage.setItem("user", JSON.stringify(data.data));
-    //   STORE_user.set(data.data);
-    //   Alert(
-    //     "bottom",
-    //     3000,
-    //     "success",
-    //     "Saved",
-    //     `Image was saved in:${data.direction.name} `
-    //   );
-    //   setState("saved");
-    // } else {
-    //   Alert("bottom", 3000, "error", "Error when saving", `${data.message}`);
-    //   setState("save");
-    // }
-  }
+      // const response = await fetch(
+      //   `${import.meta.env.PUBLIC_SERVER_URL}/api/user/collection`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${JSON.stringify({ token: token })}`,
+      //     },
+      //     body: JSON.stringify({ id: id, image: post }),
+      //   }
+      // );
+      // const data = (await response.json()) as {
+      //   data: UserProps;
+      //   success: boolean;
+      //   message?: string;
+      //   direction: { name: string; id: string };
+      // };
+      // if (data.success) {
+      //   console.log(data)
+      //   localStorage.setItem("user", JSON.stringify(data.data));
+      //   STORE_user.set(data.data);
+      //   Alert(
+      //     "bottom",
+      //     3000,
+      //     "success",
+      //     "Saved",
+      //     `Image was saved in:${data.direction.name} `
+      //   );
+      //   setState("saved");
+      // } else {
+      //   Alert("bottom", 3000, "error", "Error when saving", `${data.message}`);
+      //   setState("save");
+      // }
+    }
 }
 
 export default deletePost;

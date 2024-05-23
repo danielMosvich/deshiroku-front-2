@@ -4,12 +4,18 @@ import {
   STORE_username,
   STORE_name,
   STORE_auth_modal,
+  STORE_user,
+  STORE_defaultCollection,
+  STORE_location,
+  STORE_global_default_extension,
 } from "../store/userStore";
 import { useStore } from "@nanostores/react";
 import Button from "./global-react/button";
 import ModalContainer from "./global-react/modalContainer";
 import LoginRegister from "./loginRegister";
 import DropdownContainer from "./global-react/dropdownContainer";
+import type { UserProps } from "../types/UserProps";
+import refreshToken from "../api/user/get/refreshToken";
 
 function HeaderUser() {
   // !GLOBAL STATES
@@ -17,6 +23,44 @@ function HeaderUser() {
   const $name = useStore(STORE_name);
   const $auth_modal = useStore(STORE_auth_modal);
   const logout = () => {};
+
+  useEffect(() => {
+    if (localStorage.length > 0) {
+      if (
+        localStorage.getItem("defaultCollection") &&
+        localStorage.getItem("user")
+      ) {
+        if (localStorage.getItem("default_extension")) {
+          STORE_global_default_extension.set(
+            localStorage.getItem("default_extension")
+          );
+        }
+        const defaultCollection = JSON.parse(
+          localStorage.getItem("defaultCollection") as string
+        );
+        const user = JSON.parse(
+          localStorage.getItem("user") as string
+        ) as UserProps;
+        STORE_user.set(user);
+        STORE_username.set(user.username);
+        STORE_name.set(user.name);
+
+        if (defaultCollection) {
+          STORE_defaultCollection.set(defaultCollection);
+        } else {
+          if (user.collections) {
+            STORE_defaultCollection.set(user.collections[0]);
+          }
+        }
+        // !CURRENT TIME FOR REFRESH TOKEN
+        if (localStorage.getItem("time")) {
+          const time = JSON.parse(localStorage.getItem("time") as string);
+        }
+        refreshToken();
+      }
+    }
+    STORE_location.set(`${window.location.pathname}`);
+  }, []);
   return (
     <>
       {$username ? (

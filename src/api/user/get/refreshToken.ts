@@ -40,7 +40,6 @@ async function fetchRefreshTokenServer(url: string) {
 
       document.cookie = access_token;
       document.cookie = refresh_token;
-      window.location.reload();
     }
   } catch (error) {
     localStorage.clear();
