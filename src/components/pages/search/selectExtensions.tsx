@@ -216,14 +216,17 @@ function SelectExtensions() {
           tabIndex={0}
           onKeyDown={handleKeyDown}
           ref={listRef} // Asigna el ref al ul
-          className="outline-none bg-white/70 backdrop-blur-2xl ring-2 rounded-lg mt-2 overflow-hidden min-w-[190px] relative z-20"
+          className="outline-none bg-white/70 dark:bg-black/70 backdrop-blur-2xl ring-2 rounded-lg mt-2 overflow-hidden min-w-[190px] relative z-20"
         >
           {items.map((item, index) => (
             <li
               key={index}
-              className={`p-4 cursor-pointer flex gap-2 items-center capitalize font-ui text-sm
-              ${selectedIndex === index ? "bg-white/80" : ""} 
-              ${selectedIndex !== index && "hover:bg-white/60"}`}
+              className={`p-4 cursor-pointer flex gap-2 items-center capitalize font-ui text-sm dark:text-white
+              ${selectedIndex === index ? "bg-white/80 dark:bg-black/80" : ""} 
+              ${
+                selectedIndex !== index &&
+                "hover:bg-white/60 dark:hover:bg-black/60"
+              }`}
               onClick={() => handleClick(index)}
             >
               <img
@@ -252,7 +255,7 @@ function SelectExtensions() {
       }
     >
       <div
-        className="flex h-full items-center gap-2 select-none w-full bg-neutral-200 px-4 rounded-full"
+        className="flex h-full items-center gap-2 select-none w-full bg-neutral-200 dark:bg-neutral-900 dark:text-white  px-4 rounded-full"
         onClick={(e) => {
           // e.stopPropagation()
           handleButtonClick();

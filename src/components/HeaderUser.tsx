@@ -76,7 +76,7 @@ function HeaderUser() {
           <DropdownContainer
             position="bottom-right"
             dropdownContent={
-              <div className="ring-2 bg-white/60 dark:bg-black/70 backdrop-blur-2xl mt-5 rounded-xl w-[300px] p-2 dark:text-white">
+              <div className="ring-2 bg-white/60 dark:bg-black/70 backdrop-blur-2xl mt-5 rounded-xl w-[300px] p-2 dark:text-white z-50 relative">
                 <a
                   href={`/${$username}`}
                   className="bg-gradient-to-tr to-white from-neutral-600/10 dark:from-black/50 dark:to-blue-500/40 dark:ring-1 dark:ring-neutral-500 ring-2 ring-white rounded-xl  py-2 px-4 cursor-pointer 

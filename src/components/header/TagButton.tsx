@@ -7,7 +7,7 @@
 // //               5 = meta
 
 interface TagButtonProps {
-  children: JSX.Element | string;
+  children: React.ReactNode | string;
   flat?: boolean;
   type: number;
   action?: () => void;

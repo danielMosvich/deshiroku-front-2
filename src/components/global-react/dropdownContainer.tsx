@@ -3,10 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 interface DropdownContainerProps {
   children: React.ReactNode;
   dropdownContent: React.ReactNode;
-  className?:string
-  classNamePather?:string
-  props?:any
-  classNameDropdown?:string
+  className?: string;
+  classNamePather?: string;
+  props?: any;
+  classNameDropdown?: string;
+  handleDisable?: boolean;
+  show?: boolean;
   position?:
     | "top"
     | "bottom"
@@ -24,15 +26,14 @@ function DropdownContainer({
   position = "bottom",
   classNameDropdown,
   props,
-  classNamePather
+  classNamePather,
 }: DropdownContainerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+      setIsOpen(!isOpen);
   };
-
   const closeDropdown = (event: MouseEvent) => {
     if (
       dropdownRef.current &&
@@ -41,14 +42,6 @@ function DropdownContainer({
       setIsOpen(false);
     }
   };
-
-  useEffect(() => {
-    document.addEventListener("click", closeDropdown);
-    return () => {
-      document.removeEventListener("click", closeDropdown);
-    };
-  }, []);
-
   const getDropdownStyles = () => {
     switch (position) {
       case "top":
@@ -71,18 +64,19 @@ function DropdownContainer({
         return {};
     }
   };
+  useEffect(() => {
+      document.addEventListener("click", closeDropdown);
+      return () => {
+        document.removeEventListener("click", closeDropdown);
+      };
+  }, []);
 
   return (
     <div
       ref={dropdownRef}
-      // style={{ position: "relative", display: "flex" }}
       className={`${classNamePather ? classNamePather : "relative flex"}`}
     >
-      <div
-        {...props}
-        className="w-full"
-        onClick={toggleDropdown}
-      >
+      <div {...props} className="w-full" onClick={toggleDropdown}>
         {children}
       </div>
       {isOpen && (

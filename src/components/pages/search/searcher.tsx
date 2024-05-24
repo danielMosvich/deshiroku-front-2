@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { STORE_global_default_extension } from "../../../store/userStore";
 import SelectExtensions from "./selectExtensions";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,13 +9,34 @@ import { Pagination } from "swiper/modules";
 import "./styles.css";
 import DropdownContainer from "../../../components/global-react/dropdownContainer";
 import TagButton from "../../../components/header/TagButton";
+import ModalContainer from "../../../components/global-react/modalContainer";
+import typeTagTransform from "../../../helpers/typeTagTransform";
+import MyButton from "../../../components/global-react/myButton";
+import getRecomendations from "../../../api/search/get/getRecomendations";
 
+interface Tag {
+  label: string;
+  type: string;
+  value: string;
+}
 function Searcher() {
   const inputRef = useRef<null | HTMLInputElement>(null);
   const $default_extension = useStore(STORE_global_default_extension);
   const [inputValue, setInputValue] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-
+  const [results, setResults] = useState<Tag[]>([]);
+  const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
+  const [show, setShow] = useState(false);
+  const [recommendation, setRecommendation] = useState<
+    | []
+    | {
+        name: string;
+        url: string;
+        image: string;
+      }[]
+  >([]);
+  const $STORE_global_default_extension = useStore(
+    STORE_global_default_extension
+  );
   const getTags = async (query: string) => {
     if (query !== "") {
       try {
@@ -24,10 +45,12 @@ function Searcher() {
             import.meta.env.PUBLIC_SERVER_URL
           }/api/deshiroku/${$default_extension}/autocomplete/${query}`
         );
-        const data = await response.json();
+        const data = (await response.json()) as {
+          success: boolean;
+          data: Tag[];
+        };
         if (data.success) {
           setResults(data.data);
-          console.log(data.data);
         }
       } catch (error) {}
     }
@@ -35,139 +58,256 @@ function Searcher() {
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-    if (value !== "") {
+    if (value !== "" && value !== " ") {
       getTags(value);
+    } else {
+      setResults([]);
+    }
+  };
+  const addTag = (tag: Tag) => {
+    if (tagsSelected.find((it) => it.label === tag.label)) return;
+    setTagsSelected((prev) => [...prev, tag]);
+    setInputValue("");
+  };
+  const removeTag = (tag: Tag) => {
+    const newTag = tagsSelected.filter((it) => it.label !== tag.label);
+    setTagsSelected(newTag);
+  };
+  useEffect(() => {
+    setTagsSelected([]);
+    setInputValue("");
+    getRecomendations($STORE_global_default_extension as string).then(
+      (data) => {
+        if (data.success && data.data) {
+          setRecommendation(data.data);
+        } else {
+          setRecommendation([]);
+        }
+      }
+    );
+  }, [$STORE_global_default_extension]);
+
+  const handleGo = () => {
+    if (tagsSelected.length === 0) return;
+    interface tagProps {
+      label: string;
+      value: string;
+      type: string;
+    }
+    type RatingTypes =
+      | "all"
+      | "safe"
+      | "general"
+      | "sensitive"
+      | "questionable"
+      | "explicit";
+    interface FilterParams {
+      sort: { q: string; type: string; order: string };
+      score: {
+        value: number;
+      };
+      rating: RatingTypes;
+    }
+
+    interface QueryParams {
+      tags: tagProps[];
+      filter: FilterParams;
+    }
+    if ($default_extension) {
+      const queryParams: QueryParams = {
+        tags: tagsSelected,
+        filter: {
+          sort: { q: "sort", type: "updated", order: "desc" },
+          score: { value: 0 },
+          rating: "all",
+        },
+      };
+
+      const queryString = Object.keys(queryParams)
+        .map((key: string) => {
+          const encodedValue = encodeURIComponent(
+            JSON.stringify(queryParams[key as keyof QueryParams])
+          );
+          return `${encodeURIComponent(key)}=${encodedValue}`;
+        })
+        .join("&");
+
+      if (queryString) {
+        window.location.href = `/extensions/${$default_extension}/search/${queryString}`;
+      }
     }
   };
   return (
     <>
       <div className="flex items-center relative h-10 rounded-full mx-auto mt-5 gap-2 px-2">
-        <DropdownContainer
-          dropdownContent={
-            <div className="bg-white/70 backdrop-blur-2xl ring-2 flex flex-col gap-2  w-full left-0 mt-2 rounded-xl p-2">
-              {results.length > 0 &&
-                results.map((item, index) => (
-                  // <TagButton type={item.type}>{item.value}</TagButton>
-                  <TagButton action={() => {}} type={1}>
-                    {item.value}
-                  </TagButton>
-                ))}
+        <div className="w-full bg-neutral-200 dark:bg-neutral-900 h-full rounded-full relative flex items-center">
+          <svg
+            className="text-neutral-700 z-10 absolute left-3 dark:text-neutral-400"
+            xmlns="http://www.w3.org/2000/svg"
+            width="1.3rem"
+            height="1.3rem"
+            viewBox="0 0 16 16"
+          >
+            <g fill="currentColor">
+              <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018c-5.825-3.764-1.664-6.69 0-5.018"></path>
+              <path d="M13 6.5a6.47 6.47 0 0 1-1.258 3.844q.06.044.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5M6.5 12a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11"></path>
+            </g>
+          </svg>
+          <input
+            readOnly
+            onFocus={() => setShow(true)}
+            className="w-full h-full rounded-full bg-transparent placeholder:text-neutral-600 dark:placeholder:text-neutral-400 text-sm font-ui font-[500] pl-10 pr-4 outline-none"
+            type="text"
+            placeholder={`Search in ${$default_extension}`}
+          />
+        </div>
+        {show && (
+          <ModalContainer
+            height="85%"
+            onClose={() => {
+              setShow(false);
+              setInputValue("");
+              setResults([]);
+            }}
+          >
+            <div className="bg-neutral-200 dark:bg-neutral-800 h-10 rounded-full mx-2 mt-3 flex items-center">
+              <svg
+                className="text-neutral-700 z-10 absolute left-5 dark:text-neutral-400"
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.3rem"
+                height="1.3rem"
+                viewBox="0 0 16 16"
+              >
+                <g fill="currentColor">
+                  <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018c-5.825-3.764-1.664-6.69 0-5.018"></path>
+                  <path d="M13 6.5a6.47 6.47 0 0 1-1.258 3.844q.06.044.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5M6.5 12a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11"></path>
+                </g>
+              </svg>
+              <input
+                value={inputValue}
+                ref={inputRef}
+                onChange={handleInput}
+                onFocus={() => setShow(true)}
+                className="w-full h-full rounded-full bg-transparent placeholder:text-neutral-600 text-sm font-ui font-[500] outline-offset-4 outline-sky-500 pl-10 pr-4 dark:placeholder:text-neutral-400 dark:text-white"
+                type="text"
+                placeholder={`Search`}
+              />
             </div>
-          }
-          // position="bottom"
-          classNameDropdown="w-full relative z-20"
-          classNamePather="w-full relative h-full flex"
-          className="w-full"
-        >
-          <div className="w-full bg-neutral-200 h-full rounded-full relative flex items-center">
-            <svg
-              className="text-neutral-700 z-10 absolute left-3"
-              xmlns="http://www.w3.org/2000/svg"
-              width="1.3rem"
-              height="1.3rem"
-              viewBox="0 0 16 16"
-            >
-              <g fill="currentColor">
-                <path d="M6.5 4.482c1.664-1.673 5.825 1.254 0 5.018c-5.825-3.764-1.664-6.69 0-5.018"></path>
-                <path d="M13 6.5a6.47 6.47 0 0 1-1.258 3.844q.06.044.115.098l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1-.1-.115h.002A6.5 6.5 0 1 1 13 6.5M6.5 12a5.5 5.5 0 1 0 0-11a5.5 5.5 0 0 0 0 11"></path>
-              </g>
-            </svg>
-            <input
-              value={inputValue}
-              ref={inputRef}
-              onChange={handleInput}
-              className="w-full h-full rounded-full bg-transparent placeholder:text-neutral-600 text-sm font-ui font-[500] outline-offset-4 outline-sky-500 pl-10 pr-4"
-              type="text"
-              placeholder={`Search in ${$default_extension}`}
-            />
-          </div>
-        </DropdownContainer>
+            {tagsSelected.length > 0 && (
+              <div className="">
+                <h2 className="text-sm font-semibold px-2 pt-2 dark:text-white">
+                  Selected Tags
+                </h2>
+                <section className="py-1 flex gap-2 overflow-auto px-2">
+                  {tagsSelected.map((it, index) => {
+                    return (
+                      <TagButton
+                        action={() => {
+                          removeTag(it);
+                        }}
+                        type={typeTagTransform(it.type)}
+                        key={index + "-selected-tag"}
+                      >
+                        {it.label}
+                      </TagButton>
+                    );
+                  })}
+                </section>
+              </div>
+            )}
+            {results.length > 0 && (
+              <div className="">
+                <h2 className="mx-2 text-sm mt-2 font-semibold dark:text-white">
+                  Results
+                </h2>
+                <div className="flex flex-col gap-2 px-2 mt-2">
+                  {results.map((results, index) => {
+                    return (
+                      <TagButton
+                        action={() => {
+                          addTag(results);
+                        }}
+                        type={typeTagTransform(results.type)}
+                        key={index + "-tag-selection"}
+                      >
+                        <div className="flex gap-1 items-center">
+                          {results.label}
+                          {results.value ===
+                            tagsSelected.find(
+                              (item) => item.label === results.label
+                            )?.value && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="1em"
+                              height="1em"
+                              viewBox="0 0 256 256"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m45.66 85.66l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 11.32"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </TagButton>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            <div className="w-full flex justify-center fixed bottom-5">
+              <MyButton radius="full" variant="shadow" onClick={handleGo}>
+                Search
+              </MyButton>
+            </div>
+          </ModalContainer>
+        )}
         <SelectExtensions />
       </div>
-      {/* <section>tags selected</section> */}
-      <section className="mt-10">
-        {/* <ul className="bg-rose-500 mt-5"> */}
-        <Swiper
-          slidesPerView={2.5}
-          spaceBetween={8}
-          modules={[Pagination]}
-          className="mySwiper"
-        >
-          <SwiperSlide>
-            <li className="flex flex-col relative  h-[240px] ">
-              <img
-                // style={{background }}
-                className="w-full h-full object-cover rounded-xl rounded-b-2xl"
-                src="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716413240/deshiroku/rule34/popular_1.png"
-                alt=""
-              />
-              <div
-                style={{
-                  background: "linear-gradient(transparent 50%, black 100%)",
-                }}
-                className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
-              >
-                <span className="mb-2">Most Popular</span>
-              </div>
-            </li>
-          </SwiperSlide>
-          <SwiperSlide>
-            <li className="flex flex-col relative  h-[240px] ">
-              <img
-                // style={{background }}
-                className="w-full h-full object-cover rounded-xl rounded-b-2xl"
-                src="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716413240/deshiroku/rule34/popular_1.png"
-                alt=""
-              />
-              <div
-                style={{
-                  background: "linear-gradient(transparent 50%, black 100%)",
-                }}
-                className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
-              >
-                <span className="mb-2">Most Popular</span>
-              </div>
-            </li>
-          </SwiperSlide>
-          <SwiperSlide>
-            <li className="flex flex-col relative  h-[240px] ">
-              <img
-                // style={{background }}
-                className="w-full h-full object-cover rounded-xl rounded-b-2xl"
-                src="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716413240/deshiroku/rule34/popular_1.png"
-                alt=""
-              />
-              <div
-                style={{
-                  background: "linear-gradient(transparent 50%, black 100%)",
-                }}
-                className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
-              >
-                <span className="mb-2">Most Popular</span>
-              </div>
-            </li>
-          </SwiperSlide>
-          <SwiperSlide>
-            <li className="flex flex-col relative  h-[240px] ">
-              <img
-                // style={{background }}
-                className="w-full h-full object-cover rounded-xl rounded-b-2xl"
-                src="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716413240/deshiroku/rule34/popular_1.png"
-                alt=""
-              />
-              <div
-                style={{
-                  background: "linear-gradient(transparent 50%, black 100%)",
-                }}
-                className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
-              >
-                <span className="mb-2">Most Popular</span>
-              </div>
-            </li>
-          </SwiperSlide>
-        </Swiper>
-        {/* </ul> */}
-      </section>
+
+      {recommendation.length > 0 && (
+        <section className="">
+          <h2 className="font-semibold px-2 py-2 dark:text-white">
+            Remondation
+          </h2>
+          <Swiper
+            slidesPerView={2.5}
+            spaceBetween={8}
+            modules={[Pagination]}
+            className="mySwiper"
+          >
+            {recommendation.map((item, index) => {
+              return (
+                <SwiperSlide key={index + "-swiper"}>
+                  <button
+                    onClick={() => {
+                      window.location.href = `/extensions/${$STORE_global_default_extension}/search/${item.url}`;
+                    }}
+                    className="flex flex-col relative  h-[240px] "
+                  >
+                    <img
+                      className="w-full h-full object-cover rounded-xl rounded-b-2xl"
+                      src={item.image}
+                      alt={item.name}
+                    />
+                    <div
+                      style={{
+                        background:
+                          "linear-gradient(transparent 50%, black 100%)",
+                      }}
+                      className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
+                    >
+                      <span className="mb-2 whitespace-nowrap text-md text-ellipsis overflow-hidden capitalize">
+                        {item.name}
+                      </span>
+                    </div>
+                  </button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </section>
+      )}
     </>
   );
 }
