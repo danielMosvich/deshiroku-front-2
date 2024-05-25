@@ -114,7 +114,7 @@ function HeaderNavigator({ extension }: { extension?: string }) {
               variant={
                 $location.includes(`${EXTENSIONS_ROUTE}/${extension}`)
                   ? "solid"
-                  : "light"
+                  : "outline"
               }
             >
               {extension}
@@ -122,7 +122,7 @@ function HeaderNavigator({ extension }: { extension?: string }) {
           </a>
         ) : (
           <a href={"/"}>
-            <MyButton radius="full" variant="light">
+            <MyButton radius="full" variant="outline">
               Extensions
             </MyButton>
           </a>
@@ -151,7 +151,7 @@ function HeaderNavigator({ extension }: { extension?: string }) {
             </svg>
           </MyButton>
         </a>
-        <a href={TAGS_ROUTE}>
+        {/* <a href={TAGS_ROUTE}>
           <MyButton
             radius="full"
             variant={$location === TAGS_ROUTE ? "solid" : "light"}
@@ -169,7 +169,7 @@ function HeaderNavigator({ extension }: { extension?: string }) {
               />
             </svg>
           </MyButton>
-        </a>
+        </a> */}
         {$username ? (
           <a
             href={`/${$username}`}

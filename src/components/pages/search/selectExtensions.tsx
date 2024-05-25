@@ -160,7 +160,20 @@ const items = [
   { name: "gelbooru", icon: "/icons/gelbooru.ico", nsfw: true },
 ];
 
-function SelectExtensions() {
+function SelectExtensions({
+  setRecommendation,
+}: {
+  setRecommendation: React.Dispatch<
+    React.SetStateAction<
+      | []
+      | {
+          name: string;
+          url: string;
+          image: string;
+        }[]
+    >
+  >;
+}) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [checkedIndex, setCheckedIndex] = useState<number | null>(null);
   const $default_extension = useStore(STORE_global_default_extension);
@@ -177,6 +190,7 @@ function SelectExtensions() {
       );
     } else if (e.key === "Enter") {
       setCheckedIndex(selectedIndex);
+      STORE_global_default_extension.set(items[selectedIndex].name)
     }
   };
 
@@ -206,6 +220,9 @@ function SelectExtensions() {
       setSelectedIndex(index);
     }
   }, []);
+  useEffect(()=>{
+    setRecommendation([])
+  },[checkedIndex])
   return (
     <DropdownContainer
       position="bottom-right"

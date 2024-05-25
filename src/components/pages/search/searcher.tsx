@@ -137,6 +137,11 @@ function Searcher() {
       }
     }
   };
+  useEffect(() => {
+    if (tagsSelected.length > 0 && inputValue === "") {
+      setResults([]);
+    }
+  }, [tagsSelected, inputValue]);
   return (
     <>
       <div className="flex items-center relative h-10 rounded-full mx-auto mt-5 gap-2 px-2">
@@ -163,7 +168,7 @@ function Searcher() {
         </div>
         {show && (
           <ModalContainer
-            height="85%"
+            height="87%"
             onClose={() => {
               setShow(false);
               setInputValue("");
@@ -255,6 +260,31 @@ function Searcher() {
                 </div>
               </div>
             )}
+            {results.length === 0 && tagsSelected.length === 0 && (
+              <div className=" h-full flex  items-center flex-col">
+                <h2 className="text-black dark:text-white text-2xl px-2 text-center font-[600] font-ui mt-32 tracking-tight">
+                  Search for content with your favorite extension
+                </h2>
+                <h3 className="text-black/80 dark:text-white/80 text-sm px-2 text-center mt-3">
+                  Select your tags and search with the button.
+                </h3>
+                <p className="text-black/80 dark:text-white/80 text-xs ">
+                  Remember that you can only search by tags
+                </p>
+                <svg
+                  className="mt-6 dark:text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="5rem"
+                  height="5rem"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12.75 2a3.25 3.25 0 0 0-2.242.898L3.696 9.395a2.25 2.25 0 0 0-.034 3.223l6.256 6.227a2.25 2.25 0 0 0 3.166.009l6.945-6.835c.621-.61.97-1.445.97-2.316V4.75A2.75 2.75 0 0 0 18.25 2zm3.5 5.75a1.25 1.25 0 1 1 0-2.5a1.25 1.25 0 0 1 0 2.5m3.006 6.433l1.475-1.451q.067-.067.132-.136a2.75 2.75 0 0 1-.691 2.813l-5.334 5.229a4.75 4.75 0 0 1-6.666-.016l-4.356-4.31a2.75 2.75 0 0 1-.681-2.808l1.629 1.62q.048.064.107.121l2.411 2.386l1.931 1.922a3.25 3.25 0 0 0 4.575.014l5.334-5.229q.075-.073.134-.155"
+                  />
+                </svg>
+              </div>
+            )}
             <div className="w-full flex justify-center fixed bottom-5">
               <MyButton radius="full" variant="shadow" onClick={handleGo}>
                 Search
@@ -262,18 +292,19 @@ function Searcher() {
             </div>
           </ModalContainer>
         )}
-        <SelectExtensions />
+        <SelectExtensions setRecommendation={setRecommendation} />
       </div>
 
       {recommendation.length > 0 && (
         <section className="">
-          <h2 className="font-semibold px-2 py-2 dark:text-white">
-            Remondation
+          <h2 className="font-semibold px-2 pt-5 pb-2 dark:text-white">
+            Featured Content
           </h2>
           <Swiper
-            slidesPerView={2.5}
+            slidesPerView={2.2}
             spaceBetween={8}
             modules={[Pagination]}
+            
             className="mySwiper"
           >
             {recommendation.map((item, index) => {
@@ -297,7 +328,7 @@ function Searcher() {
                       }}
                       className="w-full font-semibold absolute text-center text-white  h-full flex items-end justify-center rounded-b-xl"
                     >
-                      <span className="mb-2 whitespace-nowrap text-md text-ellipsis overflow-hidden capitalize">
+                      <span className="mb-2 whitespace-nowrap text-sm px-3 text-ellipsis overflow-hidden capitalize">
                         {item.name}
                       </span>
                     </div>
