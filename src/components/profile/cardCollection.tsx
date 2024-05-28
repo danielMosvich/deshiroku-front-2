@@ -6,7 +6,7 @@ function CardCollection({ item, href }: { item: Collection,href:string }) {
       <a href={href} className="flex flex-col">
         <div
           style={{ gridTemplateColumns: "2fr 1fr", gridAutoRows: "120px" }}
-          className="md:w-60 md:h-40 h-[120px] md:max-h-40 md:min-h-40 bg-white ring-1 ring-white shadow-md rounded-2xl grid grid-rows-1 gap-[1px] overflow-hidden"
+          className="md:w-60 md:h-40 min-w-40 h-[120px] md:max-h-40 md:min-h-40 bg-white ring-1 ring-white shadow-md rounded-2xl grid grid-rows-1 gap-[1px] overflow-hidden"
         >
           <div className="h-full">
             {item.images[0]?.preview_url ? (

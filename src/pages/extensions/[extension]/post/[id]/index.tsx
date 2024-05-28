@@ -228,8 +228,14 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                 className="rounded-t-2xl lg:rounded-2xl brightness-95 w-full object-cover "
               />
             )}
-            <a target="_blank" href={`${paramsProperties.file_url}`} className="absolute top-3 left-3 flex items-center opacity-50 hover:opacity-100 transition-opacity">
-              <MyButton radius="full" size="sm" variant="faded">show original</MyButton>
+            <a
+              target="_blank"
+              href={`${paramsProperties.file_url}`}
+              className="absolute top-3 left-3 flex items-center opacity-50 hover:opacity-100 transition-opacity"
+            >
+              <MyButton radius="full" size="sm" variant="faded">
+                show original
+              </MyButton>
             </a>
           </section>
         ) : (
@@ -590,11 +596,15 @@ function PostById({ extension, id }: { extension: string; id: string }) {
                       className="flex items-center gap-2 rounded-xl p-2 active:bg-neutral-600 select-none"
                     >
                       <div className="w-16 h-16 overflow-hidden rounded-lg">
-                        <img
-                          src={collection.images[0].preview_url}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
+                        {collection.images[0] ? (
+                          <img
+                            src={collection.images[0].preview_url}
+                            alt=""
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-neutral-200 dark:bg-neutral-700"></div>
+                        )}
                       </div>
                       <div className="flex flex-col gap-1 text-lg font-semibold dark:text-white">
                         <h3>{collection.name}</h3>
@@ -710,10 +720,7 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         </ModalContainer>
       )}
       {showAllTags && (
-        <ModalContainer
-          height="65%"
-          onClose={() => setShowAllTags(false)}
-        >
+        <ModalContainer height="65%" onClose={() => setShowAllTags(false)}>
           <div className="flex overflow-auto flex-wrap min-h-fit max-h-full p-4 pb-10 gap-2">
             {post?.tags.map((el: TagAttributes, i: number) => {
               if (el.type || el.type === 0) {
