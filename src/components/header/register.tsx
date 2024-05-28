@@ -58,13 +58,11 @@ function RegisterComponent() {
         );
         const data = await response.json();
         if (data.success) {
-          console.log("Este usuario no existe aún");
           setErrors((prev) => ({
             ...prev,
             username: "disused",
           }));
         } else {
-          console.log("Este usuario ya existe :C");
           setErrors((prev) => ({
             ...prev,
             username: "inuse",
@@ -74,7 +72,6 @@ function RegisterComponent() {
         if ((error as Error).name === "AbortError") {
           // La solicitud fue cancelada, no necesitas manejar este caso
         } else {
-          console.log(error);
           // Manejo de errores de red u otros errores
         }
       } finally {

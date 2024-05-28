@@ -7,7 +7,6 @@ async function getUser(extension: string) {
     { credentials: "include" }
   );
   const data: { success: boolean; data: UserProps } = await res.json();
-  //   console.log(data);
   return data;
 }
 

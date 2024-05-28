@@ -9,11 +9,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useEffect, useRef, useState } from "react";
 import TagButton from "./header/TagButton";
-// import DropDown from "./global-react/dropDown";
 import FilterButton from "./header/filterButton";
 import MagicButtons from "./header/magicButtons";
 import Alert from "./global-native/alert";
-import getMe from "../api/user/get/getMe";
+import getRecomendations from "../api/search/get/getRecomendations";
 interface tagProps {
   label: string;
   value: string;
@@ -51,82 +50,17 @@ function Searcher() {
 
   const [limitSearch, setLimitSearch] = useState(false);
 
-  const cardsTags = [
-    {
-      extension: "realbooru",
-      tags: [
-        {
-          name: "most popular",
-          image_url:
-            "https://realbooru.com//images/af/4b/af4b6378b651e06ddaac2d132efd9289.jpeg",
-          url: `/extensions/${extension}/search/filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"score"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "popular week",
-          image_url:
-            "https://realbooru.com//images/99/bc/99bcb28993667683a40ea29ec80ccff2.png",
-          url: `/extensions/${extension}/search/filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A100%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "animated",
-          image_url:
-            "https://realbooru.com/images/68/a5/68a5c088791782328b2b8b7a89463437.gif",
-          url: `/extensions/${extension}/search/tags=%5B%7B"label"%3A"animated%20(24913)"%2C"value"%3A"animated"%2C"type"%3A"general"%7D%5D&filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "cosplay",
-          image_url:
-            "https://realbooru.com//images/84/59/845922c76570f06b8f3925d6d4ff27b5.jpeg",
-          url: `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22cosplay%20(53702)%22%2C%22value%22%3A%22cosplay%22%2C%22type%22%3A%22general%22%7D%5D&filter=%7B%22sort%22%3A%7B%22q%22%3A%22sort%22%2C%22type%22%3A%22updated%22%2C%22order%22%3A%22desc%22%7D%2C%22score%22%3A%7B%22value%22%3A0%7D%2C%22rating%22%3A%22all%22%7D`,
-        },
-        {
-          name: "watermark",
-          image_url:
-            "https://realbooru.com//images/02/a9/02a94b1810e70e09ecb72a177eb5d30a.jpeg",
-          url: `/extensions/${extension}/search/tags=%5B%7B"label"%3A"watermark%20(411299)"%2C"value"%3A"watermark"%2C"type"%3A"general"%7D%5D&filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-      ],
-    },
-    {
-      extension: "rule34",
-      tags: [
-        {
-          name: "most popular",
-          image_url:
-            "https://api-cdn.rule34.xxx/images/3074/c1f93eeaeed32886fb954475d085b290.png",
-          url: `/extensions/${extension}/search/filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"score"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "popular week",
-          image_url:
-            "https://api-cdn.rule34.xxx/images/1806/1f71154017758ca71910821161c00ab6.png",
-          url: `/extensions/${extension}/search/filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A100%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "animated",
-          image_url:
-            "https://api-cdn.rule34.xxx/images/6720/3e601453fffc93b84e4378f77be8b837.gif",
-          url: `/extensions/${extension}/search/tags=%5B%7B"label"%3A"animated%20(24913)"%2C"value"%3A"animated"%2C"type"%3A"general"%7D%5D&filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-        {
-          name: "cosplay",
-          image_url:
-            "https://api-cdn.rule34.xxx/images/2068/9cbce4243824a53128f94b83c825d7ca.jpeg",
-          url: `/extensions/${extension}/search/tags=%5B%7B%22label%22%3A%22cosplay%20(53702)%22%2C%22value%22%3A%22cosplay%22%2C%22type%22%3A%22general%22%7D%5D&filter=%7B%22sort%22%3A%7B%22q%22%3A%22sort%22%2C%22type%22%3A%22updated%22%2C%22order%22%3A%22desc%22%7D%2C%22score%22%3A%7B%22value%22%3A0%7D%2C%22rating%22%3A%22all%22%7D`,
-        },
-        {
-          name: "watermark",
-          image_url:
-            "https://api-cdn.rule34.xxx/images/281/1a10d0210f7266486861b5f458182df3.png",
-          url: `/extensions/${extension}/search/tags=%5B%7B"label"%3A"watermark%20(411299)"%2C"value"%3A"watermark"%2C"type"%3A"general"%7D%5D&filter=%7B"sort"%3A%7B"q"%3A"sort"%2C"type"%3A"updated"%2C"order"%3A"desc"%7D%2C"score"%3A%7B"value"%3A0%7D%2C"rating"%3A"all"%7D`,
-        },
-      ],
-    },
-  ];
+  const [recommendation, setRecommendation] = useState<
+    | null
+    | {
+        url: string;
+        name: string;
+        image: string;
+      }[]
+  >(null);
 
   const getTags = async (query: string) => {
     if (query !== "") {
-      console.log(query);
       try {
         const response = await fetch(
           `${
@@ -148,8 +82,6 @@ function Searcher() {
     }
     // agregar el tag con enter
     if (e.key === "Enter") {
-      // e.preventDefault(); // Evitar que se inserte el espacio
-      console.log(inputValue);
       setSelectedTags((prev) => [
         ...prev,
         { label: inputValue, type: "general", value: inputValue },
@@ -171,7 +103,6 @@ function Searcher() {
     setSelectedTags(newArrayTags);
   };
   const handleActive = () => {
-    console.log(active);
     setActive((prev) => !prev);
   };
 
@@ -202,8 +133,6 @@ function Searcher() {
     }
   };
   const typesTagsTransform = (type: string): number => {
-    // console.log(type)
-    // if(type === "1") console.log("Xd")
     if (type === "general" || type === "0") return 0;
     if (type === "artist" || type === "1") return 1;
     if (type === "copyrigth" || type === "3") return 3;
@@ -228,24 +157,18 @@ function Searcher() {
       };
       return params;
     } catch (error) {
-      console.log("XD");
     }
   };
   //TODO MAGIC BUTONS EVENT
   // TODO--------------------
   useEffect(() => {
-    // getMe().then((res) => {
-    //   console.log(res)
-    // });
     if (window) {
       try {
         const url = window.location.pathname;
         function getExtension() {
           const parts = url.split("/extensions/");
-          // console.log(parts)
           if (parts[0] !== "/") {
             const extensionName = parts[1].split("/")[0].trim();
-            // console.log(extensionName);
             setExtension(extensionName);
           }
         }
@@ -255,6 +178,7 @@ function Searcher() {
       }
     }
   }, []);
+
   useEffect(() => {
     if (localStorage.getItem("tags") && extension) {
       const localStorageTagsParse: {
@@ -302,7 +226,15 @@ function Searcher() {
       }
     }
   }, [active]);
-  useEffect(() => {}, [filters]);
+  useEffect(() => {
+    if (extension) {
+      getRecomendations(extension).then((data) => {
+        if (data.success) {
+          setRecommendation(data.data);
+        }
+      });
+    }
+  }, [extension]);
 
   useEffect(() => {
     if (window.location.pathname === "/") {
@@ -462,26 +394,17 @@ function Searcher() {
                   </div>
                 )}
               {/* RECOMENDATIONS SECTION */}
-              {!inputValue &&
-              extension &&
-              cardsTags[
-                cardsTags.findIndex((item) => item.extension === extension)
-              ] &&
-              cardsTags ? (
-                selectedTags?.length === 0 && (
-                  <div>
-                    <h4 className="font-semibold text-lg dark:text-white">
-                      Recomendations
-                    </h4>
-                    <div className="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 grid-cols-2 gap-3">
-                      {/* SWIPER CONTAINER */}
-                      {cardsTags[
-                        cardsTags.findIndex(
-                          (item) => item.extension === extension
-                        )
-                      ].tags.map((item, index) => (
+              {inputValue === "" ? (
+                <div>
+                  <h4 className="font-semibold text-lg dark:text-white">
+                    Recomendations
+                  </h4>
+                  <div className="mt-3 grid 2xl:grid-cols-4 xl:grid-cols-3 grid-cols-2 gap-3">
+                    {/* SWIPER CONTAINER */}
+                    {recommendation &&
+                      recommendation.map((item, index) => (
                         <a
-                          href={item.url}
+                          href={`/extensions/${extension}/search/${item.url}`}
                           key={index}
                           className="bg-neutral-100 dark:bg-neutral-900 dark:text-white flex gap-5 items-center  w-full h-fit rounded-2xl overflow-hidden hover:brightness-95 dark:hover:brightness-75 cursor-pointer"
                         >
@@ -489,7 +412,7 @@ function Searcher() {
                             className="lg:min-w-[110px] lg:max-w-[110px] lg:min-h-[110px] lg:max-h-[110px] 
                             min-w-[100px] max-w-[100px] min-h-[100px] max-h-[100px]
                             object-cover "
-                            src={item.image_url}
+                            src={item.image}
                             alt=""
                           />
                           <p className="font-semibold capitalize text-ellipsis whitespace-nowrap overflow-hidden">
@@ -497,11 +420,9 @@ function Searcher() {
                           </p>
                         </a>
                       ))}
-                    </div>
                   </div>
-                )
+                </div>
               ) : (
-                // BUSQUEDA RESULTADOS
                 <div>
                   <h2 className="font-semibold text-lg dark:text-white">
                     Results

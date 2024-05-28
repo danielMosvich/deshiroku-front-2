@@ -1,16 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Card from "./Card.astro";
-// import "swiper/css";
-// import Card from "../components/Card.astro";
-// import getImages from "@/services/getImages";
-// import type { ImagesProps } from "@/types/ImagesProps";
-// import "../../public/icons/safebooru.ico"
-// const data: { sucess: boolean; data: ImagesProps[] } = await getImages(
-//   "realbooru",
-//   1
-// );
-// console.log(data);
 ---
 
 <Layout title="Filidonia">
@@ -25,8 +15,8 @@ import Card from "./Card.astro";
   <p
     class="mx-auto text-center md:max-w-xl max-w-sm font-semibold text-neutral-600 dark:text-neutral-400"
   >
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iure, molestiae
-    unde veniam hic doloribus mollitia nam
+    Discover a new visual experience with Filidonia, similar to Pinterest but
+    with an exclusive collection of images from Safebooru, Gelbooru, Rule34, and more.
   </p>
 
   <div class="mt-10 lg:px-20 sm:px-10 px-5">
@@ -40,8 +30,9 @@ import Card from "./Card.astro";
         title="safebooru.org"
         description=`Safebooru is a anime and manga picture search engine, images are being updated hourly.`
         avatar="https://safebooru.org/favicon.ico"
-        background="https://safebooru.org//samples/4619/sample_162568abb18523ad14f8b18132284365ef3ca1f9.jpg?4882408"
+        background="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716862056/deshiroku/thumbnails/safebooru.png"
         src="/extensions/safebooru"
+        position="-20px"
       />
     </div>
   </div>
@@ -57,16 +48,17 @@ import Card from "./Card.astro";
         description=`if something exists in real life, or is made up, there will be a
       pornographic depiction of it`
         avatar="https://rule34.xxx/favicon.ico?v=2"
-        background="https://us.rule34.xxx//samples/7281/sample_3e89953717d8771c2dc070fd24dbb7ef.jpg?8315449"
-        position="center"
+        background="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716862056/deshiroku/thumbnails/rule34.jpg"
+        position="-30px"
         safe={false}
         src="/extensions/rule34"
+        
       />
       <Card
         title="realbooru.com"
         description=`The best booru for real porn stuff.`
         avatar="https://realbooru.com/favicon.ico?v=5"
-        background="https://realbooru.com//images/51/5c/515c6f8100663536c83ce30a8fddc67d.jpeg"
+        background="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716862057/deshiroku/thumbnails/realbooru.jpg"
         position="-60px"
         safe={false}
         src="/extensions/realbooru"
@@ -75,9 +67,10 @@ import Card from "./Card.astro";
         title="gelbooru.com"
         description=`Millions of FREE hentai and anime videos, images, wallpapers, and more!`
         avatar="https://gelbooru.com/favicon.png"
-        background="https://img3.gelbooru.com//images/a8/9d/a89d2dc8b558d6d53a51be71132ea329.jpg"
+        background="https://res.cloudinary.com/dnr4oeapp/image/upload/v1716862055/deshiroku/thumbnails/gelbooru.jpg"
         safe={false}
         src="/extensions/gelbooru"
+        position="0"
       />
     </div>
   </div>

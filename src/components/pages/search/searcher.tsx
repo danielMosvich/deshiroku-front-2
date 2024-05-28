@@ -7,7 +7,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import "./styles.css";
-import DropdownContainer from "../../../components/global-react/dropdownContainer";
 import TagButton from "../../../components/header/TagButton";
 import ModalContainer from "../../../components/global-react/modalContainer";
 import typeTagTransform from "../../../helpers/typeTagTransform";
@@ -87,6 +86,12 @@ function Searcher() {
     );
   }, [$STORE_global_default_extension]);
 
+  useEffect(() => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(!isMobile){
+      window.location.href = "/"
+    }
+  }, []);
   const handleGo = () => {
     if (tagsSelected.length === 0) return;
     interface tagProps {
@@ -168,7 +173,7 @@ function Searcher() {
         </div>
         {show && (
           <ModalContainer
-            height="87%"
+            height="85%"
             onClose={() => {
               setShow(false);
               setInputValue("");
@@ -200,7 +205,7 @@ function Searcher() {
             </div>
             {tagsSelected.length > 0 && (
               <div className="">
-                <h2 className="text-sm font-semibold px-2 pt-2 dark:text-white">
+                <h2 className="text-sm font-semibold px-2 pt-3 dark:text-white">
                   Selected Tags
                 </h2>
                 <section className="py-1 flex gap-2 overflow-auto px-2">
@@ -222,7 +227,7 @@ function Searcher() {
             )}
             {results.length > 0 && (
               <div className="">
-                <h2 className="mx-2 text-sm mt-2 font-semibold dark:text-white">
+                <h2 className="mx-2 text-sm mt-3 font-semibold dark:text-white">
                   Results
                 </h2>
                 <div className="flex flex-col gap-2 px-2 mt-2">
@@ -261,7 +266,7 @@ function Searcher() {
               </div>
             )}
             {results.length === 0 && tagsSelected.length === 0 && (
-              <div className=" h-full flex  items-center flex-col">
+              <div className=" h-fit flex  items-center flex-col">
                 <h2 className="text-black dark:text-white text-2xl px-2 text-center font-[600] font-ui mt-32 tracking-tight">
                   Search for content with your favorite extension
                 </h2>
@@ -304,7 +309,6 @@ function Searcher() {
             slidesPerView={2.2}
             spaceBetween={8}
             modules={[Pagination]}
-            
             className="mySwiper"
           >
             {recommendation.map((item, index) => {

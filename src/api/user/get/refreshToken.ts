@@ -52,11 +52,9 @@ async function refreshToken() {
   const refreshTokenString = getCookieByName("refresh_token") as string;
 
   if (refreshTokenString && !accessTokenString) {
-    // console.log("SOLO HAY REFRESH TOKEN");
     fetchRefreshTokenServer(refreshTokenString);
   }
   if (!refreshTokenString && !accessTokenString) {
-    // console.log("NO HAY COKKIES");
     localStorage.clear();
     window.location.reload();
   }
@@ -66,7 +64,6 @@ async function refreshToken() {
       let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
       document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     });
-    console.log("XD")
     localStorage.clear();
     window.location.reload();
   }

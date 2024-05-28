@@ -21,20 +21,24 @@ function SelectCollection({ post }: { post: ImagesProps }) {
           Save it in your collections
         </p>
         <ul className="flex flex-col mt-1">
-          {$user.collections.map((collection:Collection) => (
+          {$user.collections.map((collection: Collection) => (
             <li
               key={collection._id}
-              className="h-16 flex flex-row gap-2 items-center hover:bg-neutral-800 px-2 rounded-lg "
+              className="h-16 flex flex-row gap-2 items-center dark:hover:bg-neutral-800 hover:bg-neutral-200 px-2 rounded-lg "
             >
               <div className="h-12 w-12 min-w-12 min-h-12 rounded-lg overflow-hidden">
-                <img
-                  className="h-full w-full object-cover"
-                  src={collection.images[0].preview_url}
-                  alt=""
-                />
+                {collection.images[0] ? (
+                  <img
+                    className="h-full w-full object-cover"
+                    src={collection.images[0].preview_url}
+                    alt=""
+                  />
+                ) : (
+                  <div className="bg-neutral-400 w-12 h-12 rounded-lg"></div>
+                )}
               </div>
               <h2
-                className="dark:text-white hover:underline cursor-pointer"
+                className="dark:text-white hover:underline cursor-pointer overflow-hidden text-ellipsis"
                 onClick={() => {
                   handleDefaultCollection(collection);
                 }}

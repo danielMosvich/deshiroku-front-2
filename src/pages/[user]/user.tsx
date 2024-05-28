@@ -2,18 +2,15 @@ import { useEffect, useState } from "react";
 import type { UserProps } from "../../types/UserProps";
 import Me from "./Me";
 import Other from "./Other";
-import { STORE_user } from "../../store/userStore";
-import { useStore } from "@nanostores/react";
+// import { STORE_user } from "../../store/userStore";
+// import { useStore } from "@nanostores/react";
 
 function User({ user }: { user?: string }) {
   const [localUser, setLocalUser] = useState<UserProps | null>(null);
-  const $user = useStore(STORE_user) as UserProps;
+  // const $user = useStore(STORE_user) as UserProps;
   useEffect(() => {
-    if ($user) {
-      setLocalUser($user);
-    }
-    // if (localStorage.getItem("user"))
-    //   setLocalUser(JSON.parse(localStorage.getItem("user") as string));
+    if (localStorage.getItem("user"))
+      setLocalUser(JSON.parse(localStorage.getItem("user") as string));
   }, []);
 
   return (

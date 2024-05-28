@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import DropDown from "./dropDown";
 import {
   STORE_username,
   STORE_name,
@@ -16,13 +15,13 @@ import LoginRegister from "./loginRegister";
 import DropdownContainer from "./global-react/dropdownContainer";
 import type { UserProps } from "../types/UserProps";
 import refreshToken from "../api/user/get/refreshToken";
+import logout from "../helpers/logout";
 
 function HeaderUser() {
   // !GLOBAL STATES
   const $username = useStore(STORE_username);
   const $name = useStore(STORE_name);
   const $auth_modal = useStore(STORE_auth_modal);
-  const logout = () => {};
 
   useEffect(() => {
     if (localStorage.length > 0) {
@@ -69,7 +68,7 @@ function HeaderUser() {
             href={`/${$username}`}
             className="hover:bg-neutral-200 dark:hover:bg-neutral-700 w-12 h-12 rounded-full grid place-content-center font-semibold uppercase cursor-pointer"
           >
-            <div className="bg-gradient-to-t from-rose-500 to-pink-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase">
+            <div className="bg-gradient-to-t from-blue-500 to-sky-400 text-white w-9 h-9 rounded-full grid place-content-center font-semibold uppercase">
               {$username.split("")[0]}
             </div>
           </a>
@@ -100,7 +99,7 @@ function HeaderUser() {
                   </svg>
                   <span>Settings</span>
                 </div>
-                <div className=" select-none transition-colors hover:bg-rose-500/80 hover:text-white  gap-2  cursor-pointer w-full px-3 py-3 flex items-center rounded-xl">
+                <button onClick={logout} className=" select-none transition-colors hover:bg-rose-500/80 hover:text-white  gap-2  cursor-pointer w-full px-3 py-3 flex items-center rounded-xl">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.3rem"
@@ -120,7 +119,7 @@ function HeaderUser() {
                     <path fill="none" d="M0 0h36v36H0z" />
                   </svg>
                   <span>Logout</span>
-                </div>
+                </button>
               </div>
             }
           >

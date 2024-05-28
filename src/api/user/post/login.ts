@@ -39,14 +39,11 @@ async function fetchLoginServer(username: string, password: string) {
     }),
   });
   const data = (await response.json()) as ApiLoginProps;
-  // console.log(data);
   if (data.success && data.data) {
     const cookies = {
       access_token: data.data.access_token,
       refresh_token: data.data.refresh_token,
     };
-    // console.log(cookies)
-    // function getAcessToken() {}
     const access_token = transformCookies(
       "access_token",
       cookies.access_token.token,
@@ -62,7 +59,6 @@ async function fetchLoginServer(username: string, password: string) {
       "defaultCollection",
       JSON.stringify(data.data.user.collections[0])
     );
-    // console.log(data.data.user)
     localStorage.setItem("user", JSON.stringify(data.data.user));
     localStorage.setItem(
       "time",
@@ -100,7 +96,6 @@ async function login(username: string, password: string) {
   try {
     fetchLoginServer(username, password);
   } catch (error) {
-    // console.log("user")
     if (error instanceof Error) {
       Alert("bottom", 3000, "error", error.name, error.message);
     } else {

@@ -6,19 +6,53 @@ import getMe from "../../api/user/get/getMe";
 import { STORE_user } from "../../store/userStore";
 import { useStore } from "@nanostores/react";
 import MyButton from "../../components/global-react/myButton";
+import PageLoader from "../../components/loaders/pageLoader";
+import createCollection from "../../api/user/post/createCollection";
+import ModalQuestion from "../../components/global-react/modalQuestion";
 function Me() {
   const [user, setUser] = useState<null | UserProps>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [showAddButton, setShowAddButton] = useState(true);
   const $user = useStore(STORE_user) as UserProps;
   useEffect(() => {
-      getMe().then((res) => {
-        if (res.success) {
-          setUser(res.data);
+    getMe().then((res) => {
+      if (res.success) {
+        setUser(res.data);
+      }
+    });
+  }, [$user]);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valueUnfilter = e.target.value;
+    const value = valueUnfilter.replace(/[^a-zA-Z0-9\s\-_]+/g, "");
+    setInputValue(value);
+  };
+
+  const handleCreateCollection = () => {
+    if (inputValue === "") return;
+    const sanitizedCollectionName = inputValue.replace(
+      /[^a-zA-Z0-9\s\-_]+/g,
+      ""
+    );
+    setShowAddButton(false);
+    createCollection(sanitizedCollectionName).then(
+      (e:any) => {
+        if (e.success) {
+          setInputValue("");
+          setShowAddModal(false);
+          setShowAddButton(true);
+        } else{
+          setShowAddButton(true);
+
         }
-      });
-  }, []);
+      }
+    );
+  };
+
   return (
     <>
-      {user && (
+      {user ? (
         <div>
           <div className="flex flex-col items-center">
             <button className="button-profile uppercase font-semibold text-6xl">
@@ -28,9 +62,9 @@ function Me() {
               </div>
             </button>
 
-              <h2 className="font-semibold text-2xl mt-5 dark:text-neutral-50">
-                {user.name}
-              </h2>
+            <h2 className="font-semibold text-2xl mt-5 dark:text-neutral-50">
+              {user.name}
+            </h2>
             <h3 className=" text-lg dark:text-neutral-50">@{user.username}</h3>
 
             <div className="flex gap-3 mt-5">
@@ -47,7 +81,11 @@ function Me() {
                 Your collections
               </h2>
               <aside className="flex gap-2 items-center justify-center h-full">
-                <MyButton icon radius="full">
+                <MyButton
+                  icon
+                  radius="full"
+                  onClick={() => setShowAddModal(true)}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.5rem"
@@ -75,7 +113,7 @@ function Me() {
                 </MyButton>
               </aside>
             </section>
-            <section className="mt-8">
+            <section className="my-8">
               <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:flex 2xl:w-full w-fit gap-5 mx-auto  2xl:flex-wrap">
                 {user.collections.map((item: Collection) => (
                   <CardCollection
@@ -88,6 +126,42 @@ function Me() {
             </section>
           </div>
         </div>
+      ) : (
+        <PageLoader></PageLoader>
+      )}
+      {showAddModal && (
+        <ModalQuestion onClose={() => setShowAddModal(false)}>
+          <div className="bg-neutral-100/90 backdrop-blur-2xl p-4 rounded-xl md:min-w-[400px] w-full mx-auto">
+            <h3 className=" font-semibold text-md">New name collection</h3>
+            <input
+              className="bg-white px-3 py-3 outline-offset-4 outline-2 outline-sky-500 rounded-xl border-none mt-2 w-full"
+              type="text"
+              placeholder="new name collection"
+              name="input-new-collection-name"
+              value={inputValue}
+              onChange={handleInput}
+            />
+            <div className="flex justify-end gap-2 mt-3">
+              <MyButton
+                radius="2xl"
+                variant="light"
+                onClick={() => {setShowAddModal(false);}}
+                color="danger"
+              >
+                Cancel
+              </MyButton>
+
+              <MyButton
+                radius="2xl"
+                variant="light"
+                onClick={handleCreateCollection}
+                disabled={!showAddButton}
+              >
+                Create
+              </MyButton>
+            </div>
+          </div>
+        </ModalQuestion>
       )}
     </>
   );

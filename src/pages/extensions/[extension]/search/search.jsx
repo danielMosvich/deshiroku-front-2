@@ -33,117 +33,89 @@ function Search({ extension }) {
     const url = `/extensions/${extension}/post/${element.id}?${queryString}`;
     return url;
   }
-  // const loadImage = (url) => {
-  //   return new Promise((resolve, reject) => {
-  //     const img = new Image();
-  //     img.onload = () => resolve(img);
-  //     img.onerror = () => reject(new Error(`Error loading image from ${url}`));
-  //     img.src = url;
-  //   });
-  // };
-  // const loadImages = async (imageUrls) => {
-  //   try {
-  //     // Carga todas las imágenes simultáneamente
-  //     const loadedImages = await Promise.all(
-  //       imageUrls.map(async (url) => {
-  //         try {
-  //           return await loadImage(url);
-  //         } catch (error) {
-  //           return null;
-  //         }
-  //       })
-  //     );
-
-  //     // Filtra las imágenes cargadas para eliminar aquellas que sean null (indicando que hubo un error al cargarlas)
-  //     const filteredImages = loadedImages.filter((img) => img !== null);
-
-  //     return filteredImages;
-  //   } catch (error) {
-  //     console.error(`Error loading images: ${error.message}`);
-  //     // Puedes manejar el error de alguna manera, por ejemplo, lanzar una excepción o retornar un array vacío
-  //     throw error;
-  //   }
-  // };
   async function GetImages(pageParams, query) {
-    if (pageParams === 1 && extension) {
-      const data = await getImagesByQuery(extension, query, pageParams);
-      if (data.success) {
-        const imageUrls = data.data.map((img) => img.preview_url);
-        const imagePromises = imageUrls.map(
-          (url) =>
-            new Promise((resolve, reject) => {
-              const img = new Image();
-              img.onload = () => resolve(img);
-              img.onerror = () => resolve(null);
-              img.src = url;
-            })
-        );
-        const loadedImages = await Promise.all(imagePromises);
-        if (loadedImages) {
-          const filteredImages = ImageNullFilter(loadedImages, data.data);
-          setData(filteredImages);
-          setTimeout(() => {
-            setIsLoadingMore(false);
-          }, 1000);
-        }
-      } else {
-        setTimeout(() => {
-          GetImages(pageParams, query);
-        }, 3000);
-      }
-    } else {
-      const newArray = new Array(30).fill().map(() => ({ extension: "load" }));
-      setData((prev) => {
-        return [...prev, ...newArray];
-      });
-      const data2 = await getImagesByQuery(extension, query, pageParams);
-      if (data2.data.length === 0) {
-        setEndPage(true);
-        setIsLoadingMore(false);
-        setData((prev) => {
-          return [...prev.filter((e) => e.extension !== "load")];
-        });
-        Alert(
-          "bottom",
-          5000,
-          "danger",
-          "No more images",
-          "this is the end of the images"
-        );
-        return;
-      }
-      if (data2.success) {
-        const imageUrls = data2.data.map((img) => img.preview_url);
-        const imagePromises = imageUrls.map(
-          (url) =>
-            new Promise((resolve, reject) => {
-              const img = new Image();
-              img.onload = () => resolve(img);
-              img.onerror = () => resolve(null);
-              img.src = url;
-            })
-        );
-        const loadedImages = await Promise.all(imagePromises);
-        if (loadedImages) {
-          const filteredImages = ImageNullFilter(loadedImages, data2.data);
-          setData((prev) => {
-            const newValueToData = [
-              ...prev.filter((e) => e.extension !== "load"),
-              ...filteredImages,
-            ];
-            return newValueToData;
-          });
-          setPage((prev) => prev + 1);
-          setIsLoadingMore(false);
-          setPass(false);
+    try {
+      if (pageParams === 1 && extension) {
+        const data = await getImagesByQuery(extension, query, pageParams);
+        if (data.success) {
+          const imageUrls = data.data.map((img) => img.preview_url);
+          const imagePromises = imageUrls.map(
+            (url) =>
+              new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = url;
+              })
+          );
+          const loadedImages = await Promise.all(imagePromises);
+          if (loadedImages) {
+            const filteredImages = ImageNullFilter(loadedImages, data.data);
+            setData(filteredImages);
+            setTimeout(() => {
+              setIsLoadingMore(false);
+            }, 1000);
+          }
         } else {
-          throw new Error("Some images could not be loaded correctly");
+          setData(undefined);
         }
       } else {
-        setTimeout(() => {
-          GetImages(pageParams, query);
-        }, 4000);
+        const newArray = new Array(30)
+          .fill()
+          .map(() => ({ extension: "load" }));
+        setData((prev) => {
+          return [...prev, ...newArray];
+        });
+        const data2 = await getImagesByQuery(extension, query, pageParams);
+        if (data2.data.length === 0) {
+          setEndPage(true);
+          setIsLoadingMore(false);
+          setData((prev) => {
+            return [...prev.filter((e) => e.extension !== "load")];
+          });
+          Alert(
+            "bottom",
+            5000,
+            "danger",
+            "No more images",
+            "this is the end of the images"
+          );
+          return;
+        }
+        if (data2.success) {
+          const imageUrls = data2.data.map((img) => img.preview_url);
+          const imagePromises = imageUrls.map(
+            (url) =>
+              new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = url;
+              })
+          );
+          const loadedImages = await Promise.all(imagePromises);
+          if (loadedImages) {
+            const filteredImages = ImageNullFilter(loadedImages, data2.data);
+            setData((prev) => {
+              const newValueToData = [
+                ...prev.filter((e) => e.extension !== "load"),
+                ...filteredImages,
+              ];
+              return newValueToData;
+            });
+            setPage((prev) => prev + 1);
+            setIsLoadingMore(false);
+            setPass(false);
+          } else {
+            throw new Error("Some images could not be loaded correctly");
+          }
+        } else {
+          setTimeout(() => {
+            GetImages(pageParams, query);
+          }, 4000);
+        }
       }
+    } catch (error) {
     }
   }
   const setParams = () => {
@@ -174,7 +146,6 @@ function Search({ extension }) {
         tags,
         filter: filterParams,
       };
-      // console.log(params);
 
       const filtersString = `+${params.filter.sort.q}:${
         params.filter.sort.type
@@ -198,7 +169,6 @@ function Search({ extension }) {
         GetImages(1, queryVariable);
       }
     } catch (error) {
-      console.log(error);
     }
   };
   //TODO -----------------------<
@@ -318,7 +288,7 @@ function Search({ extension }) {
             )}
           </Masonry>
         </div>
-      ) : (
+      ) : data !== undefined ? (
         <div className="md:max-h-[calc(100vh-160px)]  md:min-h-[calc(100vh-160px)] max-h-[calc(100vh-56px)]  min-h-[calc(100vh-56px)] overflow-y-clip">
           <div className="animate-fade-up">
             <Masonry
@@ -339,6 +309,10 @@ function Search({ extension }) {
               })}
             </Masonry>
           </div>
+        </div>
+      ) : (
+        <div>
+          The content was not found.
         </div>
       )}
       {isLoadingMore && <Loader />}

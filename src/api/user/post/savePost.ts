@@ -41,7 +41,6 @@ async function savePost(
       direction: { name: string; id: string };
     };
     if (data.success) {
-      // console.log(data)
       localStorage.setItem("user", JSON.stringify(data.data));
       STORE_user.set(data.data);
       Alert(

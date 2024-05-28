@@ -24,15 +24,10 @@ async function fetchUserDataFromServer(
   );
   const data = await res.json();
   return data
-//   console.log(data);
 }
 
 async function getCollectionByUsername(username: string, collection: string) {
   const token = getCookieByName("access_token") as string
-//   if (!token) {
-//     return { success: false, data: null, message: "cookies is not there" };
-//   }
-// console.log(token,"TOKEN")
   try {
     return await fetchUserDataFromServer(username, collection, token);
   } catch (error) {}

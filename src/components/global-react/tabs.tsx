@@ -38,7 +38,6 @@ function Tabs({
         width: currentTab.offsetWidth,
         left: currentTab.offsetLeft,
       });
-      // console.log(currentTab.offsetLeft);
     }
   }, [activeTab]);
 

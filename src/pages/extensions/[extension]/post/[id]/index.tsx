@@ -67,7 +67,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
         type_file: type,
       });
       if (type !== "mp4" && type !== "webm") {
-        // console.log("XD")
         const imagePromise = new Promise((resolve, reject) => {
           const img = new Image();
           img.onload = () => resolve(img);
@@ -81,7 +80,6 @@ function PostById({ extension, id }: { extension: string; id: string }) {
 
         if (loadedImage) {
           setLoadImage(true);
-          console.log("load image");
         }
       }
     } catch (error) {

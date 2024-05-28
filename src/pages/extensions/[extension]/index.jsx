@@ -54,7 +54,6 @@ function Extension({ extension }) {
             }, 1000);
           }
         } catch (error) {
-          console.log(error);
         }
       } else {
         // !SI ES QUE NO CARGA QUE LO HAGA DE NUEVO CADA 3 SEGUNDOS
@@ -114,7 +113,6 @@ function Extension({ extension }) {
 
   useEffect(() => {
     if (!isLoadingMore && data && data.length > 0 && pass) {
-      console.log("NEXT",pass)
       GetImages(page + 1);
       setIsLoadingMore(true);
     }

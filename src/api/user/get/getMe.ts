@@ -39,6 +39,7 @@ async function getMe(): Promise<GetMeProps> {
 
   try {
     const response = await fetchUserDataFromServer(token);
+    localStorage.setItem("user", JSON.stringify(response.data));
     return response;
   } catch (error) {
     return { success: false, message: "fetch failed", data: null };

@@ -108,7 +108,6 @@ function FilterButton({
         }
       });
     } else {
-      console.log("No es un número.");
     }
   };
   return (
