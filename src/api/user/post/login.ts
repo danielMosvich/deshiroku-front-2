@@ -34,8 +34,8 @@ async function fetchLoginServer(username: string, password: string) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      username: username,
-      password: password,
+      username: username.trim(),
+      password: password.trim(),
     }),
   });
   const data = (await response.json()) as ApiLoginProps;

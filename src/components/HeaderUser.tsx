@@ -136,7 +136,6 @@ function HeaderUser() {
               />
             </svg>
           </DropdownContainer>
-          {/* <DropDown data={{ name: $name, username: $username }} /> */}
         </div>
       ) : (
         <div className="flex gap-2 ml-2">

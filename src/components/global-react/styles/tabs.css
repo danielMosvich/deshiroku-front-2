@@ -9,7 +9,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(58, 57, 57);
+  background-color: rgb(206, 204, 204);
+  /* background-color: rgb(58, 57, 57); */
   overflow: hidden;
   position: relative;
 }
@@ -42,7 +43,8 @@
   font-size: inherit;
   z-index: 20;
   text-align: center;
-  color: rgb(177, 173, 173);
+  color: rgb(116, 115, 115);
+  /* color: rgb(177, 173, 173); */
   font-weight: inherit;
 }
 .tab-button.active {
@@ -111,3 +113,11 @@
 .tab-buttons.rounded_full {
   border-radius: 9999px;
 } */
+@media (prefers-color-scheme: dark) {
+  .tab-buttons {
+    background-color: rgb(58, 57, 57);
+  }
+  .tab-button {
+    color: rgb(177, 173, 173);
+  }
+}

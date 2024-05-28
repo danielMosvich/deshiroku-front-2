@@ -15,9 +15,9 @@ async function fetchRegisterServer(
   password: string
 ) {
   const user = {
-    name: name,
-    username: username,
-    password: password,
+    name: name.trim(),
+    username: username.trim(),
+    password: password.trim(),
   };
   if (name === "" || username === "" || password === "") return;
   const url = import.meta.env.PUBLIC_SERVER_URL;

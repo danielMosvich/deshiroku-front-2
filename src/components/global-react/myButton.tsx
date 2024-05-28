@@ -17,6 +17,7 @@ interface MyButtonProps {
   size?: "sm" | "md" | "lg";
   radius?: "none" | "sm" | "md" | "lg" | "2xl" | "3xl" | "full";
   icon?: boolean;
+  fullWidth?: boolean;
 }
 const MyButton: React.FC<MyButtonProps> = ({
   variant = "solid",
@@ -27,6 +28,7 @@ const MyButton: React.FC<MyButtonProps> = ({
   onClick,
   disabled,
   icon,
+  fullWidth,
   ...props
 }) => {
   const getSizeStyles = () => {
@@ -114,12 +116,18 @@ const MyButton: React.FC<MyButtonProps> = ({
     }
   };
 
+  const getFullWidthStyles = () => {
+    if (fullWidth) {
+      return { width: "100%" };
+    }
+  };
+
   const buttonClassName = `my-button ${variant} font-semibold ${color}`;
 
   return (
     <button
       className={buttonClassName}
-      style={{ ...getSizeStyles(), ...getRadiusStyles() }}
+      style={{ ...getSizeStyles(), ...getRadiusStyles(),...getFullWidthStyles() }}
       onClick={onClick}
       disabled={disabled}
       {...props}

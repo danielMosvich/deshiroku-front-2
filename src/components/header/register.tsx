@@ -50,7 +50,7 @@ function RegisterComponent() {
       const signal = controller.signal;
       try {
         const response = await fetch(
-          `${import.meta.env.PUBLIC_SERVER_URL}/api/user/register/${value}`,
+          `${import.meta.env.PUBLIC_SERVER_URL}/api/user/register/${value.trim()}`,
           {
             method: "GET",
             signal: signal,
@@ -72,7 +72,6 @@ function RegisterComponent() {
         if ((error as Error).name === "AbortError") {
           // La solicitud fue cancelada, no necesitas manejar este caso
         } else {
-          // Manejo de errores de red u otros errores
         }
       } finally {
         controller.abort(); // Asegurarse de que la solicitud se cancele al finalizar

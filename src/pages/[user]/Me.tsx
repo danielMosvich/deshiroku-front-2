@@ -14,6 +14,7 @@ function Me() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [showAddButton, setShowAddButton] = useState(true);
+  const [logoutModal, setLogoutModal] = useState(false);
   const $user = useStore(STORE_user) as UserProps;
   useEffect(() => {
     getMe().then((res) => {
@@ -36,24 +37,49 @@ function Me() {
       ""
     );
     setShowAddButton(false);
-    createCollection(sanitizedCollectionName).then(
-      (e:any) => {
-        if (e.success) {
-          setInputValue("");
-          setShowAddModal(false);
-          setShowAddButton(true);
-        } else{
-          setShowAddButton(true);
-
-        }
+    createCollection(sanitizedCollectionName).then((e: any) => {
+      if (e.success) {
+        setInputValue("");
+        setShowAddModal(false);
+        setShowAddButton(true);
+      } else {
+        setShowAddButton(true);
       }
-    );
+    });
   };
-
+  const logout = () => {
+    localStorage.clear();
+    const cookies = document.cookie.split("; ");
+    for (let cookie of cookies) {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+    }
+    window.location.href = "/";
+  };
   return (
     <>
       {user ? (
         <div>
+          {/* LOGOUT */}
+          <div
+            className="absolute right-2"
+            onClick={() => setLogoutModal(true)}
+          >
+            <MyButton variant="flat" color="danger" icon radius="full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.5rem"
+                height="1.5rem"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h6q.425 0 .713.288T12 4t-.288.713T11 5H5v14h6q.425 0 .713.288T12 20t-.288.713T11 21zm12.175-8H10q-.425 0-.712-.288T9 12t.288-.712T10 11h7.175L15.3 9.125q-.275-.275-.275-.675t.275-.7t.7-.313t.725.288L20.3 11.3q.3.3.3.7t-.3.7l-3.575 3.575q-.3.3-.712.288t-.713-.313q-.275-.3-.262-.712t.287-.688z"
+                />
+              </svg>
+            </MyButton>
+          </div>
           <div className="flex flex-col items-center">
             <button className="button-profile uppercase font-semibold text-6xl">
               {user.username.split("")[0]}
@@ -131,10 +157,12 @@ function Me() {
       )}
       {showAddModal && (
         <ModalQuestion onClose={() => setShowAddModal(false)}>
-          <div className="bg-neutral-100/90 backdrop-blur-2xl p-4 rounded-xl md:min-w-[400px] w-full mx-auto">
-            <h3 className=" font-semibold text-md">New name collection</h3>
+          <div className="bg-neutral-100/90 backdrop-blur-2xl p-4 rounded-xl md:min-w-[400px] w-full mx-auto dark:bg-neutral-900">
+            <h3 className=" font-semibold text-md dark:text-white">
+              New name collection
+            </h3>
             <input
-              className="bg-white px-3 py-3 outline-offset-4 outline-2 outline-sky-500 rounded-xl border-none mt-2 w-full"
+              className="bg-white dark:bg-neutral-800 dark:text-white dark:placeholder:text-neutral-300 px-3 py-3 outline-offset-4 outline-2 outline-sky-500 rounded-xl border-none mt-2 w-full"
               type="text"
               placeholder="new name collection"
               name="input-new-collection-name"
@@ -145,7 +173,9 @@ function Me() {
               <MyButton
                 radius="2xl"
                 variant="light"
-                onClick={() => {setShowAddModal(false);}}
+                onClick={() => {
+                  setShowAddModal(false);
+                }}
                 color="danger"
               >
                 Cancel
@@ -159,6 +189,40 @@ function Me() {
               >
                 Create
               </MyButton>
+            </div>
+          </div>
+        </ModalQuestion>
+      )}
+      {logoutModal && (
+        <ModalQuestion onClose={() => setLogoutModal(false)}>
+          <div className="bg-white rounded-2xl overflow-hidden dark:bg-neutral-900">
+            <h2 className="p-4 dark:text-white">
+              Are you sure you want to logout?
+            </h2>
+            <div className="flex items-center border-t bg-neutral-300 gap-[1px] dark:border-neutral-700 dark:bg-neutral-700">
+              <div className="bg-white w-full dark:bg-neutral-900">
+                <MyButton
+                  fullWidth
+                  radius="none"
+                  variant="light"
+                  onClick={() => setLogoutModal(false)}
+                >
+                  Cancel
+                </MyButton>
+              </div>
+              <div
+                className="bg-white w-full dark:bg-neutral-900"
+                onClick={logout}
+              >
+                <MyButton
+                  fullWidth
+                  radius="none"
+                  variant="light"
+                  color="danger"
+                >
+                  Logout
+                </MyButton>
+              </div>
             </div>
           </div>
         </ModalQuestion>

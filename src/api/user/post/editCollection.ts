@@ -20,7 +20,7 @@ async function editCollection(id: string, name: string) {
         Authorization: `Bearer ${JSON.stringify({ token: token })}`,
       },
       body: JSON.stringify({
-        name: name,
+        name: name.trim(),
         id: id,
       }),
     });
@@ -39,6 +39,7 @@ async function editCollection(id: string, name: string) {
         `the collection was edited`,
         `was edited by ${name}`
       );
+      return data;
     } else {
       Alert(
         "bottom",

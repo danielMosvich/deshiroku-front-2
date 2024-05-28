@@ -23,7 +23,7 @@ function LoginComponent() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (username !== "" && password !== "") {
-      login(username, password);
+      login(username.trim(), password.trim());
     }
   }
 
