@@ -75,10 +75,12 @@ function ButtonSave({
       >
         {children}
         <button
+          
           style={styleButton}
           className="rounded-full min-w-24 py-2 flex justify-center items-center font-semibold text-white capitalize ml-auto mr-2"
           disabled={state === "saving" || state === "removing"} // Deshabilitar el botón durante las operaciones asincrónicas
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (state === "save") {
               savePost(id, post, setState);
             }
